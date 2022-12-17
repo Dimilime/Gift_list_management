@@ -5,6 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import javax.servlet.http.HttpSession;
 
 import be.project.javabeans.User;
@@ -24,6 +25,7 @@ public class Home extends HttpServlet {
 			user = (User)session.getAttribute("user");
 		request.setAttribute("userList", user != null ? user.getGiftList(): "no user");
 		request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

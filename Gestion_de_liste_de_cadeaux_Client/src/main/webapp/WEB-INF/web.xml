@@ -9,16 +9,63 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
+
   
+    <!-- CONTEXT PARAMS -->
+  <context-param>
+  	<param-name>apiUrl</param-name>
+  	<param-value>http://localhost:8080/Gestion_de_liste_de_cadeaux_API/api</param-value>
+  </context-param>
+  
+   <!-- ENVIRONNEMENT ENTRIES -->
+  <env-entry> 
+    <env-entry-name>apiUrl</env-entry-name>
+    <env-entry-type>java.lang.String</env-entry-type>
+    <env-entry-value>http://localhost:8080/Gestion_de_liste_de_cadeaux_API/api</env-entry-value> 
+ </env-entry>
+  
+	 
+  <!-- SERVLETS -->
   <servlet>
-  <servlet-name>Home</servlet-name>
-  <servlet-class>be.project.servlets.Home</servlet-class>
+  	<servlet-name>Authentication</servlet-name>
+  	<servlet-class>be.project.servlets.AuthenticationServlet</servlet-class>
+  </servlet>
+   <servlet>
+  	<servlet-name>Logout</servlet-name>
+  	<servlet-class>be.project.servlets.LogoutServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>SignUp</servlet-name>
+  	<servlet-class>be.project.servlets.SignUpServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>Home</servlet-name>
+  	<servlet-class>be.project.servlets.Home</servlet-class>
   </servlet>
   
+   <!-- MAPPING SERVLET -->
   <servlet-mapping>
-  <servlet-name>Home</servlet-name>
-  <url-pattern>/</url-pattern>
-  <url-pattern>/home</url-pattern>
+  	<servlet-name>Authentication</servlet-name>
+	  	<url-pattern>/connexion</url-pattern>
+	  	<url-pattern>/authentication</url-pattern>
+	  	<url-pattern>/login</url-pattern>
+  </servlet-mapping>
+   <servlet-mapping>
+	 <servlet-name>Logout</servlet-name>
+  		<url-pattern>/logout</url-pattern>
   </servlet-mapping>
   
+  <servlet-mapping>
+  	<servlet-name>SignUp</servlet-name>
+	  	<url-pattern>/signup</url-pattern>
+	  	<url-pattern>/sinscrire</url-pattern>
+	  	<url-pattern>/inscription</url-pattern>
+  </servlet-mapping>
+   <servlet-mapping>
+  	<servlet-name>Home</servlet-name>
+	  	<url-pattern>/home</url-pattern>
+	  	<url-pattern>/hub</url-pattern>
+	  	<url-pattern>/accueil</url-pattern>
+  </servlet-mapping>
+
 </web-app>
