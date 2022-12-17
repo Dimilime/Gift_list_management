@@ -1,4 +1,4 @@
-package be.project.models;
+package be.project.javabeans;
 
 import java.io.Serializable;
 import java.time.LocalDate;
