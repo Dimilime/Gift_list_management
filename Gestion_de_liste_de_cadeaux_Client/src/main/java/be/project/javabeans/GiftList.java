@@ -1,4 +1,4 @@
-package be.project.models;
+package be.project.javabeans;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -81,6 +81,8 @@ public class GiftList implements Serializable{
 	public void addGift(Gift gift) {
 		gifts.add(gift);
 	}
+	
+	
 	
 	
 	

@@ -1,11 +1,19 @@
-package be.project.models;
+package be.project.javabeans;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import be.project.dao.UserDAO;
 
 public class User implements Serializable{
+
 	private static final long serialVersionUID = -5899409470895546883L;
 	
 	private int userId;
@@ -26,15 +34,6 @@ public class User implements Serializable{
 		this.email= email;
 		this.password=password;
 	}
-
-	public User(int userId, String firstname, String lastname, String email, String password) {
-		this.userId = userId;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.email = email;
-		this.password = password;
-	}
-	
 	public User(int userId, String firstname, String lastname, String email, String password,ArrayList<GiftList> giftList ,ArrayList<Notification> notifications, ArrayList<Participation> participations ) {
 		this.userId = userId;
 		this.firstname = firstname;
@@ -66,7 +65,7 @@ public class User implements Serializable{
 		return lastname;
 	}
 
-	public void setLastname(String lastname) {
+	public void setlastname(String lastname) {
 		this.lastname = lastname;
 	}
 
@@ -101,7 +100,7 @@ public class User implements Serializable{
 	public void setNotifications(ArrayList<Notification> notifications) {
 		this.notifications = notifications;
 	}
-	
+
 	public ArrayList<Participation> getParticipations() {
 		return participations;
 	}
@@ -109,7 +108,7 @@ public class User implements Serializable{
 	public void setParticipations(ArrayList<Participation> participations) {
 		this.participations = participations;
 	}
-	
+
 	public static boolean login(String email, String password) {
 		UserDAO userDAO = new UserDAO();
 		return userDAO.login(email, password);
@@ -119,17 +118,26 @@ public class User implements Serializable{
 		UserDAO userDAO = new UserDAO();
 		return userDAO.find(email);
 	}
-	
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email
-				+ ", password=" + password + ", giftList=" + giftList + ", notifications=" + notifications
-				+ ", participations=" + participations + "]";
+
+	public static User getUserByJSONObject(JSONObject json)throws JsonParseException, JsonMappingException, JSONException, IOException {
+		User user=new User();
+		user.setUserId(json.getInt("userId"));
+		user.setFirstname(json.getString("firstname"));
+		user.setlastname(json.getString("lastname"));
+		user.setEmail(json.getString("email"));
+		return user;
 	}
-	public int insertUser() {
+	public boolean createUser() {
 		UserDAO userDAO = new UserDAO();
 		return userDAO.insert(this);
 	}
+	public boolean createUser(boolean withSharedList) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	
+	
 	
 	
 

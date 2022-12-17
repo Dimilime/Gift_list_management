@@ -1,6 +1,7 @@
 package be.project.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Gift implements Serializable{
 
@@ -14,9 +15,30 @@ public class Gift implements Serializable{
 	private boolean reserved;
 	private String link;
 	private String Image;
+	private ArrayList<Participation> participations;
 	
 	public Gift() {
 	}
+	
+	public Gift(int priorityLevel, String name, String description, double averagePrice, boolean reserved, String link,
+			String image) {
+		super();
+		this.priorityLevel = priorityLevel;
+		this.name = name;
+		this.description = description;
+		this.averagePrice = averagePrice;
+		this.reserved = reserved;
+		this.link = link;
+		Image = image;
+		this.setParticipations(new ArrayList<Participation>());
+	}
+	
+	public Gift(int priorityLevel, String name, String description, double averagePrice, boolean reserved, String link,
+			String image, ArrayList<Participation> participations) {
+		this(priorityLevel,name, description, averagePrice, reserved, link, image);
+		this.setParticipations(participations);
+	}
+
 
 	public int getGiftId() {
 		return giftId;
@@ -81,8 +103,14 @@ public class Gift implements Serializable{
 	public void setImage(String image) {
 		Image = image;
 	}
-	
-	
+
+	public ArrayList<Participation> getParticipations() {
+		return participations;
+	}
+
+	public void setParticipations(ArrayList<Participation> participations) {
+		this.participations = participations;
+	}
 	
 
 }
