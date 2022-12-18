@@ -24,7 +24,7 @@ public class Home extends HttpServlet {
 		if(session != null )
 			user = (User)session.getAttribute("user");
 		request.setAttribute("userList", user != null ? user.getGiftList(): "no user");
-		request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/JSP/home.jsp").forward(request, response);
 
 	}
 

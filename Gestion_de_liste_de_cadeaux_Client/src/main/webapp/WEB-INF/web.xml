@@ -66,6 +66,7 @@
 	  	<url-pattern>/home</url-pattern>
 	  	<url-pattern>/hub</url-pattern>
 	  	<url-pattern>/accueil</url-pattern>
+	  	<url-pattern>/</url-pattern>
   </servlet-mapping>
 
 </web-app>
