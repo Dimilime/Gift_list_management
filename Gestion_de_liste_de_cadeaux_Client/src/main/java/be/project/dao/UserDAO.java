@@ -120,10 +120,6 @@ public class UserDAO implements DAO<User>{
 					String connected=jsonResponse.getString("connected");
 					if(connected.equals("true")) {
 						success=true;
-						MultivaluedMap<String, String> headers;
-						headers=res.getHeaders();
-						List<String> apiKey=headers.get("api-key");
-						saveApiKey(apiKey.get(0));
 					}
 				}
 			}
@@ -131,16 +127,4 @@ public class UserDAO implements DAO<User>{
 		}
 		return success;
 	}
-	
-	private static void saveApiKey(String apiKey) {
-		Context ctx;
-		try {
-			ctx = new InitialContext();
-			Context env = (Context) ctx.lookup("java:comp/env");
-			env.addToEnvironment("apiKey", apiKey);
-		} catch (NamingException e) {
-			System.out.println("Error save api key");
-		}
-	}
-
 }

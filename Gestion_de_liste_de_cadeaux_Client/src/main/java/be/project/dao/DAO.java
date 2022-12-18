@@ -36,8 +36,9 @@ public interface DAO<T> {
 		try {
 			ctx = new InitialContext();
 			Context env = (Context) ctx.lookup("java:comp/env");
-			return (String) env.getEnvironment().get("apiKey");
+			return (String) env.lookup("apiKey");
 		} catch (NamingException e) {
+			System.out.println("Error to get api key");
 			return "";
 		}
 	}
