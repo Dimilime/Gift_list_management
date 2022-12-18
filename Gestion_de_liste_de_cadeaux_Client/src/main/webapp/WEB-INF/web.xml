@@ -23,6 +23,11 @@
     <env-entry-type>java.lang.String</env-entry-type>
     <env-entry-value>http://localhost:8080/Gestion_de_liste_de_cadeaux_API/api</env-entry-value> 
  </env-entry>
+ <env-entry> 
+    <env-entry-name>apiKey</env-entry-name>
+    <env-entry-type>java.lang.String</env-entry-type>
+    <env-entry-value>B61UGnAzniOU1NZc5jqZgC17M838GB1MczxyhR7eTx4oPDm5YSCjYklsN98wkpnU6dCDXf4QZ29xbTsFIy9F5ISeDZJpXSgVHukfNRsc6dUTmi2op0WVlSmsebga4jiX</env-entry-value> 
+ </env-entry>
   
 	 
   <!-- SERVLETS -->
