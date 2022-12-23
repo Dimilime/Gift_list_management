@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import be.project.dao.AbstractDAOFactory;
+import be.project.dao.DAO;
 import be.project.dao.UserDAO;
 
 public class User implements Serializable{
@@ -24,6 +26,9 @@ public class User implements Serializable{
 	private ArrayList<GiftList> giftList;
 	private ArrayList<Notification> notifications;
 	private ArrayList<Participation> participations;
+	
+	private static AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	private static DAO<User> userDAO = adf.getUserDAO();
 	
 	public User() {
 		
@@ -42,7 +47,7 @@ public class User implements Serializable{
 		this.password = password;
 		this.giftList= giftList;
 		this.notifications=notifications;
-		this.setParticipations(participations);
+		this.participations= participations;
 	}
 
 	public int getUserId() {
@@ -110,12 +115,10 @@ public class User implements Serializable{
 	}
 
 	public static boolean login(String email, String password) {
-		UserDAO userDAO = new UserDAO();
-		return userDAO.login(email, password);
+		return ((UserDAO)userDAO).login(email, password);
 	}
 
 	public static User getUser(String email) {
-		UserDAO userDAO = new UserDAO();
 		return userDAO.find(email);
 	}
 
@@ -128,12 +131,15 @@ public class User implements Serializable{
 		return user;
 	}
 	public boolean createUser() {
-		UserDAO userDAO = new UserDAO();
 		return userDAO.insert(this);
 	}
 	public boolean createUser(boolean withSharedList) {
-		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public boolean addGiftList(GiftList gl) {
+		giftList.add(gl);
+		return gl.create();
 	}
 	
 	

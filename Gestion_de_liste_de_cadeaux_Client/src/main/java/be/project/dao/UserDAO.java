@@ -1,60 +1,33 @@
 package be.project.dao;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
-
 import org.json.JSONObject;
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
-
 import be.project.javabeans.User;
 
-public class UserDAO implements DAO<User>{
-	
-	private static  String apiUrl;
-	private Client client;
-	private WebResource resource;
-	
-	private static URI getBaseUri() {
-		return UriBuilder.fromUri(apiUrl).build();
-	}
+public class UserDAO extends DAO<User>{
 	
 	public UserDAO() {
-		ClientConfig config=new DefaultClientConfig();
-		client = Client.create(config);
-		apiUrl=getApiUrl();
-		resource=client.resource(getBaseUri());
+		
 	}
 
 	@Override
 	public boolean insert(User obj) {
 		boolean success=false;
-		String key=getApiKey();	
-		MultivaluedMap<String, String> parameters = new MultivaluedMapImpl();
+		String key=getApiKey();
 		parameters.add("email", obj.getEmail());
 		parameters.add("firstname", obj.getFirstname());
 		parameters.add("lastname",obj.getLastname());
 		parameters.add("password", obj.getPassword());
-		ClientResponse res=resource
+		clientResponse=resource
 				.path("user")
 				.path("create")
 				.header("key",key)
 				.post(ClientResponse.class,parameters)
 				;
-		int httpResponseCode=res.getStatus();
+		int httpResponseCode=clientResponse.getStatus();
 		if(httpResponseCode == 201) {
 			success=true;
 		}
@@ -63,7 +36,6 @@ public class UserDAO implements DAO<User>{
 
 	@Override
 	public boolean delete(String id) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -76,12 +48,14 @@ public class UserDAO implements DAO<User>{
 	@Override
 	public User find(String email) {
 		String key=getApiKey();
+		parameters.add("email", email);
 		String responseJSON=resource
 				.path("user")
-				.path(email)
+				.queryParams(parameters)
 				.header("key",key)
 				.accept(MediaType.APPLICATION_JSON)
 				.get(String.class);
+		System.out.println(responseJSON);
 		User user=null;
 		try {
 			JSONObject json = new JSONObject(responseJSON);
@@ -101,17 +75,16 @@ public class UserDAO implements DAO<User>{
 
 	public boolean login(String email, String password) {
 		boolean success=false;
-		MultivaluedMap<String,String> paramsPost=new MultivaluedMapImpl();
-		paramsPost.add("email",email);
-		paramsPost.add("password", password);
-		ClientResponse res=resource
+		parameters.add("email",email);
+		parameters.add("password", password);
+		clientResponse=resource
 				.path("user")
 				.path("login")
 				.accept(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class,paramsPost)
-				;
-		String response=res.getEntity(String.class);
-		int status=res.getStatus();
+				.post(ClientResponse.class,parameters);
+		
+		String response=clientResponse.getEntity(String.class);
+		int status=clientResponse.getStatus();
 		JSONObject jsonResponse = new JSONObject(response);
 		if(status==200) {
 			//status ok, on verifie la reponse json

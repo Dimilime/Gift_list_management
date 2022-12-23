@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import be.project.models.User;
 import oracle.jdbc.OracleTypes;
 
-public class UserDAO implements DAO<User>{
-
+public class UserDAO extends DAO<User>{
+	
+	public UserDAO(Connection conn) {
+		super(conn);
+	}
 	@Override
 	public int insert(User obj) {
-		Connection conn=DatabaseConnection.getConnection();
+		
 		int id=0;
 		try {
 			CallableStatement sql = conn.prepareCall("{call insert_user(?,?,?,?,?)}");
@@ -40,25 +43,20 @@ public class UserDAO implements DAO<User>{
 
 	@Override
 	public boolean delete(String id) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public int update(User obj) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public User find(String email) {
-		Connection conn=DatabaseConnection.getConnection();
-		CallableStatement callableStatement = null;
 		Struct struc=null;
-		User user=null;
-		try {
-			String sql="{call getUserByEmail(?,?)}";
-			callableStatement = conn.prepareCall(sql);
+		User user=null;String sql="{call getUserByEmail(?,?)}";
+		try (CallableStatement callableStatement = conn.prepareCall(sql)){
+			
 			callableStatement.setString(1, email);
 			callableStatement.registerOutParameter(2, OracleTypes.STRUCT, "USER_OBJECT");
 			callableStatement.execute();
@@ -72,42 +70,42 @@ public class UserDAO implements DAO<User>{
 				user = new User(userId, firstname, lastname, email, null);
 			}
 		
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		finally {
-			try {
-				conn.close();
-			}catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}
-		}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+//		finally {
+//			try {
+//				conn.close();
+//			}catch (SQLException e) {
+//				System.out.println(e.getMessage());
+//			}
+//		}
 		return user;
 	}
 
 	@Override
 	public ArrayList<User> findAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	public boolean login(String email, String pwd) {
-		Connection conn=DatabaseConnection.getConnection();
 		String hash_password_from_db = null; 
 		String hash_password="";
-		try {
-		      CallableStatement callStmt = conn.prepareCall("{call select_user_password(?,?)}");
+		try(CallableStatement callStmt = conn.prepareCall("{call select_user_password(?,?)}")) {
+		      
 		      callStmt.setString(1, email);
 		      callStmt.registerOutParameter(2, java.sql.Types.VARCHAR);
 		      callStmt.execute();
 		      hash_password_from_db = callStmt.getString(2);
 		      if(hash_password_from_db != null) {
-		    	  CallableStatement sql = conn.prepareCall("{call hash_password(?,?)}");
-		    	  sql.setString(1, pwd);
-		    	  sql.registerOutParameter(2, java.sql.Types.VARCHAR);
-		    	  sql.execute();
-		    	  hash_password = sql.getString(2);
-		    	  sql.close();
+		    	  try(CallableStatement sql = conn.prepareCall("{call hash_password(?,?)}")){
+						sql.setString(1, pwd);
+						sql.registerOutParameter(2, java.sql.Types.VARCHAR);
+						sql.execute();
+						hash_password = sql.getString(2);
+						sql.close();
+		    	  }
+		    	  
 		      }
 			if(hash_password.equals(hash_password_from_db)) {
 				return true;
@@ -115,14 +113,15 @@ public class UserDAO implements DAO<User>{
 		} catch (Exception e) {
 			System.out.println("Erreur dans UserDAO de l'api -> Login " + e.getMessage());
 		}
-		finally {
-			try {
-				conn.close();
-			}catch (SQLException e) {
-				System.out.println("Erreur dans UserDAO de l'api -> Login " + e.getMessage());
-			}
-		}
+//		finally {
+//			try {
+//				conn.close();
+//			}catch (SQLException e) {
+//				System.out.println("Erreur dans UserDAO de l'api -> Login " + e.getMessage());
+//			}
+//		}
 		return false;
 	}
+	
 
 }

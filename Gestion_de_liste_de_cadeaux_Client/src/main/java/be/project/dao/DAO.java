@@ -1,24 +1,51 @@
 package be.project.dao;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
 
-public interface DAO<T> {
-	public boolean insert(T obj);
-	
-	public boolean delete(String id);
-	
-	public boolean update(T obj);
-	
-	public T find(String id);
-	
-	public ArrayList<T> findAll();
-	
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
-	default String getApiUrl() {
+public abstract class DAO<T> {
+	
+	public abstract boolean insert(T obj);
+	
+	public abstract boolean delete(String id);
+	
+	public abstract boolean update(T obj);
+	
+	public abstract T find(String id);
+	
+	public abstract ArrayList<T> findAll();
+	
+	protected static  String apiUrl;
+	protected Client client;
+	protected WebResource resource;
+	protected MultivaluedMap<String, String> parameters;
+	protected ClientResponse clientResponse;
+	private static URI getBaseUri() {
+		return UriBuilder.fromUri(apiUrl).build();
+	}
+	
+	public DAO() {
+		ClientConfig config=new DefaultClientConfig();
+		client = Client.create(config);
+		apiUrl=getApiUrl();
+		resource=client.resource(getBaseUri());
+		parameters = new MultivaluedMapImpl();
+	}
+
+	private String getApiUrl() {
 		Context ctx;
 		String api="";
 		try {
@@ -31,7 +58,7 @@ public interface DAO<T> {
 		return api;
 	}
 	
-	default String getApiKey() {
+	protected String getApiKey() {
 		Context ctx;
 		try {
 			ctx = new InitialContext();

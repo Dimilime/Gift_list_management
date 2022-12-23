@@ -1,38 +1,29 @@
 package be.project.dao;
 
-import java.net.URI;
 import java.util.ArrayList;
 
-import javax.ws.rs.core.UriBuilder;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-
+import com.sun.jersey.api.client.ClientResponse;
 import be.project.javabeans.GiftList;
 
-public class GiftListDAO implements DAO<GiftList>{
+public class GiftListDAO extends DAO<GiftList>{
 	
-	private static  String apiUrl;
-	private Client client;
-	private WebResource resource;
-	
-	private static URI getBaseUri() {
-		return UriBuilder.fromUri(apiUrl).build();
-	}
-	
+
 	public GiftListDAO() {
-		ClientConfig config=new DefaultClientConfig();
-		client = Client.create(config);
-		apiUrl=getApiUrl();
-		resource=client.resource(getBaseUri());
+		
 	}
 
 	@Override
 	public boolean insert(GiftList obj) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean success=false;
+		parameters.add("occasion", obj.getOccasion());
+		clientResponse=resource
+				.path("giftList")
+				.post(ClientResponse.class,parameters);
+		int httpResponseCode=clientResponse.getStatus();
+		if(httpResponseCode == 201) {
+			success=true;
+		}
+		return success;
 	}
 
 	@Override

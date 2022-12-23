@@ -1,12 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-    <%@ include file="base.jsp" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Page de connexion</title>
-</head>
-<body>   
+<jsp:include page="head.jsp">
+	<jsp:param value="Page de connexion" name="title"/>
+</jsp:include>
+<body>
    	<div class="container" >
 		<div class="row justify-content-center">
 		    <div class="text-center">
@@ -37,7 +37,7 @@
 		  	<button type="submit" class="btn btn-primary" >Se connecter</button>
 		  </div>
 		    <div class="text-center">
-		  	<a href="<%=str%>/signup" class="btn btn-secondary">S'inscrire</a>
+		  	<a href="./signup" class="btn btn-secondary">S'inscrire</a>
 		  </div>
 		</form>
 	</div>

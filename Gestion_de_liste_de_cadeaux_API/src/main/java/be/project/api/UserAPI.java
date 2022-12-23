@@ -17,14 +17,10 @@ import be.project.models.User;
 @Path("/user")
 public class UserAPI extends API {
 	
-	public UserAPI() {
-		// TODO Auto-generated constructor stub
-	}
-	
 	@GET
 	@Path("{email}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getPoliceman(@PathParam("email") String email,
+	public Response getUser(@PathParam("email") String email,
 			@HeaderParam("key") String key) {
 		String apiKey=getApiKey();
 		if(key!=null) {

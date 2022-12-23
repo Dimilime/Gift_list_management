@@ -2,35 +2,46 @@ package be.project.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 public class DatabaseConnection {
-	public Connection connection;
+	private static Connection instance = null;
 
-	public DatabaseConnection() {
-		
-	}
-
-	public static Connection getConnection(){
-		Connection conn=null;
-		try{ 
-			Context ctx = new InitialContext();
-		    Context env = (Context) ctx.lookup("java:comp/env");
-		    final String connectionString = (String) env.lookup("connectionString");
-		    final String username = (String) env.lookup("dbUser");
-		    final String password = (String) env.lookup("dbUserPassword");
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn=DriverManager.getConnection(
-					connectionString,
-					username,
-					password);
-		}
-		catch (Exception ex) {
+	private DatabaseConnection() {
+		Context ctx = null;
+		Context env = null;
+		String connectionString = null;
+		String username = null;
+		String password = null;
+		try {
+			ctx = new InitialContext();
+			env = (Context) ctx.lookup("java:comp/env");
+			connectionString = (String) env.lookup("connectionString");
+			username = (String) env.lookup("dbUser");
+			password = (String) env.lookup("dbUserPassword");
 			
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			instance=DriverManager.getConnection(connectionString,username,password);
+			if(instance == null)
+				System.out.println("La base de donnée est inaccessible");
+		} catch (NamingException e) {
+			e.printStackTrace();
 		}
-		return conn;
+	    catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static Connection getInstance(){
+		if(instance == null)
+			new DatabaseConnection();
+		return instance;
 	}
 
 }

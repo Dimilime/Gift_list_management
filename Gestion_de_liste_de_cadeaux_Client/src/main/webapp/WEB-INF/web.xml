@@ -1,77 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
-  <display-name>Gestion_de_liste_de_cadeaux_Client</display-name>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-  </welcome-file-list>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+	id="WebApp_ID" version="4.0">
+	<display-name>Gestion_de_liste_de_cadeaux_Client</display-name>
+	<welcome-file-list>
+		<welcome-file>authentication.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<!-- FILTERS -->
+	
+	<filter>
+		<filter-name>UnauthenticatedFilter</filter-name>
+		<filter-class>be.project.filters.UnauthenticatedFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>AuthenticationFilter</filter-name>
+		<filter-class>be.project.filters.AuthenticationFilter</filter-class>
+	</filter>
+	
+	<!-- FILTER MAPPING -->
+	
+	<filter-mapping>
+		<filter-name>UnauthenticatedFilter</filter-name>
+		<servlet-name>Authentication</servlet-name>
+		<servlet-name>SignUp</servlet-name>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<servlet-name>Home</servlet-name>
+		<servlet-name>Logout</servlet-name>
+		<servlet-name>AddGiftList</servlet-name>
+		<servlet-name>AddGift</servlet-name>
+	</filter-mapping>
+	
+	<!-- CONTEXT PARAMS -->
+	<context-param>
+		<param-name>apiUrl</param-name>
+		<param-value>http://localhost:8080/Gestion_de_liste_de_cadeaux_API/api</param-value>
+	</context-param>
 
-  
-    <!-- CONTEXT PARAMS -->
-  <context-param>
-  	<param-name>apiUrl</param-name>
-  	<param-value>http://localhost:8080/Gestion_de_liste_de_cadeaux_API/api</param-value>
-  </context-param>
-  
-   <!-- ENVIRONNEMENT ENTRIES -->
-  <env-entry> 
-    <env-entry-name>apiUrl</env-entry-name>
-    <env-entry-type>java.lang.String</env-entry-type>
-    <env-entry-value>http://localhost:8080/Gestion_de_liste_de_cadeaux_API/api</env-entry-value> 
- </env-entry>
- <env-entry> 
-    <env-entry-name>apiKey</env-entry-name>
-    <env-entry-type>java.lang.String</env-entry-type>
-    <env-entry-value>B61UGnAzniOU1NZc5jqZgC17M838GB1MczxyhR7eTx4oPDm5YSCjYklsN98wkpnU6dCDXf4QZ29xbTsFIy9F5ISeDZJpXSgVHukfNRsc6dUTmi2op0WVlSmsebga4jiX</env-entry-value> 
- </env-entry>
-  
-	 
-  <!-- SERVLETS -->
-  <servlet>
-  	<servlet-name>Authentication</servlet-name>
-  	<servlet-class>be.project.servlets.AuthenticationServlet</servlet-class>
-  </servlet>
-   <servlet>
-  	<servlet-name>Logout</servlet-name>
-  	<servlet-class>be.project.servlets.LogoutServlet</servlet-class>
-  </servlet>
-  <servlet>
-  	<servlet-name>SignUp</servlet-name>
-  	<servlet-class>be.project.servlets.SignUpServlet</servlet-class>
-  </servlet>
-  <servlet>
-  	<servlet-name>Home</servlet-name>
-  	<servlet-class>be.project.servlets.Home</servlet-class>
-  </servlet>
-  
-   <!-- MAPPING SERVLET -->
-  <servlet-mapping>
-  	<servlet-name>Authentication</servlet-name>
-	  	<url-pattern>/connexion</url-pattern>
-	  	<url-pattern>/authentication</url-pattern>
-	  	<url-pattern>/login</url-pattern>
-  </servlet-mapping>
-   <servlet-mapping>
-	 <servlet-name>Logout</servlet-name>
-  		<url-pattern>/logout</url-pattern>
-  </servlet-mapping>
-  
-  <servlet-mapping>
-  	<servlet-name>SignUp</servlet-name>
-	  	<url-pattern>/signup</url-pattern>
-	  	<url-pattern>/sinscrire</url-pattern>
-	  	<url-pattern>/inscription</url-pattern>
-  </servlet-mapping>
-   <servlet-mapping>
-  	<servlet-name>Home</servlet-name>
-	  	<url-pattern>/home</url-pattern>
-	  	<url-pattern>/hub</url-pattern>
-	  	<url-pattern>/accueil</url-pattern>
-	  	<url-pattern>/</url-pattern>
-  </servlet-mapping>
+	<!-- ENVIRONNEMENT ENTRIES -->
+	<env-entry>
+		<env-entry-name>apiUrl</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>http://localhost:8080/Gestion_de_liste_de_cadeaux_API/api</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<env-entry-name>apiKey</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>B61UGnAzniOU1NZc5jqZgC17M838GB1MczxyhR7eTx4oPDm5YSCjYklsN98wkpnU6dCDXf4QZ29xbTsFIy9F5ISeDZJpXSgVHukfNRsc6dUTmi2op0WVlSmsebga4jiX</env-entry-value>
+	</env-entry>
+
+
+	<!-- SERVLETS -->
+	<servlet>
+		<servlet-name>Authentication</servlet-name>
+		<servlet-class>be.project.servlets.AuthenticationServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>Logout</servlet-name>
+		<servlet-class>be.project.servlets.LogoutServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>SignUp</servlet-name>
+		<servlet-class>be.project.servlets.SignUpServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>Home</servlet-name>
+		<servlet-class>be.project.servlets.Home</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>AddGiftList</servlet-name>
+		<servlet-class>be.project.servlets.AddGiftList</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>AddGift</servlet-name>
+		<servlet-class>be.project.servlets.AddGift</servlet-class>
+	</servlet>
+
+	<!-- MAPPING SERVLET -->
+	<servlet-mapping>
+		<servlet-name>Authentication</servlet-name>
+		<url-pattern>/connexion</url-pattern>
+		<url-pattern>/authentication</url-pattern>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Logout</servlet-name>
+		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SignUp</servlet-name>
+		<url-pattern>/signup</url-pattern>
+		<url-pattern>/sinscrire</url-pattern>
+		<url-pattern>/inscription</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Home</servlet-name>
+		<url-pattern>/home</url-pattern>
+		<url-pattern>/hub</url-pattern>
+		<url-pattern>/accueil</url-pattern>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>AddGiftList</servlet-name>
+		<url-pattern>/addList</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AddGift</servlet-name>
+		<url-pattern>/addGift</url-pattern>
+	</servlet-mapping>
 
 </web-app>

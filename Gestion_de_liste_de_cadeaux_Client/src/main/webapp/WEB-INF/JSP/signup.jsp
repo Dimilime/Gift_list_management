@@ -1,12 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-    <%@ include file="base.jsp" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Page d'inscription</title>
-</head>
+<jsp:include page="head.jsp">
+	<jsp:param value="Page d'inscription" name="title"/>
+</jsp:include>
 <body>
 	<div class="container" >
 		<div class="row justify-content-center">
@@ -26,8 +24,8 @@
 			<div id="serialNumber" class="form-text" class="invalid-feedback">Exemple : example@hotmail.com</div>		 
 		  </div>
 		     <div class="mb-3">
-		    <label for="inputfirstname" class="form-label">Prénom</label>
-		    <input type="text" class="form-control" id="inputfirstname" name="firstname" placeholder="Entrez prénom"  required>	 
+		    <label for="inputfirstname" class="form-label">PrÃ©nom</label>
+		    <input type="text" class="form-control" id="inputfirstname" name="firstname" placeholder="Entrez prÃ©nom"  required>	 
 		  </div>
 		   <div class="mb-3">
 		    <label for="inputLastname" class="form-label">Nom</label>
@@ -44,7 +42,7 @@
 		  	<button type="submit" class="btn btn-primary" >S'inscrire</button>
 		  </div>
 		    <div class="text-center">
-		  	<a href="<%=str%>/connexion" class="btn btn-secondary">Se connecter</a>
+		  	<a href="./connexion" class="btn btn-secondary">Se connecter</a>
 		  </div>
 		</form>
 	</div>

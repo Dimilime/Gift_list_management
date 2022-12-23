@@ -3,3 +3,8 @@
 .justify-content-center{
     margin-top: 20px
 }
+
+h1{
+	background-color: red;
+	text-align: center;
+}

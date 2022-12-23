@@ -1,16 +1,23 @@
 package be.project.dao;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
-public interface DAO<T> {
+public abstract class DAO<T> {
+	
+	protected Connection conn;
+	
+	public DAO(Connection connection) {
+		conn= connection;
+	}
 
-	public int insert(T obj);
+	public abstract int insert(T obj);
 	
-	public boolean delete(String id);
+	public abstract boolean delete(String id);
 	
-	public int update(T obj);
+	public abstract int update(T obj);
 	
-	public T find(String id);
+	public abstract T find(String id);
 	
-	public ArrayList<T> findAll();
+	public abstract ArrayList<T> findAll();
 }

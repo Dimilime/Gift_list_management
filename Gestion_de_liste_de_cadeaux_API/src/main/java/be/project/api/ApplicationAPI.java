@@ -7,7 +7,6 @@ import javax.ws.rs.core.Application;
 public class ApplicationAPI extends Application{
 	
 	public ApplicationAPI() {
-		// TODO Auto-generated constructor stub
 	}
 
 }

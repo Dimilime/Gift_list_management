@@ -22,7 +22,7 @@ public class Home extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		User user = null;
 		if(session != null )
-			user = (User)session.getAttribute("user");
+			user = (User)session.getAttribute("connectedUser");
 		request.setAttribute("userList", user != null ? user.getGiftList(): "no user");
 		request.getRequestDispatcher("/WEB-INF/JSP/home.jsp").forward(request, response);
 
