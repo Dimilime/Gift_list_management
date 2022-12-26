@@ -16,6 +16,7 @@ public class User implements Serializable{
 	private String email;
 	private String password;
 	private ArrayList<GiftList> giftList;
+	private ArrayList<GiftList> invitations;
 	private ArrayList<Notification> notifications;
 	private ArrayList<Participation> participations;
 	
@@ -99,6 +100,18 @@ public class User implements Serializable{
 		this.giftList = giftList;
 	}
 
+	/**
+	 * @return the invitations
+	 */
+	public ArrayList<GiftList> getInvitations() {
+		return invitations;
+	}
+	/**
+	 * @param invitations the invitations to set
+	 */
+	public void setInvitations(ArrayList<GiftList> invitations) {
+		this.invitations = invitations;
+	}
 	public ArrayList<Notification> getNotifications() {
 		return notifications;
 	}
@@ -119,8 +132,11 @@ public class User implements Serializable{
 		return ((UserDAO)userDAO).login(email, password);
 	}
 
-	public static User getUser(String email) {
-		return userDAO.find(email);
+	public static User getUser(int id) {
+		return userDAO.find(id);
+	}
+	public static User getUserByEmail(String email) {
+		return ((UserDAO)userDAO).findByEmail(email);
 	}
 	
 	@Override

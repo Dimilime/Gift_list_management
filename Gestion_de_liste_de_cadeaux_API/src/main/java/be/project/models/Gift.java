@@ -1,7 +1,11 @@
 package be.project.models;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.util.ArrayList;
+
+import be.project.dao.AbstractDAOFactory;
+import be.project.dao.DAO;
 
 public class Gift implements Serializable{
 
@@ -14,31 +18,35 @@ public class Gift implements Serializable{
 	private double averagePrice;
 	private boolean reserved;
 	private String link;
-	private String Image;
+	private Blob image;
 	private ArrayList<Participation> participations;
+	private GiftList giftList;
+	
+	private static AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	private static DAO<Gift> giftDAO = adf.getGiftDAO();
 	
 	public Gift() {
 	}
 	
-	public Gift(int priorityLevel, String name, String description, double averagePrice, boolean reserved, String link,
-			String image) {
-		super();
+	public Gift(int giftId, int priorityLevel, String name, String description, double averagePrice, String reserved,String link,
+			Blob image, GiftList giftList) {
+		this.giftId =giftId;
 		this.priorityLevel = priorityLevel;
 		this.name = name;
 		this.description = description;
 		this.averagePrice = averagePrice;
-		this.reserved = reserved;
+		this.setReserved(reserved);
 		this.link = link;
-		Image = image;
-		this.setParticipations(new ArrayList<Participation>());
+		this.image = image;
+		this.participations= new ArrayList<Participation>();
+		this.giftList = giftList;
 	}
 	
-	public Gift(int priorityLevel, String name, String description, double averagePrice, boolean reserved, String link,
-			String image, ArrayList<Participation> participations) {
-		this(priorityLevel,name, description, averagePrice, reserved, link, image);
+	public Gift(int giftId, int priorityLevel, String name, String description, double averagePrice, String reserved, String link,
+			GiftList giftList,Blob image, ArrayList<Participation> participations) {
+		this(giftId,priorityLevel,name, description, averagePrice,reserved, link, image,giftList);
 		this.setParticipations(participations);
 	}
-
 
 	public int getGiftId() {
 		return giftId;
@@ -84,8 +92,8 @@ public class Gift implements Serializable{
 		return reserved;
 	}
 
-	public void setReserved(boolean reserved) {
-		this.reserved = reserved;
+	public void setReserved(String reserved) {
+		this.reserved = reserved == "Y" ? true : false;
 	}
 
 	public String getLink() {
@@ -96,12 +104,12 @@ public class Gift implements Serializable{
 		this.link = link;
 	}
 
-	public String getImage() {
-		return Image;
+	public Blob getImage() {
+		return image;
 	}
 
-	public void setImage(String image) {
-		Image = image;
+	public void setImage(Blob image) {
+		this.image = image;
 	}
 
 	public ArrayList<Participation> getParticipations() {
@@ -110,6 +118,26 @@ public class Gift implements Serializable{
 
 	public void setParticipations(ArrayList<Participation> participations) {
 		this.participations = participations;
+	}
+
+	public GiftList getGiftList() {
+		return giftList;
+	}
+
+	public void setGiftList(GiftList giftList) {
+		this.giftList = giftList;
+	}
+	
+	public int create() {
+		return giftDAO.insert(this);
+	}
+	
+	public String getReservedAsString() {
+		return reserved ? "Y" : "N";
+	}
+	
+	public static Gift getGift(int id) {
+		return giftDAO.find(id);
 	}
 	
 

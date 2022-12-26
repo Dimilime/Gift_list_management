@@ -3,6 +3,10 @@ package be.project.javabeans;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import be.project.dao.AbstractDAOFactory;
+import be.project.dao.DAO;
+import be.project.javabeans.Gift;
+
 public class Gift implements Serializable{
 
 	private static final long serialVersionUID = -6171468954549901451L;
@@ -14,28 +18,33 @@ public class Gift implements Serializable{
 	private double averagePrice;
 	private boolean reserved;
 	private String link;
-	private String Image;
+	private String image;
+	private GiftList giftList;
 	private ArrayList<Participation> participations;
+	
+	private static AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	private static DAO<Gift> giftDAO = adf.getGiftDAO();
 	
 	public Gift() {
 	}
 	
-	public Gift(int priorityLevel, String name, String description, double averagePrice, boolean reserved, String link,
-			String image) {
-		super();
+	public Gift(int giftId, int priorityLevel, String name, String description, double averagePrice, String link,
+			String image, GiftList giftList) {
+		this.giftId =giftId;
 		this.priorityLevel = priorityLevel;
 		this.name = name;
 		this.description = description;
 		this.averagePrice = averagePrice;
-		this.reserved = reserved;
+		this.reserved = false;
 		this.link = link;
-		Image = image;
-		this.setParticipations(new ArrayList<Participation>());
+		this.image = image;
+		this.participations= new ArrayList<Participation>();
+		this.setGiftList(giftList);
 	}
 	
-	public Gift(int priorityLevel, String name, String description, double averagePrice, boolean reserved, String link,
-			String image, ArrayList<Participation> participations) {
-		this(priorityLevel,name, description, averagePrice, reserved, link, image);
+	public Gift(int giftId, int priorityLevel, String name, String description, double averagePrice, String link,
+			GiftList giftList,String image, ArrayList<Participation> participations) {
+		this(giftId,priorityLevel,name, description, averagePrice, link, image,giftList);
 		this.setParticipations(participations);
 	}
 
@@ -97,11 +106,25 @@ public class Gift implements Serializable{
 	}
 
 	public String getImage() {
-		return Image;
+		return image;
 	}
 
 	public void setImage(String image) {
-		Image = image;
+		image = image;
+	}
+
+	/**
+	 * @return the giftList
+	 */
+	public GiftList getGiftList() {
+		return giftList;
+	}
+
+	/**
+	 * @param giftList the giftList to set
+	 */
+	public void setGiftList(GiftList giftList) {
+		this.giftList = giftList;
 	}
 
 	public ArrayList<Participation> getParticipations() {

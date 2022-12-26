@@ -27,7 +27,7 @@ public class GiftListDAO extends DAO<GiftList>{
 	}
 
 	@Override
-	public boolean delete(String id) {
+	public boolean delete(int id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -39,7 +39,7 @@ public class GiftListDAO extends DAO<GiftList>{
 	}
 
 	@Override
-	public GiftList find(String id) {
+	public GiftList find(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

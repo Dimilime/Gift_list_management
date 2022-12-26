@@ -15,7 +15,7 @@ public class GiftDAO extends DAO<Gift> {
 	}
 
 	@Override
-	public boolean delete(String id) {
+	public boolean delete(int id) {
 		return false;
 	}
 
@@ -25,7 +25,7 @@ public class GiftDAO extends DAO<Gift> {
 	}
 
 	@Override
-	public Gift find(String id) {
+	public Gift find(int id) {
 		return null;
 	}
 

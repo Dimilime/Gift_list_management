@@ -40,11 +40,8 @@ public class User implements Serializable{
 		this.password=password;
 	}
 	public User(int userId, String firstname, String lastname, String email, String password,ArrayList<GiftList> giftList ,ArrayList<Notification> notifications, ArrayList<Participation> participations ) {
+		this(firstname,lastname,email,password);
 		this.userId = userId;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.email = email;
-		this.password = password;
 		this.giftList= giftList;
 		this.notifications=notifications;
 		this.participations= participations;
@@ -118,8 +115,11 @@ public class User implements Serializable{
 		return ((UserDAO)userDAO).login(email, password);
 	}
 
-	public static User getUser(String email) {
-		return userDAO.find(email);
+	public static User getUserByEmail(String email) {
+		return ((UserDAO)userDAO).findByEmail(email);
+	}
+	public static User getUser(int id) {
+		return userDAO.find(id);
 	}
 
 	public static User getUserByJSONObject(JSONObject json)throws JsonParseException, JsonMappingException, JSONException, IOException {

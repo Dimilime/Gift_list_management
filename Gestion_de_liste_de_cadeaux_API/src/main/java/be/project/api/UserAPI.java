@@ -22,10 +22,9 @@ public class UserAPI extends API {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(@PathParam("email") String email,
 			@HeaderParam("key") String key) {
-		String apiKey=getApiKey();
 		if(key!=null) {
 			if(key.equals(apiKey)) {
-				User user=User.getUser(email);
+				User user=User.getUserByEmail(email);
 				return Response.status(Status.OK).entity(user).build();
 			}
 		}
@@ -42,7 +41,6 @@ public class UserAPI extends API {
 		boolean success= User.login(email, password);
 		if(success) {
 			responseJSON="{\"connected\":\"true\"}";
-			String apiKey=getApiKey();
 			return Response.status(Status.OK)
 					.header("api-key", apiKey)
 					.entity(responseJSON).build();
@@ -52,9 +50,6 @@ public class UserAPI extends API {
 	}
 	
 	@POST
-	@Path("/create")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response createUser(
 			@FormParam("email") String email,
 			@FormParam("firstname") String firstname,
@@ -63,7 +58,6 @@ public class UserAPI extends API {
 			@HeaderParam("key") String key)
 	{
 		User user=null;
-		String apiKey=getApiKey();
 		if(key.equals(apiKey)) {
 			try {
 				user = new User( firstname, lastname, email, password);
@@ -71,9 +65,10 @@ public class UserAPI extends API {
 				if(userId != 0) {
 					return Response
 							.status(Status.CREATED)
+							.header("Location", "/Gestion_de_liste_de_cadeaux_API/api/user/"+userId)
 							.build();
 				}else {
-					return Response.status(Status.NOT_ACCEPTABLE).build();
+					return Response.status(Status.SERVICE_UNAVAILABLE).build();
 				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());

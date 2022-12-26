@@ -31,6 +31,9 @@
 				<td>
 					<a class="btn btn-secondary" href="./<%=i%>">Modifier</a>
 				</td>
+				<td>
+					<a class="btn btn-secondary" href="./<%=i%>">Partager</a>
+				</td>
 			</tr>
 			<%
 			}

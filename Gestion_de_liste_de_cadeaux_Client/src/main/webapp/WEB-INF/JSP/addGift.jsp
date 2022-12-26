@@ -9,10 +9,10 @@
 	<%@ include file="base.jsp"%>
 	<div class="d-flex justify-content-center"><h1>Ajouter un cadeau </h1></div>
 	<div class="d-flex justify-content-center">
-		<form action="" method="post">
+		<form action="" method="post" enctype="multipart/form-data">
 			<div class="mb-3">
 				<label for="giftName" class="form-label">Nom</label> 
-				<input id="giftName" type="text" class="form-control" name="giftName">
+				<input id="giftName" type="text" class="form-control" name="giftName" required>
 			</div>
 			<div class="mb-3">
 				<label for="description" class="form-label">Description</label> 
@@ -20,7 +20,7 @@
 			</div>
 			<div class="mb-3">
 				<label for="averagePrice" class="form-label">Prix moyen</label> 
-				<input id="averagePrice" type="number" class="form-control" name="averagePrice">
+				<input id="averagePrice" type="number" class="form-control" name="averagePrice" required min=1>
 			</div>
 			<div class="mb-3">
 				<label for="priorityLevel" class="form-label">Priorité</label> 
@@ -35,11 +35,11 @@
 					%>
 
 				</select>
-				<div id="selectHelp" class="form-text">Priorité des envies, 10 est une envie très élevé</div>
+				<div id="selectHelp" class="form-text">Priorité des envies, 10 est une envie très élevée</div>
 			</div>
 			<div class="mb-3">
 				<label for="image" class="form-label">Inserer une image du cadeau</label> 
-				<input type="file" id="image" name="giftImg" accept="image/png, image/jpeg" aria-described="imageHelp">
+				<input type="file" id="image" name="giftImg" accept="image/png, image/jpeg, image/jpg" aria-described="imageHelp">
 				<div id="imageHelp" class="form-text">Facultatif! Si vous avez une image vous pouvez l'inclure</div>
 			</div>
 			<div class="mb-3">

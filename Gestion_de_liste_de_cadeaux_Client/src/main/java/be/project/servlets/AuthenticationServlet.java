@@ -64,7 +64,7 @@ public class AuthenticationServlet extends HttpServlet {
 			try {
 				boolean loginSuccess=User.login(email, password);
 				if(loginSuccess) {
-					User connectedUser=User.getUser(email);
+					User connectedUser=User.getUserByEmail(email);
 					if(connectedUser!=null) {
 						HttpSession session=request.getSession(true);
 						if(!session.isNew()) {

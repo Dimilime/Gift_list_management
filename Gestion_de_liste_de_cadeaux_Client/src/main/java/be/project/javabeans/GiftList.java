@@ -2,25 +2,39 @@ package be.project.javabeans;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
-import be.project.dao.GiftListDAO;
+import be.project.dao.AbstractDAOFactory;
+import be.project.dao.DAO;
 
 public class GiftList implements Serializable{
 
 	private static final long serialVersionUID = 2490091305208028913L;
-	private static GiftListDAO giftListDAO = new GiftListDAO();
+	
+	private static AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	private static DAO<GiftList> giftListDAO = adf.getGiftListDAO();
 	
 	private String occasion;
 	private LocalDate expirationDate;
 	private boolean enabled;
-	private User user;
+	private ArrayList<Gift> gifts;
+	private ArrayList<User> sharedUsers;
+	private User giftListUser;
+	
 	public GiftList() {
 	}
-
-	public GiftList(String occasion, LocalDate expirationDate, boolean enabled) {
+	
+	public GiftList(String occasion, User giftListUser) {
 		this.occasion = occasion;
-		this.expirationDate = expirationDate;
-		this.enabled = enabled;
+		this.enabled = true;
+		this.giftListUser = giftListUser;
+	}
+	
+	public GiftList(String occasion, LocalDate expirationDate, boolean enabled, ArrayList<Gift> gifts, ArrayList<User> sharedUsers,User giftListUser) {
+		this(occasion,giftListUser);
+		this.gifts = gifts;
+		this.sharedUsers = sharedUsers;
+		this.giftListUser = giftListUser;	
 	}
 
 	public String getOccasion() {
@@ -47,15 +61,30 @@ public class GiftList implements Serializable{
 		this.enabled = enabled;
 	}
 
-	public User getUser() {
-		return user;
+	public User getGiftListUser() {
+		return giftListUser;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setGiftListUser(User giftListUser) {
+		this.giftListUser = giftListUser;
 	}
 	
-	
+	public ArrayList<Gift> getGifts() {
+		return gifts;
+	}
+
+	public void setGifts(ArrayList<Gift> gifts) {
+		this.gifts = gifts;
+	}
+
+	public ArrayList<User> getSharedUsers() {
+		return sharedUsers;
+	}
+
+	public void setSharedUsers(ArrayList<User> sharedUsers) {
+		this.sharedUsers = sharedUsers;
+	}
+
 	public boolean create() {
 		return giftListDAO.insert(this);
 	}

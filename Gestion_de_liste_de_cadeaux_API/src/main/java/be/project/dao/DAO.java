@@ -13,11 +13,11 @@ public abstract class DAO<T> {
 
 	public abstract int insert(T obj);
 	
-	public abstract boolean delete(String id);
+	public abstract boolean delete(int id);
 	
 	public abstract int update(T obj);
 	
-	public abstract T find(String id);
+	public abstract T find(int id);
 	
 	public abstract ArrayList<T> findAll();
 }

@@ -18,31 +18,25 @@ public class UserDAO extends DAO<User>{
 	public int insert(User obj) {
 		
 		int id=0;
-		try {
-			CallableStatement sql = conn.prepareCall("{call insert_user(?,?,?,?,?)}");
-			sql.setString(1, obj.getEmail());
-			sql.setString(2, obj.getFirstname());
-			sql.setString(3, obj.getLastname());
-			sql.setString(4, obj.getPassword());
-			sql.registerOutParameter(5, java.sql.Types.INTEGER);
-			sql.executeUpdate();
-			id = sql.getInt(5) ;
-			sql.close();
+		String sql="{call insert_user(?,?,?,?,?)}";
+		try(CallableStatement callableStatement = conn.prepareCall(sql)) {
+			
+			callableStatement.setString(1, obj.getEmail());
+			callableStatement.setString(2, obj.getFirstname());
+			callableStatement.setString(3, obj.getLastname());
+			callableStatement.setString(4, obj.getPassword());
+			callableStatement.registerOutParameter(5, java.sql.Types.INTEGER);
+			callableStatement.executeUpdate();
+			id = callableStatement.getInt(5);
+			
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
-		}
-		finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}
 		}
 		return id;
 	}
 
 	@Override
-	public boolean delete(String id) {
+	public boolean delete(int id) {
 		return false;
 	}
 
@@ -50,11 +44,38 @@ public class UserDAO extends DAO<User>{
 	public int update(User obj) {
 		return 0;
 	}
-
+	
 	@Override
-	public User find(String email) {
+	public User find(int id) {
 		Struct struc=null;
-		User user=null;String sql="{call getUserByEmail(?,?)}";
+		User user=null;
+		String sql="{call getUser(?,?)}";
+		try (CallableStatement callableStatement = conn.prepareCall(sql)){
+			
+			callableStatement.setInt(1, id);
+			callableStatement.registerOutParameter(2, OracleTypes.STRUCT, "USER_OBJECT");
+			callableStatement.execute();
+			
+			struc = (Struct) callableStatement.getObject(2);
+			Object[] objects = struc.getAttributes();
+			if(objects != null) {
+				int userId= Integer.valueOf(objects[0].toString());
+				String firstname=(String)objects[1];
+				String lastname=(String)objects[2];
+				String email=(String)objects[3];
+				user = new User(userId, firstname, lastname, email, null);
+			}
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return user;
+	}
+	public User findByEmail(String email) {
+		Struct struc=null;
+		User user=null;
+		String sql="{call getUserByEmail(?,?)}";
 		try (CallableStatement callableStatement = conn.prepareCall(sql)){
 			
 			callableStatement.setString(1, email);
@@ -72,14 +93,8 @@ public class UserDAO extends DAO<User>{
 		
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} 
-//		finally {
-//			try {
-//				conn.close();
-//			}catch (SQLException e) {
-//				System.out.println(e.getMessage());
-//			}
-//		}
+		}
+
 		return user;
 	}
 
@@ -113,13 +128,6 @@ public class UserDAO extends DAO<User>{
 		} catch (Exception e) {
 			System.out.println("Erreur dans UserDAO de l'api -> Login " + e.getMessage());
 		}
-//		finally {
-//			try {
-//				conn.close();
-//			}catch (SQLException e) {
-//				System.out.println("Erreur dans UserDAO de l'api -> Login " + e.getMessage());
-//			}
-//		}
 		return false;
 	}
 	

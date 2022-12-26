@@ -16,7 +16,7 @@ public class NotificationDAO extends DAO<Notification>{
 	}
 
 	@Override
-	public boolean delete(String id) {
+	public boolean delete(int id) {
 		return false;
 	}
 
@@ -26,7 +26,7 @@ public class NotificationDAO extends DAO<Notification>{
 	}
 
 	@Override
-	public Notification find(String id) {
+	public Notification find(int id) {
 		return null;
 	}
 

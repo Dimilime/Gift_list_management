@@ -20,11 +20,11 @@ public abstract class DAO<T> {
 	
 	public abstract boolean insert(T obj);
 	
-	public abstract boolean delete(String id);
+	public abstract boolean delete(int id);
 	
 	public abstract boolean update(T obj);
 	
-	public abstract T find(String id);
+	public abstract T find(int id);
 	
 	public abstract ArrayList<T> findAll();
 	
@@ -33,6 +33,8 @@ public abstract class DAO<T> {
 	protected WebResource resource;
 	protected MultivaluedMap<String, String> parameters;
 	protected ClientResponse clientResponse;
+	protected String apiKey;
+	
 	private static URI getBaseUri() {
 		return UriBuilder.fromUri(apiUrl).build();
 	}
@@ -43,6 +45,7 @@ public abstract class DAO<T> {
 		apiUrl=getApiUrl();
 		resource=client.resource(getBaseUri());
 		parameters = new MultivaluedMapImpl();
+		apiKey = getApiKey();
 	}
 
 	private String getApiUrl() {

@@ -6,7 +6,10 @@ import javax.naming.NamingException;
 
 public class API{
 	
+	protected String apiKey;
+	
 	public API() {
+		apiKey=getApiKey();
 	}
 	protected static String getApiKey() {
 		Context ctx;

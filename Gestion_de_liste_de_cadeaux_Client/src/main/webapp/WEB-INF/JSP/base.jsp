@@ -4,7 +4,7 @@
 	<div class="collapse navbar-collapse justify-content-between " id="navbarText">
 		<ul class="navbar-nav mr-auto">
 			<li class="nav-item "><a class="nav-link" href="#">Mes
-					participations</a></li>
+					invitations</a></li>
 			<li class="nav-item"><a class="nav-link" href="#">Mes
 					notifications</a></li>
 		</ul>

@@ -1,33 +1,54 @@
 package be.project.models;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import be.project.dao.AbstractDAOFactory;
+import be.project.dao.DAO;
+import be.project.models.GiftList;
 
 public class GiftList implements Serializable{
 
 	private static final long serialVersionUID = 2490091305208028913L;
 	
+	private static AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	private static DAO<GiftList> giftListDAO = adf.getGiftListDAO();
+	
+	private int listId;
 	private String occasion;
 	private LocalDate expirationDate;
 	private boolean enabled;
 	private ArrayList<Gift> gifts;
 	private ArrayList<User> sharedUsers;
-	private User userGiftList;
-
-	public GiftList(String occasion, User userGiftList) {
+	private User giftListUser;
+	private String key;
+	
+	public GiftList(int listId, String occasion , User giftListUser,  String expirationDate, String key, String enabled) {
+		this.listId = listId;
 		this.occasion = occasion;
-		this.enabled = true;
-		this.setUserGiftList(userGiftList);
+		this.setEnabled(enabled);
+		this.key = key;
+		this.setExpirationDate(expirationDate);
+		this.giftListUser = giftListUser;
 	}
 	
-	public GiftList(String occasion, LocalDate expirationDate, boolean enabled, ArrayList<Gift> gifts, ArrayList<User> sharedUsers,User userGiftList) {
-		this.occasion = occasion;
-		this.expirationDate = expirationDate;
-		this.enabled = enabled;
-		this.setGifts(gifts);
-		this.setSharedUsers(sharedUsers);
-		this.setUserGiftList(userGiftList);	
+	
+	public GiftList(int listId, String occasion, String expirationDate, ArrayList<Gift> gifts, ArrayList<User> sharedUsers,
+			User giftListUser, String key, String enabled) {
+		this(listId,occasion,giftListUser, expirationDate, key,enabled);
+		this.gifts = gifts;
+		this.sharedUsers = sharedUsers;
+	}
+
+	public int getListId() {
+		return listId;
+	}
+
+	public void setListId(int listId) {
+		this.listId = listId;
 	}
 
 	public String getOccasion() {
@@ -42,16 +63,26 @@ public class GiftList implements Serializable{
 		return expirationDate;
 	}
 
-	public void setExpirationDate(LocalDate expirationDate) {
-		this.expirationDate = expirationDate;
+	public void setExpirationDate(String expirationDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		LocalDate parsedExpirationDate = null;
+		try {
+		if(expirationDate != null)
+			parsedExpirationDate = LocalDate.parse(expirationDate, formatter);
+		
+		
+		}catch (DateTimeParseException e) {
+			e.printStackTrace();
+		}
+		this.expirationDate = parsedExpirationDate;
 	}
 
 	public boolean isEnabled() {
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+	public void setEnabled(String enabled) {
+		this.enabled = enabled.equals("Y") ? true : false;
 	}
 
 	public ArrayList<Gift> getGifts() {
@@ -70,19 +101,52 @@ public class GiftList implements Serializable{
 		this.sharedUsers = sharedUsers;
 	}
 
-	public User getUserGiftList() {
-		return userGiftList;
+	public User getGiftListUser() {
+		return giftListUser;
 	}
 
-	public void setUserGiftList(User userGiftList) {
-		this.userGiftList = userGiftList;
+	public void setGiftListUser(User giftListUser) {
+		this.giftListUser = giftListUser;
 	}
-
+	
+	/**
+	 * @return the key
+	 */
+	public String getKey() {
+		return key;
+	}
+	/**
+	 * @param key the key to set
+	 */
+	public void setKey(String key) {
+		this.key = key;
+	}
 	public void addGift(Gift gift) {
 		gifts.add(gift);
 	}
 	
+	public int create() {
+		return giftListDAO.insert(this);
+	}
 	
+	public static GiftList getGiftList(int id) {
+		return giftListDAO.find(id);
+	}
+	
+	public Date parseExpirationDateToDate() {
+		try {
+		if(expirationDate != null) 
+			return Date.valueOf(expirationDate);
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String getEnabledAsString() {
+		return enabled ? "Y" : "N";
+	}
 	
 	
 	

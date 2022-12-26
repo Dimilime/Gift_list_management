@@ -16,17 +16,15 @@ public class UserDAO extends DAO<User>{
 	@Override
 	public boolean insert(User obj) {
 		boolean success=false;
-		String key=getApiKey();
 		parameters.add("email", obj.getEmail());
 		parameters.add("firstname", obj.getFirstname());
 		parameters.add("lastname",obj.getLastname());
 		parameters.add("password", obj.getPassword());
 		clientResponse=resource
 				.path("user")
-				.path("create")
-				.header("key",key)
-				.post(ClientResponse.class,parameters)
-				;
+				.header("key",apiKey)
+				.post(ClientResponse.class,parameters);
+		
 		int httpResponseCode=clientResponse.getStatus();
 		if(httpResponseCode == 201) {
 			success=true;
@@ -35,24 +33,25 @@ public class UserDAO extends DAO<User>{
 	}
 
 	@Override
-	public boolean delete(String id) {
+	public boolean delete(int id) {
 		return false;
 	}
 
 	@Override
 	public boolean update(User obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
 	@Override
-	public User find(String email) {
-		String key=getApiKey();
-		parameters.add("email", email);
+	public User find(int id) {
+		return null;
+	}
+	
+	public User findByEmail(String email) {
 		String responseJSON=resource
 				.path("user")
-				.queryParams(parameters)
-				.header("key",key)
+				.path(email)
+				.header("key",apiKey)
 				.accept(MediaType.APPLICATION_JSON)
 				.get(String.class);
 		System.out.println(responseJSON);
@@ -69,7 +68,6 @@ public class UserDAO extends DAO<User>{
 
 	@Override
 	public ArrayList<User> findAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -100,4 +98,6 @@ public class UserDAO extends DAO<User>{
 		}
 		return success;
 	}
+
+	
 }
