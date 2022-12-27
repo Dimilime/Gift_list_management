@@ -14,8 +14,8 @@ public class UserDAO extends DAO<User>{
 	}
 
 	@Override
-	public boolean insert(User obj) {
-		boolean success=false;
+	public int insert(User obj) {
+		
 		parameters.add("email", obj.getEmail());
 		parameters.add("firstname", obj.getFirstname());
 		parameters.add("lastname",obj.getLastname());
@@ -26,10 +26,8 @@ public class UserDAO extends DAO<User>{
 				.post(ClientResponse.class,parameters);
 		
 		int httpResponseCode=clientResponse.getStatus();
-		if(httpResponseCode == 201) {
-			success=true;
-		}
-		return success;
+		
+		return httpResponseCode == 201 ? 1 : 0;
 	}
 
 	@Override

@@ -8,7 +8,8 @@
 <body>
 	<%@ include file="base.jsp"%>
 	<div class="d-flex justify-content-center"><h1>Ajouter un cadeau </h1></div>
-	<div class="d-flex justify-content-center">
+	<div id="addGift" class="d-flex justify-content-center" style="display:none;">
+		
 		<form action="" method="post" enctype="multipart/form-data">
 			<div class="mb-3">
 				<label for="giftName" class="form-label">Nom</label> 
@@ -52,6 +53,11 @@
 			</div>
 			
 		</form>
+	</div>
+	<div id="addAnotherGift" class="d-flex justify-content-center" >
+		<p>Ajouter un autre cadeau ?</p>
+		<button type="submit">Oui</button>
+		<button type="submit">Non</button>
 	</div>
 </body>
 </html>

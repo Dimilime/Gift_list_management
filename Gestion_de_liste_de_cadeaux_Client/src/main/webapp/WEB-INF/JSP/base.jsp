@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg bg-light">
-	<a class="navbar-brand" href="./"><img src="ressources/gift32.png"
+	<a class="navbar-brand" href="./"><img src="./resources/imgs/gift32.png"
 		width="32" height="32"/>Liste de cadeaux</a>
 	<div class="collapse navbar-collapse justify-content-between " id="navbarText">
 		<ul class="navbar-nav mr-auto">

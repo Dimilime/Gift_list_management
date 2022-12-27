@@ -41,7 +41,7 @@ public class GiftListAPI extends API{
 			if(giftListId != 0) {
 				return Response
 						.status(Status.CREATED)
-						.header("Location","/Gestion_de_liste_de_cadeaux_API/api/giftList/"+giftListId)
+						.header("Location","/Gestion_de_liste_de_cadeaux_API/api/giftList/"+giftListId).header("idCreated", giftListId)
 						.build();
 			}
 			return Response.status(Status.SERVICE_UNAVAILABLE).build();

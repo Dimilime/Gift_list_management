@@ -18,7 +18,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public abstract class DAO<T> {
 	
-	public abstract boolean insert(T obj);
+	public abstract int insert(T obj);
 	
 	public abstract boolean delete(int id);
 	

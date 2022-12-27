@@ -110,19 +110,13 @@ public class Gift implements Serializable{
 	}
 
 	public void setImage(String image) {
-		image = image;
+		this.image = image;
 	}
 
-	/**
-	 * @return the giftList
-	 */
 	public GiftList getGiftList() {
 		return giftList;
 	}
 
-	/**
-	 * @param giftList the giftList to set
-	 */
 	public void setGiftList(GiftList giftList) {
 		this.giftList = giftList;
 	}
@@ -134,5 +128,9 @@ public class Gift implements Serializable{
 	public void setParticipations(ArrayList<Participation> participations) {
 		this.participations = participations;
 	}	
+	
+	public void create() {
+		giftDAO.insert(this);
+	}
 
 }

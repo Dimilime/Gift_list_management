@@ -2,6 +2,8 @@ package be.project.javabeans;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import be.project.dao.AbstractDAOFactory;
@@ -14,28 +16,40 @@ public class GiftList implements Serializable{
 	private static AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
 	private static DAO<GiftList> giftListDAO = adf.getGiftListDAO();
 	
+	private int listId;
 	private String occasion;
 	private LocalDate expirationDate;
 	private boolean enabled;
 	private ArrayList<Gift> gifts;
 	private ArrayList<User> sharedUsers;
 	private User giftListUser;
+	private String key;
 	
-	public GiftList() {
-	}
-	
-	public GiftList(String occasion, User giftListUser) {
+	public GiftList(int listId, String occasion , User giftListUser,  String expirationDate, String key, String enabled) {
+		this.setListId(listId);
 		this.occasion = occasion;
-		this.enabled = true;
+		this.setEnabled(enabled);
+		this.setKey(key);
+		this.setExpirationDate(expirationDate);
 		this.giftListUser = giftListUser;
 	}
 	
-	public GiftList(String occasion, LocalDate expirationDate, boolean enabled, ArrayList<Gift> gifts, ArrayList<User> sharedUsers,User giftListUser) {
-		this(occasion,giftListUser);
+	
+	public GiftList(int listId, String occasion, String expirationDate, ArrayList<Gift> gifts, ArrayList<User> sharedUsers,
+			User giftListUser, String key, String enabled) {
+		this(listId,occasion,giftListUser, expirationDate, key,enabled);
 		this.gifts = gifts;
 		this.sharedUsers = sharedUsers;
-		this.giftListUser = giftListUser;	
 	}
+
+	public int getListId() {
+		return listId;
+	}
+
+	public void setListId(int listId) {
+		this.listId = listId;
+	}
+
 
 	public String getOccasion() {
 		return occasion;
@@ -49,16 +63,26 @@ public class GiftList implements Serializable{
 		return expirationDate;
 	}
 
-	public void setExpirationDate(LocalDate expirationDate) {
-		this.expirationDate = expirationDate;
+	public void setExpirationDate(String expirationDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		LocalDate parsedExpirationDate = null;
+		try {
+		if(expirationDate != null)
+			parsedExpirationDate = LocalDate.parse(expirationDate, formatter);
+		
+		
+		}catch (DateTimeParseException e) {
+			e.printStackTrace();
+		}
+		this.expirationDate = parsedExpirationDate;
 	}
 
 	public boolean isEnabled() {
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+	public void setEnabled(String enabled) {
+		this.enabled = enabled.equals("Y") ? true : false;
 	}
 
 	public User getGiftListUser() {
@@ -85,7 +109,26 @@ public class GiftList implements Serializable{
 		this.sharedUsers = sharedUsers;
 	}
 
-	public boolean create() {
+
+	public String getKey() {
+		return key;
+	}
+
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+	
+	public void addGift(Gift g) {
+		gifts.add(g);
+	}
+	
+	public void removeGift(Gift g) {
+		gifts.remove(g);
+	}
+	
+
+	public int create() {
 		return giftListDAO.insert(this);
 	}
 	

@@ -82,12 +82,17 @@
 
 	<!-- MAPPING SERVLET -->
 	<servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/resources/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
 		<servlet-name>Authentication</servlet-name>
 		<url-pattern>/connexion</url-pattern>
 		<url-pattern>/authentication</url-pattern>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
-
+	
 	<servlet-mapping>
 		<servlet-name>Logout</servlet-name>
 		<url-pattern>/logout</url-pattern>
@@ -103,7 +108,6 @@
 	<servlet-mapping>
 		<servlet-name>Home</servlet-name>
 		<url-pattern>/home</url-pattern>
-		<url-pattern>/hub</url-pattern>
 		<url-pattern>/accueil</url-pattern>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>

@@ -13,17 +13,18 @@ public class GiftListDAO extends DAO<GiftList>{
 	}
 
 	@Override
-	public boolean insert(GiftList obj) {
-		boolean success=false;
+	public int insert(GiftList obj) {
+		
 		parameters.add("occasion", obj.getOccasion());
+		parameters.add("expirationDate", obj.getExpirationDate().toString());
+		parameters.add("userId", String.valueOf(obj.getGiftListUser().getUserId()));
 		clientResponse=resource
 				.path("giftList")
+				.header("key",apiKey)
 				.post(ClientResponse.class,parameters);
-		int httpResponseCode=clientResponse.getStatus();
-		if(httpResponseCode == 201) {
-			success=true;
-		}
-		return success;
+		
+		return clientResponse.getStatus() == 201 ? //if client response equals 201 return the id created or 0
+				Integer.valueOf(clientResponse.getHeaders().getFirst("idCreated")) : 0;
 	}
 
 	@Override

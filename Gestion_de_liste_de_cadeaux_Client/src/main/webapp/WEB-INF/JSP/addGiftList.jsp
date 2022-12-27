@@ -17,6 +17,13 @@
 						<option value="Wedding">Mariage</option>
 						<option value="Birthday">Anniversaire</option>
 					</select>
+					<%
+						String error = (String)request.getAttribute("error");
+						if(error != null){
+					%>
+						<div class="form-text"> Erreur : <%=error %></div>
+					<%} %>
+					
 			</div>
 			<div class="mb-3">
 				<label for="expirationDate" class="form-label">Date d'expiration</label>

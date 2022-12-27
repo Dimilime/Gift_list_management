@@ -34,7 +34,7 @@ public class GiftAPI extends API {
 			
 			if(key.equals(apiKey)) 
 			{ 
-				System.out.println("giftname: " + giftName + " averaPrice: " + averagePrice + " priotitylvl: " + priorityLevel + "listId : " + listId);
+				
 				if(giftName == null || averagePrice == 0 || priorityLevel == 0 || listId == 0)
 					return Response.status(Status.BAD_REQUEST).build();
 				
@@ -51,7 +51,7 @@ public class GiftAPI extends API {
 					if(giftId != 0) {
 							return Response
 									.status(Status.CREATED)
-									.header("Location","/Gestion_de_liste_de_cadeaux_API/api/gift/"+giftId)
+									.header("Location","/Gestion_de_liste_de_cadeaux_API/api/gift/"+giftId).header("idCreated", giftId)
 									.build();
 						}
 				} catch (Exception e) {

@@ -131,13 +131,13 @@ public class User implements Serializable{
 		return user;
 	}
 	public boolean createUser() {
-		return userDAO.insert(this);
+		return userDAO.insert(this) == 1;
 	}
 	public boolean createUser(boolean withSharedList) {
 		return false;
 	}
 	
-	public boolean addGiftList(GiftList gl) {
+	public int addGiftList(GiftList gl) {
 		giftList.add(gl);
 		return gl.create();
 	}

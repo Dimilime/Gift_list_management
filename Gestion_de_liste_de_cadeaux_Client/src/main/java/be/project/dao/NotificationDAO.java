@@ -11,8 +11,8 @@ public class NotificationDAO extends DAO<Notification>{
 	}
 
 	@Override
-	public boolean insert(Notification obj) {
-		return false;
+	public int insert(Notification obj) {
+		return 0;
 	}
 
 	@Override
