@@ -6,23 +6,27 @@
 	<jsp:param value="Ajouter une nouvelle liste" name="title" />
 </jsp:include>
 <body>
-	<%@ include file="base.jsp"%>
+	<%@ include file="base.html"%>
 	<div class="d-flex justify-content-center"><h1>Ajouter une nouvelle liste</h1></div>
+	<%
+		String error = (String)request.getAttribute("errorAddGiftList");
+		if(error != null){
+	%>
+	<div class="alert alert-warning alert-dismissible fade show" role="alert">
+		Erreur : <%=error %>
+	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	<%} %>
 	<div class="d-flex justify-content-center">
 		<form action="" method="post">
 			<div class="mb-3">
 				<label for="ocassion" class="form-label">Occasion</label> 
 					<select id="ocassion" class="form-select" name="occasion">
-						<option selected value="Christmas">Noël</option>
-						<option value="Wedding">Mariage</option>
-						<option value="Birthday">Anniversaire</option>
+						<option selected value="Noel">Noël</option>
+						<option value="Mariage">Mariage</option>
+						<option value="Anniversaire">Anniversaire</option>
 					</select>
-					<%
-						String error = (String)request.getAttribute("error");
-						if(error != null){
-					%>
-						<div class="form-text"> Erreur : <%=error %></div>
-					<%} %>
+					
 					
 			</div>
 			<div class="mb-3">

@@ -28,19 +28,17 @@ public class AuthenticationFilter extends HttpFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
-		System.out.println("Passe dans le filtre");
 		HttpSession session = ((HttpServletRequest)request).getSession(false);
 		String requestUrl = ((HttpServletRequest)request).getRequestURI();
-		String servletPath = ((HttpServletRequest)request).getServletPath();
 		
-		System.out.println(requestUrl);//
+		System.out.println(requestUrl);
 		if(session!=null) {
 			User u = (User)session.getAttribute("connectedUser");
 			if(u !=null) {
 				chain.doFilter(request, response);
 			}
 			else {
-				((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED);//TODO: faire la page d'erreur
+				((HttpServletResponse)response).sendRedirect("login");
 			}
 		}else 
 			((HttpServletResponse)response).sendRedirect("login");

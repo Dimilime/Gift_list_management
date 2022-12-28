@@ -1,6 +1,12 @@
 package be.project.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import javax.ws.rs.core.MediaType;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
 import be.project.javabeans.GiftList;
@@ -29,26 +35,37 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public boolean delete(int id) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean update(GiftList obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public GiftList find(int id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ArrayList<GiftList> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String responseJSON = resource.path("giftList")
+				.header("key",apiKey)
+				.accept(MediaType.APPLICATION_JSON).get(String.class);
+		JSONArray arrayResponseJSON = new JSONArray(responseJSON);
+		ArrayList<GiftList> giftLists = new ArrayList<>();
+		try {
+			for(int i = 0; i < arrayResponseJSON.length(); i++) {
+				GiftList giftList = GiftList.mapListFromJson((JSONObject) arrayResponseJSON.get(i));
+				giftLists.add(giftList);
+			}
+			return giftLists;
+		} catch (Exception e) {
+			System.out.println("error findAll de GiftListDAO client = "+e.getMessage());
+			return null;
+		}
 	}
 	
 	

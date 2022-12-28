@@ -1,5 +1,7 @@
 package be.project.api;
 
+import java.util.ArrayList;
+
 //import java.time.LocalDate;
 
 import javax.ws.rs.Consumes;
@@ -32,11 +34,11 @@ public class GiftListAPI extends API{
 		if(key.equals(apiKey)) 
 		{ 
 			
-			if(occasion == null || userId != 0)
+			if(occasion == null || userId == 0)
 				return Response.status(Status.BAD_REQUEST).build();
 			System.out.println(expirationDate);
 			User user = User.getUser(userId);
-			GiftList giftList= new GiftList(0,occasion, user, expirationDate,key, "Y");
+			GiftList giftList= new GiftList(0,occasion, user, expirationDate,null, "Y");
 			int giftListId=giftList.create();
 			if(giftListId != 0) {
 				return Response
@@ -67,5 +69,22 @@ public class GiftListAPI extends API{
 		}
 		return Response.status(Status.UNAUTHORIZED).build();
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllList(@HeaderParam("key") String key) {
+		if(key!=null) {
+			if(key.equals(apiKey)) {
+				ArrayList<GiftList> giftLists=GiftList.getAll();
+				if(giftLists == null || giftLists.isEmpty())
+					return Response.status(Status.NOT_FOUND).build();
+				
+				return Response.status(Status.OK).entity(giftLists).build();
+			}
+		}
+		return Response.status(Status.UNAUTHORIZED).build();
+	}
+	
+	
 	
 }

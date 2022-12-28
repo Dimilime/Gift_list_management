@@ -9,11 +9,7 @@
 	</welcome-file-list>
 	
 	<!-- FILTERS -->
-	
-	<filter>
-		<filter-name>UnauthenticatedFilter</filter-name>
-		<filter-class>be.project.filters.UnauthenticatedFilter</filter-class>
-	</filter>
+
 	<filter>
 		<filter-name>AuthenticationFilter</filter-name>
 		<filter-class>be.project.filters.AuthenticationFilter</filter-class>
@@ -22,17 +18,12 @@
 	<!-- FILTER MAPPING -->
 	
 	<filter-mapping>
-		<filter-name>UnauthenticatedFilter</filter-name>
-		<servlet-name>Authentication</servlet-name>
-		<servlet-name>SignUp</servlet-name>
-	</filter-mapping>
-	
-	<filter-mapping>
 		<filter-name>AuthenticationFilter</filter-name>
 		<servlet-name>Home</servlet-name>
 		<servlet-name>Logout</servlet-name>
 		<servlet-name>AddGiftList</servlet-name>
 		<servlet-name>AddGift</servlet-name>
+		<servlet-name>AddNewGift</servlet-name>
 	</filter-mapping>
 	
 	<!-- CONTEXT PARAMS -->
@@ -52,8 +43,7 @@
 		<env-entry-type>java.lang.String</env-entry-type>
 		<env-entry-value>B61UGnAzniOU1NZc5jqZgC17M838GB1MczxyhR7eTx4oPDm5YSCjYklsN98wkpnU6dCDXf4QZ29xbTsFIy9F5ISeDZJpXSgVHukfNRsc6dUTmi2op0WVlSmsebga4jiX</env-entry-value>
 	</env-entry>
-
-
+	
 	<!-- SERVLETS -->
 	<servlet>
 		<servlet-name>Authentication</servlet-name>
@@ -78,6 +68,22 @@
 	<servlet>
 		<servlet-name>AddGift</servlet-name>
 		<servlet-class>be.project.servlets.AddGift</servlet-class>
+		<multipart-config>
+                <max-file-size>10485760</max-file-size><!-- 10 MB -->
+                <max-request-size>10485760</max-request-size>
+        </multipart-config>
+	</servlet>
+	<servlet>
+		<servlet-name>AddNewGift</servlet-name>
+		<servlet-class>be.project.servlets.AddNewGift</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>EditList</servlet-name>
+		<servlet-class>be.project.servlets.EditList</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>ShareList</servlet-name>
+		<servlet-class>be.project.servlets.ShareList</servlet-class>
 	</servlet>
 
 	<!-- MAPPING SERVLET -->
@@ -120,6 +126,21 @@
 	<servlet-mapping>
 		<servlet-name>AddGift</servlet-name>
 		<url-pattern>/addGift</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AddNewGift</servlet-name>
+		<url-pattern>/addNewGift</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>EditList</servlet-name>
+		<url-pattern>/editList</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ShareList</servlet-name>
+		<url-pattern>/shareList</url-pattern>
 	</servlet-mapping>
 
 </web-app>

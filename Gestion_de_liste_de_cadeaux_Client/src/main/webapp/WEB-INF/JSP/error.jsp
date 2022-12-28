@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" errorPage="true"%>
+    pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <jsp:include page="head.jsp">
 	<jsp:param value="Oups une erreur est survenue" name="title"/>
 </jsp:include>
 <body>
-	<%@ include file="base.jsp" %>
+	<%@ include file="base.html" %>
 	<% String error = (String)request.getAttribute("error"); %>
 	<div class="alert alert-danger" role="alert">
 		<h3>Oups une erreur est survenue</h3>

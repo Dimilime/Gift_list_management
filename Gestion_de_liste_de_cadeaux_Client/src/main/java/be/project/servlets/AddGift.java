@@ -2,6 +2,7 @@ package be.project.servlets;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -37,22 +38,20 @@ public class AddGift extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		Part part = request.getPart("giftImg");
-		InputStream is = part.getInputStream();
-		ServletFileUpload sf = new ServletFileUpload(new DiskFileItemFactory());
-		try {
-			List<FileItem> fileItem = sf.parseRequest(request);
-		} catch (FileUploadException e) {
-			e.printStackTrace();
-		}
+//		Part part = request.getPart("giftImg");//genere exception
+//		InputStream is = part.getInputStream();
+//		ServletFileUpload sf = new ServletFileUpload(new DiskFileItemFactory());
+//		try {
+//			List<FileItem> fileItem = sf.parseRequest(request);
+//		} catch (FileUploadException e) {
+//			e.printStackTrace();
+//		}
 
 		HttpSession session = request.getSession(false);
 		
 		GiftList giftList = null;
-		User user = null;
 		if(session != null ) {
 			giftList = (GiftList)session.getAttribute("giftList");
-			user = (User)session.getAttribute("connectedUser");
 		}
 		String giftName = request.getParameter("giftName");
 		String description = request.getParameter("description");
@@ -60,16 +59,25 @@ public class AddGift extends HttpServlet {
 		String priorityLevel =  request.getParameter("priorityLevel");
 		String giftImg = request.getParameter("giftImg");
 		String link = request.getParameter("link");
-		System.out.println(giftName);
-		System.out.println(giftImg);
-		System.out.println(link);
+//		System.out.println(giftName);
+//		System.out.println(giftImg);
+//		System.out.println(link);
 		if(giftName != null ||averagePrice != null || priorityLevel != null ) {
 			try {
 				Double avgPrice = Double.valueOf(averagePrice);
 				int priorityLvl = Integer.valueOf(priorityLevel);
 				Gift gift = new Gift(0, priorityLvl, giftName, description, avgPrice, link, giftImg, giftList);
-				giftList.addGift(gift);
-				session.setAttribute("giftList", giftList);
+				ArrayList<Gift> gifts = new ArrayList<>();
+				giftList.setGifts(gifts);
+				if(giftList.addGift(gift)) {
+					
+					session.setAttribute("giftList", giftList);
+					response.sendRedirect("addNewGift");
+					return;
+				}
+				request.setAttribute("errorGift","Cadeau non ajouté!");
+				doGet(request, response);
+				return;
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 			}

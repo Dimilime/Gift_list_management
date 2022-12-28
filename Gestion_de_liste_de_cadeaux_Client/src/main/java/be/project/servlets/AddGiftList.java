@@ -1,6 +1,7 @@
 package be.project.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 import javax.servlet.ServletException;
@@ -37,16 +38,24 @@ public class AddGiftList extends HttpServlet {
 			user = (User)session.getAttribute("connectedUser");
 		
 		if(occasion != null) {
-			
+			ArrayList<GiftList> giftLists = new ArrayList<>();
 			GiftList giftList = new GiftList(0,occasion,user,expirationDate, null, "Y");
-			int idCreated = giftList.create();
-			giftList.setListId(idCreated);
-			session.setAttribute("giftList", giftList);
-			response.sendRedirect("addGift");
-				
+			user.setGiftList(giftLists);
+			int idCreated = user.addGiftList(giftList);
+			if(idCreated !=0) {
+				giftList.setListId(idCreated);
+				session.setAttribute("giftList", giftList);
+				request.setAttribute("message", "Liste ajouté!");
+				request.getRequestDispatcher("addGift").forward(request, response);
+				return;
+			}
+			request.setAttribute("errorAddGiftList", "Liste non ajouté!");
+			doGet(request, response);
+			return;
 		}
-		request.setAttribute("error", "L'occasion ne peut pas être vide!");
+		request.setAttribute("errorAddGiftList", "L'occasion ne peut pas être vide!");
 		doGet(request, response);
+		return;
 	}
 
 }

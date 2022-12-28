@@ -6,27 +6,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
 
-import be.project.javabeans.User;
-
-
-public class Home extends HttpServlet {
+public class ShareList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
- 
-    
+
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
-		User user = null;
-		if(session != null )
-			user = (User)session.getAttribute("connectedUser");
-		if(user != null)
-			request.getRequestDispatcher("/WEB-INF/JSP/home.jsp").forward(request, response);
-
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
-
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		doGet(request, response);
 	}
 

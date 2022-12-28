@@ -1,14 +1,15 @@
-<%@page import="be.project.javabeans.Gift"%>
+<%@page import="be.project.javabeans.GiftList"%>
+<%@page import="be.project.javabeans.User"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8" errorPage="handleException.jsp"%>
 <!DOCTYPE html>
 <html>
 <jsp:include page="head.jsp">
 	<jsp:param value="Mes listes de cadeaux" name="title" />
 </jsp:include> 
 <body>
-	<%@ include file="base.jsp" %> 
+	<%@ include file="base.html" %> 
 	<div class="d-flex justify-content-center"><h1>Mes listes de cadeaux</h1></div>
 	
 	<div class="container d-flex justify-content-center">
@@ -21,18 +22,19 @@
 				<th>Modifier</th>
 			</tr>
 			<%
-			//ArrayList<Gift> userList = (ArrayList<Gift>) request.getAttribute("userList");
-			for (int i = 0; i < 8; i++) {
+				User u = (User)session.getAttribute("connectedUser");
+				ArrayList<GiftList> giftLists = u.getGiftList();
+				for ( GiftList giftList : giftLists) {
 			%>
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td><%= giftList.getOccasion()%></td>
+				<td><%= giftList.isEnabled() ? "Activé":" Désactivé"%></td>
+				<td><%= giftList.getExpirationDate() == null ? "Pas de date d'expiration": giftList.getExpirationDate() %></td>
 				<td>
-					<a class="btn btn-secondary" href="./<%=i%>">Modifier</a>
+					<a class="btn btn-secondary" href="./editList?id=<%=giftList.getListId()%>">Modifier</a>
 				</td>
 				<td>
-					<a class="btn btn-secondary" href="./<%=i%>">Partager</a>
+					<a class="btn btn-secondary" href="./shareList?id=<%=giftList.getListId()%>">Partager</a>
 				</td>
 			</tr>
 			<%

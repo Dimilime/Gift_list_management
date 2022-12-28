@@ -129,8 +129,12 @@ public class Gift implements Serializable{
 		this.participations = participations;
 	}	
 	
-	public void create() {
-		giftDAO.insert(this);
+	public int create() {
+		return giftDAO.insert(this);
+	}
+	
+	public static ArrayList<Gift> getAll(){
+		return giftDAO.findAll();
 	}
 
 }

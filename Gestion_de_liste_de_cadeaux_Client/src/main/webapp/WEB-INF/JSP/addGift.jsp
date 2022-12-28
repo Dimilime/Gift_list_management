@@ -3,11 +3,22 @@
 <!DOCTYPE html>
 <html>
 <jsp:include page="head.jsp">
-	<jsp:param value="Ajouter une nouvelle liste" name="title" />
+	<jsp:param value="Ajouter un cadeau" name="title" />
 </jsp:include>
 <body>
-	<%@ include file="base.jsp"%>
+	<%@ include file="base.html"%>
 	<div class="d-flex justify-content-center"><h1>Ajouter un cadeau </h1></div>
+	<% if( request.getAttribute("message") != null){%>
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			${ message }
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	<%}else if(request.getAttribute("erroGift") != null){ %>
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">
+			${ errorGift }
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	<%} %>
 	<div id="addGift" class="d-flex justify-content-center" style="display:none;">
 		
 		<form action="" method="post" enctype="multipart/form-data">
@@ -54,10 +65,6 @@
 			
 		</form>
 	</div>
-	<div id="addAnotherGift" class="d-flex justify-content-center" >
-		<p>Ajouter un autre cadeau ?</p>
-		<button type="submit">Oui</button>
-		<button type="submit">Non</button>
-	</div>
+	
 </body>
 </html>

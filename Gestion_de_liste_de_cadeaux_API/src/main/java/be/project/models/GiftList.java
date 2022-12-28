@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
 import be.project.models.GiftList;
@@ -66,10 +67,13 @@ public class GiftList implements Serializable{
 	public void setExpirationDate(String expirationDate) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDate parsedExpirationDate = null;
-		try {
-		if(expirationDate != null)
-			parsedExpirationDate = LocalDate.parse(expirationDate, formatter);
 		
+		try {
+		if(expirationDate != null) {
+			expirationDate = expirationDate.contains(" ")? expirationDate.split(" ")[0] : expirationDate;
+			expirationDate = expirationDate.contains("-")? expirationDate.replace("-", "/"): expirationDate;
+			parsedExpirationDate = LocalDate.parse(expirationDate, formatter);
+		}
 		
 		}catch (DateTimeParseException e) {
 			e.printStackTrace();
@@ -125,6 +129,10 @@ public class GiftList implements Serializable{
 		return giftListDAO.insert(this);
 	}
 	
+	public static ArrayList<GiftList> getAll() {
+		return giftListDAO.findAll();
+	}
+	
 	public static GiftList getGiftList(int id) {
 		return giftListDAO.find(id);
 	}
@@ -140,9 +148,18 @@ public class GiftList implements Serializable{
 		return null;
 	}
 	
-	public String getEnabledAsString() {
+	public String returnEnabledAsString() {
 		return enabled ? "Y" : "N";
 	}
+
+
+	@Override
+	public String toString() {
+		return "GiftList [listId=" + listId + ", occasion=" + occasion + ", expirationDate=" + expirationDate
+				+ ", enabled=" + enabled + ", gifts=" + gifts + ", sharedUsers=" + sharedUsers + ", giftListUser="
+				+ giftListUser + ", key=" + key + "]";
+	}
+	
 	
 	
 	

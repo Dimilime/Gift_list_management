@@ -3,6 +3,7 @@ package be.project.javabeans;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +24,8 @@ public class User implements Serializable{
 	private String lastname;
 	private String email;
 	private String password;
-	private ArrayList<GiftList> giftList;
+	private ArrayList<GiftList> giftLists;
+	private ArrayList<GiftList> invitations;
 	private ArrayList<Notification> notifications;
 	private ArrayList<Participation> participations;
 	
@@ -38,11 +40,15 @@ public class User implements Serializable{
 		this.lastname=lastname;
 		this.email= email;
 		this.password=password;
+		this.giftLists = new ArrayList<>();
+		this.invitations = new ArrayList<>();
+		this.notifications = new ArrayList<>();
+		this.participations = new ArrayList<>();
 	}
-	public User(int userId, String firstname, String lastname, String email, String password,ArrayList<GiftList> giftList ,ArrayList<Notification> notifications, ArrayList<Participation> participations ) {
+	public User(int userId, String firstname, String lastname, String email, String password,ArrayList<GiftList> giftLists ,ArrayList<Notification> notifications, ArrayList<Participation> participations ) {
 		this(firstname,lastname,email,password);
 		this.userId = userId;
-		this.giftList= giftList;
+		this.giftLists= giftLists;
 		this.notifications=notifications;
 		this.participations= participations;
 	}
@@ -88,13 +94,22 @@ public class User implements Serializable{
 	}
 
 	public ArrayList<GiftList> getGiftList() {
-		return giftList;
+		return giftLists = GiftList.getAll().stream()
+				.filter( list -> list.getGiftListUser().getUserId() == this.userId)
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
-	public void setGiftList(ArrayList<GiftList> giftList) {
-		this.giftList = giftList;
+	public void setGiftList(ArrayList<GiftList> giftLists) {
+		this.giftLists = giftLists;
 	}
 
+	public ArrayList<GiftList> getInvitations() {
+		return invitations;
+	}
+
+	public void setInvitations(ArrayList<GiftList> invitations) {
+		this.invitations = invitations;
+	}
 	public ArrayList<Notification> getNotifications() {
 		return notifications;
 	}
@@ -138,7 +153,7 @@ public class User implements Serializable{
 	}
 	
 	public int addGiftList(GiftList gl) {
-		giftList.add(gl);
+		giftLists.add(gl);
 		return gl.create();
 	}
 	

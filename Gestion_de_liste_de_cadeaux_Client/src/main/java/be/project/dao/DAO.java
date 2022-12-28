@@ -9,6 +9,7 @@ import javax.naming.NamingException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -34,6 +35,7 @@ public abstract class DAO<T> {
 	protected MultivaluedMap<String, String> parameters;
 	protected ClientResponse clientResponse;
 	protected String apiKey;
+	protected ObjectMapper mapper;
 	
 	private static URI getBaseUri() {
 		return UriBuilder.fromUri(apiUrl).build();
@@ -46,6 +48,7 @@ public abstract class DAO<T> {
 		resource=client.resource(getBaseUri());
 		parameters = new MultivaluedMapImpl();
 		apiKey = getApiKey();
+		mapper = new ObjectMapper();
 	}
 
 	private String getApiUrl() {
