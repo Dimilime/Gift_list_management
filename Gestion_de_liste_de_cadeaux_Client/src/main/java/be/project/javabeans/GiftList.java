@@ -46,6 +46,7 @@ public class GiftList implements Serializable{
 		this.setKey(key);
 		this.setExpirationDate(expirationDate);
 		this.giftListUser = giftListUser;
+		this.gifts = new ArrayList<>();
 	}
 	
 	

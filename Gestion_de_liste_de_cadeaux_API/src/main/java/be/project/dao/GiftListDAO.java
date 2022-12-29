@@ -59,7 +59,7 @@ public class GiftListDAO extends DAO<GiftList>{
 			callableStatement.execute();
 			
 			struc = (Struct) callableStatement.getObject(2);
-			Object[] objects = struc.getAttributes();
+ 			Object[] objects = struc != null ? struc.getAttributes() : null;
 			if(objects != null) {
 				int giftListId= Integer.valueOf(objects[0].toString());
 				String expirationDate=objects[1] != null ? objects[1].toString() : null;;
@@ -74,7 +74,7 @@ public class GiftListDAO extends DAO<GiftList>{
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
-		e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		return giftList;

@@ -1,6 +1,5 @@
 package be.project.dao;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.ws.rs.core.MediaType;
@@ -9,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
 import be.project.javabeans.GiftList;
 
 public class GiftListDAO extends DAO<GiftList>{
@@ -20,7 +21,7 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public int insert(GiftList obj) {
-		
+		parameters = new MultivaluedMapImpl();
 		parameters.add("occasion", obj.getOccasion());
 		parameters.add("expirationDate", obj.getExpirationDate().toString());
 		parameters.add("userId", String.valueOf(obj.getGiftListUser().getUserId()));

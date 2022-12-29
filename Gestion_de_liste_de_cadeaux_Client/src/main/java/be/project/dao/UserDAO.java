@@ -5,6 +5,8 @@ import javax.ws.rs.core.MediaType;
 import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
 import be.project.javabeans.User;
 
 public class UserDAO extends DAO<User>{
@@ -15,7 +17,7 @@ public class UserDAO extends DAO<User>{
 
 	@Override
 	public int insert(User obj) {
-		
+		parameters = new MultivaluedMapImpl();
 		parameters.add("email", obj.getEmail());
 		parameters.add("firstname", obj.getFirstname());
 		parameters.add("lastname",obj.getLastname());
@@ -71,6 +73,7 @@ public class UserDAO extends DAO<User>{
 
 	public boolean login(String email, String password) {
 		boolean success=false;
+		parameters = new MultivaluedMapImpl();
 		parameters.add("email",email);
 		parameters.add("password", password);
 		clientResponse=resource

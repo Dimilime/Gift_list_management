@@ -8,18 +8,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import be.project.javabeans.Gift;
-import be.project.javabeans.GiftList;
 
 public class GiftDAO extends DAO<Gift> {
 	
 	public GiftDAO() {
+		super();
 	}
 
 	@Override
 	public int insert(Gift obj) {
-		
+
+		parameters = new MultivaluedMapImpl();
 		parameters.add("giftName", obj.getName());
 		parameters.add("description", obj.getDescription());
 		parameters.add("averagePrice", String.valueOf(obj.getAveragePrice()));
@@ -27,6 +29,8 @@ public class GiftDAO extends DAO<Gift> {
 		parameters.add("giftImg", obj.getImage());
 		parameters.add("link", String.valueOf(obj.getLink()));
 		parameters.add("listId", String.valueOf(obj.getGiftList().getListId()));
+		System.out.println(parameters);
+		System.out.println("from client avant l'envoie"+obj);
 		clientResponse=resource
 				.path("gift")
 				.header("key",apiKey)

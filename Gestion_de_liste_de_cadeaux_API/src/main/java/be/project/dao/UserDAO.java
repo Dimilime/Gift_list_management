@@ -118,7 +118,6 @@ public class UserDAO extends DAO<User>{
 						sql.registerOutParameter(2, java.sql.Types.VARCHAR);
 						sql.execute();
 						hash_password = sql.getString(2);
-						sql.close();
 		    	  }
 		    	  
 		      }

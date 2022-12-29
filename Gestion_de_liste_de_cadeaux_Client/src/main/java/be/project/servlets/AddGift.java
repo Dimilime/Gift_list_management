@@ -32,6 +32,7 @@ public class AddGift extends HttpServlet {
 
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("doGet addGift");
 		request.getRequestDispatcher("/WEB-INF/JSP/addGift.jsp").forward(request, response);
 	}
 
@@ -46,7 +47,13 @@ public class AddGift extends HttpServlet {
 //		} catch (FileUploadException e) {
 //			e.printStackTrace();
 //		}file.getinputstreampour recupe limage
-
+		
+		if(request.getAttribute("giftListForward") != null) {
+			doGet(request, response);
+			return;
+		}
+			
+		System.out.println("doPost addgift");
 		HttpSession session = request.getSession(false);
 		
 		GiftList giftList = null;
@@ -55,6 +62,7 @@ public class AddGift extends HttpServlet {
 			if(giftList == null) {
 				request.setAttribute("errorAddGiftList", "Liste non connu, créez ou modifiez une nouvelle liste!");
 				request.getRequestDispatcher("addGiftList").forward(request, response);
+				return;
 			}
 		}
 		String giftName = request.getParameter("giftName");
@@ -70,30 +78,31 @@ public class AddGift extends HttpServlet {
 		if(giftName != null && averagePrice != null && priorityLevel != null
 				&& giftName.trim().length() > 0 && averagePrice.trim().length() > 0 && priorityLevel.trim().length() > 0) {
 			try {
-				Double avgPrice = Double.valueOf(averagePrice);
-				int priorityLvl = Integer.valueOf(priorityLevel);
-				Gift gift = null;
-				if(avgPrice >0 && priorityLvl > 0) {
-					
-					gift = new Gift(0, priorityLvl, giftName, description, avgPrice, link, giftImg, giftList);
-					ArrayList<Gift> gifts = new ArrayList<>();
-					if(giftList.getGifts().isEmpty())
-						giftList.setGifts(gifts);
-					
-				}
-				if(giftList.addGift(gift)) {
+					Double avgPrice = Double.valueOf(averagePrice);
+					int priorityLvl = Integer.valueOf(priorityLevel);
+					Gift gift = null;
+					if(avgPrice >0 && priorityLvl > 0) {
 						
-					session.setAttribute("giftList", giftList);
-					request.setAttribute("message","Cadeau ajouté!");
-					if(addAnother) {
-						doGet(request, response);
-						return;
-					}else {
-						request.getRequestDispatcher("home").forward(request, response);
+						gift = new Gift(0, priorityLvl, giftName, description, avgPrice, link, giftImg, giftList);
+						ArrayList<Gift> gifts = new ArrayList<>();
+						if(giftList.getGifts().isEmpty() || giftList.getGifts() == null)
+							giftList.setGifts(gifts);
+						
 					}
+					if(giftList.addGift(gift)) {
+							
+						//session.setAttribute("giftList", giftList);
+						request.setAttribute("message","Cadeau ajouté!");
+						if(addAnother) {
+							doGet(request, response);
+							return;
+						}else {
+							request.getRequestDispatcher("home").forward(request, response);
+							return;
+						}
+							
+							
 						
-						
-					
 				}
 				request.setAttribute("errorGift","Cadeau non ajouté!");
 				doGet(request, response);
