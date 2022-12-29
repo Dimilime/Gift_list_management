@@ -62,7 +62,7 @@ public class GiftListDAO extends DAO<GiftList>{
 			Object[] objects = struc.getAttributes();
 			if(objects != null) {
 				int giftListId= Integer.valueOf(objects[0].toString());
-				String expirationDate=(String)objects[1];
+				String expirationDate=objects[1] != null ? objects[1].toString() : null;;
 				String occasion=objects[2].toString();
 				String enabled =objects[3].toString();
 				String key = (String)objects[4];

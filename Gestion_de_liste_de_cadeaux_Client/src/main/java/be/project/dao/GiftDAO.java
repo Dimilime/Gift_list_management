@@ -2,9 +2,15 @@ package be.project.dao;
 
 import java.util.ArrayList;
 
+import javax.ws.rs.core.MediaType;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.sun.jersey.api.client.ClientResponse;
 
 import be.project.javabeans.Gift;
+import be.project.javabeans.GiftList;
 
 public class GiftDAO extends DAO<Gift> {
 	
@@ -46,7 +52,21 @@ public class GiftDAO extends DAO<Gift> {
 
 	@Override
 	public ArrayList<Gift> findAll() {
-		return null;
+		String responseJSON = resource.path("gift")
+				.header("key",apiKey)
+				.accept(MediaType.APPLICATION_JSON).get(String.class);
+		JSONArray arrayResponseJSON = new JSONArray(responseJSON);
+		ArrayList<Gift> gifts = new ArrayList<>();
+		try {
+			for(int i = 0; i < arrayResponseJSON.length(); i++) {
+				Gift gift = Gift.mapGiftFromJson((JSONObject) arrayResponseJSON.get(i));
+				gifts.add(gift);
+			}
+			return gifts;
+		} catch (Exception e) {
+			System.out.println("error findAll de GiftDAO client = "+e.getMessage());
+			return null;
+		}
 	}
 
 }

@@ -1,7 +1,15 @@
 package be.project.javabeans;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
@@ -135,6 +143,26 @@ public class Gift implements Serializable{
 	
 	public static ArrayList<Gift> getAll(){
 		return giftDAO.findAll();
+	}
+	
+	public static Gift mapGiftFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException  {
+		Gift gift = null;
+		GiftList giftList = null;
+		int giftId = jsonObject.getInt("giftId");
+		int priorityLevel = jsonObject.getInt("priorityLevel");
+		String name = jsonObject.getString("name");
+		String description = jsonObject.isNull("description") ? null : jsonObject.getString("description");
+		Double averagePrice = jsonObject.getDouble("averagePrice");
+		boolean reserved = jsonObject.getBoolean("reserved");
+		String link = jsonObject.isNull("link") ? null : jsonObject.getString("link");
+		String image = jsonObject.isNull("image") ? null : jsonObject.getString("image");
+		//JSONArray participations = jsonObject.getJSONArray("participations"); 
+		JSONObject listObject = jsonObject.getJSONObject("giftList");
+		giftList = GiftList.mapListFromJson(listObject);
+		gift = new Gift(giftId, priorityLevel, name, description, averagePrice, link, giftList, image, null);
+		gift.setReserved(reserved);
+		return gift;
+		
 	}
 
 }

@@ -139,8 +139,11 @@ public class GiftList implements Serializable{
 	}
 	
 	public boolean addGift(Gift g) {
-		gifts.add(g);
-		return g.create() != 0;
+		if(g != null) {
+			gifts.add(g);
+			return g.create() != 0;
+		}
+		return false;	
 	}
 	
 	public void removeGift(Gift g) {

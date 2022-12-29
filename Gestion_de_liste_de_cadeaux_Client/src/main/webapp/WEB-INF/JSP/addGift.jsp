@@ -13,7 +13,7 @@
 			${ message }
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
-	<%}else if(request.getAttribute("erroGift") != null){ %>
+	<%}if(request.getAttribute("erroGift") != null){ %>
 		<div class="alert alert-warning alert-dismissible fade show" role="alert">
 			${ errorGift }
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -21,7 +21,7 @@
 	<%} %>
 	<div id="addGift" class="d-flex justify-content-center" style="display:none;">
 		
-		<form action="" method="post" enctype="multipart/form-data">
+		<form action="addGift" method="post" enctype="multipart/form-data">
 			<div class="mb-3">
 				<label for="giftName" class="form-label">Nom</label> 
 				<input id="giftName" type="text" class="form-control" name="giftName" required>
@@ -58,6 +58,11 @@
 				<label for="link" class="form-label">Lien du cadeau</label> 
 				<input id="link" type="text" class="form-control" name="link" aria-described="linkHelp">
 				<div id="linkHelp" class="form-text">Facultatif! Si vous avez un lien marchand pour le cadeau vous pouvez l'inclure</div>
+			</div>
+			<div class="mb-3">
+				<label for="addAnother" class="form-label">Souhaitez-vous ajouter un autre cadeau ensuite ?</label> 
+				<input id="addAnother" type="checkbox" class="form-check-input" name="addAnother" aria-described="addAnotherHelp">
+				<div id="addAnotherHelp" class="form-text">Cochez la case pour ajouter un autre cadeau après celui ci</div>
 			</div>
 			<div class="d-grid gap-2 col-6 mx-auto">
 				<button type="submit" class="btn btn-primary btn-lg">Ajouter</button>

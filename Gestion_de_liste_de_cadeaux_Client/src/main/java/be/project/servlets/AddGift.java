@@ -45,13 +45,17 @@ public class AddGift extends HttpServlet {
 //			List<FileItem> fileItem = sf.parseRequest(request);
 //		} catch (FileUploadException e) {
 //			e.printStackTrace();
-//		}
+//		}file.getinputstreampour recupe limage
 
 		HttpSession session = request.getSession(false);
 		
 		GiftList giftList = null;
 		if(session != null ) {
 			giftList = (GiftList)session.getAttribute("giftList");
+			if(giftList == null) {
+				request.setAttribute("errorAddGiftList", "Liste non connu, créez ou modifiez une nouvelle liste!");
+				request.getRequestDispatcher("addGiftList").forward(request, response);
+			}
 		}
 		String giftName = request.getParameter("giftName");
 		String description = request.getParameter("description");
@@ -59,21 +63,37 @@ public class AddGift extends HttpServlet {
 		String priorityLevel =  request.getParameter("priorityLevel");
 		String giftImg = request.getParameter("giftImg");
 		String link = request.getParameter("link");
+		boolean addAnother = request.getParameter("addAnother") != null;
 //		System.out.println(giftName);
 //		System.out.println(giftImg);
 //		System.out.println(link);
-		if(giftName != null ||averagePrice != null || priorityLevel != null ) {
+		if(giftName != null && averagePrice != null && priorityLevel != null
+				&& giftName.trim().length() > 0 && averagePrice.trim().length() > 0 && priorityLevel.trim().length() > 0) {
 			try {
 				Double avgPrice = Double.valueOf(averagePrice);
 				int priorityLvl = Integer.valueOf(priorityLevel);
-				Gift gift = new Gift(0, priorityLvl, giftName, description, avgPrice, link, giftImg, giftList);
-				ArrayList<Gift> gifts = new ArrayList<>();
-				giftList.setGifts(gifts);
-				if(giftList.addGift(gift)) {
+				Gift gift = null;
+				if(avgPrice >0 && priorityLvl > 0) {
 					
+					gift = new Gift(0, priorityLvl, giftName, description, avgPrice, link, giftImg, giftList);
+					ArrayList<Gift> gifts = new ArrayList<>();
+					if(giftList.getGifts().isEmpty())
+						giftList.setGifts(gifts);
+					
+				}
+				if(giftList.addGift(gift)) {
+						
 					session.setAttribute("giftList", giftList);
-					response.sendRedirect("addNewGift");
-					return;
+					request.setAttribute("message","Cadeau ajouté!");
+					if(addAnother) {
+						doGet(request, response);
+						return;
+					}else {
+						request.getRequestDispatcher("home").forward(request, response);
+					}
+						
+						
+					
 				}
 				request.setAttribute("errorGift","Cadeau non ajouté!");
 				doGet(request, response);
@@ -81,8 +101,11 @@ public class AddGift extends HttpServlet {
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 			}
-		}else
+		}else {
+			request.setAttribute("errorGift","Nom, prix ou priorité vide!");
 			doGet(request, response);
+		}
+			
 	}
 
 }

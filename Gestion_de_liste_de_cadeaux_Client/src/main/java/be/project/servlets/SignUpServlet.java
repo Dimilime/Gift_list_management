@@ -60,7 +60,7 @@ public class SignUpServlet extends HttpServlet {
 					success= user.createUser();
 				}
 				if(success) {
-					message="Compte crée avec succès!";
+					message="Compte créé avec succès!";
 					request.setAttribute("message", message);
 					//check si s'inscrit après un lien direct le co et go liste details 
 					if(key!=null) {

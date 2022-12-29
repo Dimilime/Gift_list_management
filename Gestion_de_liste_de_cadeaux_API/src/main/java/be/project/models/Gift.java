@@ -140,5 +140,9 @@ public class Gift implements Serializable{
 		return giftDAO.find(id);
 	}
 	
+	public static ArrayList<Gift> getAll(){
+		return giftDAO.findAll();
+	}
+	
 
 }

@@ -1,5 +1,6 @@
 package be.project.dao;
 
+import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -76,7 +77,7 @@ public class GiftDAO extends DAO<Gift> {
 				Blob img = null;//TODO: get image objects[7]
 				int listId = Integer.valueOf(objects[8].toString());
 				GiftList giftList = giftListDAO.find(listId);
-				gift = new Gift(giftId, priorityLevel, name, description, listId, reserved, link, img, giftList);
+				gift = new Gift(giftId, priorityLevel, name, description, averagePrice, reserved, link, img, giftList);
 			}
 		
 		} catch (NumberFormatException e) {
@@ -90,7 +91,46 @@ public class GiftDAO extends DAO<Gift> {
 
 	@Override
 	public ArrayList<Gift> findAll() {
-		return null;
+		GiftListDAO giftListDAO = new GiftListDAO(conn);
+		Array array=null;
+		ArrayList<Gift> gifts= new ArrayList<>();
+		String sql="{call getAllGift(?)}";
+		try (CallableStatement callableStatement = conn.prepareCall(sql)){
+			
+			callableStatement.registerOutParameter(1, OracleTypes.ARRAY, "TABLE_GIFT");
+			callableStatement.execute();
+			
+			array = callableStatement.getArray(1);
+			Object [] objects = (Object[]) array.getArray();
+			if(objects != null) {
+				for (int i = 0; i < objects.length; i++) {
+					Object [] os = ((Struct)objects[i]).getAttributes();
+					if(os != null) {
+						
+						int giftId= Integer.valueOf(os[0].toString());
+						String name=os[1].toString();
+						String description= (String)os[2];
+						Double averagePrice =Double.valueOf( os[3].toString());
+						int priorityLevel =  Integer.valueOf( os[4].toString());
+						String reserved = os[5].toString();
+						String link = (String)os[6];
+						Blob img = null;
+						int listId = Integer.valueOf(os[8].toString());
+						GiftList giftList = giftListDAO.find(listId);
+						Gift gift = new Gift(giftId, priorityLevel, name, description, averagePrice , reserved, link, img, giftList);
+						gifts.add(gift);		
+					}
+					
+				}
+			}
+		
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return gifts;
 	}
 
 }

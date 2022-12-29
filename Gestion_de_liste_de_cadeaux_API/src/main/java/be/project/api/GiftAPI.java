@@ -1,6 +1,8 @@
 package be.project.api;
 
 import java.sql.Blob;
+import java.util.ArrayList;
+
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -77,6 +79,21 @@ public class GiftAPI extends API {
 						return Response.status(Status.NOT_FOUND).build();
 					
 					return Response.status(Status.OK).entity(gift).build();
+				}
+			}
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+		
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getAllList(@HeaderParam("key") String key) {
+			if(key!=null) {
+				if(key.equals(apiKey)) {
+					ArrayList<Gift> gifts=Gift.getAll();
+					if(gifts == null || gifts.isEmpty())
+						return Response.status(Status.NOT_FOUND).build();
+					
+					return Response.status(Status.OK).entity(gifts).build();
 				}
 			}
 			return Response.status(Status.UNAUTHORIZED).build();

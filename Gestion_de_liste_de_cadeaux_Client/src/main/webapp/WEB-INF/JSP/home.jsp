@@ -11,7 +11,19 @@
 <body>
 	<%@ include file="base.html" %> 
 	<div class="d-flex justify-content-center"><h1>Mes listes de cadeaux</h1></div>
-	
+	<% if( request.getAttribute("message") != null){%>
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			${ message }
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	<%}
+		if(request.getAttribute("errorAddGiftList") != null){
+	%>
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">
+			${ errorAddGiftList }	
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	<%} %>
 	<div class="container d-flex justify-content-center">
 		
 		<table class="table">
