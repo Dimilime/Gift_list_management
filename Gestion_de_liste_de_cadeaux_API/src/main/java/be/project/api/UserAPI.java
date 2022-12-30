@@ -1,5 +1,7 @@
 package be.project.api;
 
+import java.util.ArrayList;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -12,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import be.project.models.Gift;
 import be.project.models.User;
 
 @Path("/user")
@@ -78,7 +81,22 @@ public class UserAPI extends API {
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
 		
-		
+	}
+	
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllUsers(@HeaderParam("key") String key) {
+		if(key!=null) {
+			if(key.equals(apiKey)) {
+				ArrayList<User> users=User.getAll();
+				if(users == null || users.isEmpty())
+					return Response.status(Status.NOT_FOUND).build();
+				
+				return Response.status(Status.OK).entity(users).build();
+			}
+		}
+		return Response.status(Status.UNAUTHORIZED).build();
 	}
 	
 }

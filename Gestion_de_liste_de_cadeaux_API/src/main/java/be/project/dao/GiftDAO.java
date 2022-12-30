@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import be.project.models.Gift;
 import be.project.models.GiftList;
-import be.project.models.User;
 import oracle.jdbc.OracleTypes;
 
 public class GiftDAO extends DAO<Gift> {

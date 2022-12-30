@@ -1,11 +1,15 @@
 package be.project.dao;
 
+import java.sql.Array;
+import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Struct;
 import java.util.ArrayList;
 
+import be.project.models.Gift;
+import be.project.models.GiftList;
 import be.project.models.User;
 import oracle.jdbc.OracleTypes;
 
@@ -100,7 +104,39 @@ public class UserDAO extends DAO<User>{
 
 	@Override
 	public ArrayList<User> findAll() {
-		return null;
+		Array array=null;
+		ArrayList<User> users= new ArrayList<>();
+		String sql="{call getAllUsers(?)}";
+		try (CallableStatement callableStatement = conn.prepareCall(sql)){
+			
+			callableStatement.registerOutParameter(1, OracleTypes.ARRAY, "TABLE_USERS");
+			callableStatement.execute();
+			
+			array = callableStatement.getArray(1);
+			Object [] objects = (Object[]) array.getArray();
+			if(objects != null) {
+				for (int i = 0; i < objects.length; i++) {
+					Object [] os = ((Struct)objects[i]).getAttributes();
+					if(os != null) {
+						
+						int userId= Integer.valueOf(os[0].toString());
+						String firstname=(String)os[1];
+						String lastname=(String)os[2];
+						String email=(String)os[3];
+						User user = new User(userId, firstname, lastname, email, null);
+						users.add(user);		
+					}
+					
+				}
+			}
+		
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
 	}
 	
 	public boolean login(String email, String pwd) {

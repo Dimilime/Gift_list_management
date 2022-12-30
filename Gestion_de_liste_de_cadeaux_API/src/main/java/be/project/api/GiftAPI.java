@@ -86,7 +86,7 @@ public class GiftAPI extends API {
 		
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response getAllList(@HeaderParam("key") String key) {
+		public Response getAllGift(@HeaderParam("key") String key) {
 			if(key!=null) {
 				if(key.equals(apiKey)) {
 					ArrayList<Gift> gifts=Gift.getAll();

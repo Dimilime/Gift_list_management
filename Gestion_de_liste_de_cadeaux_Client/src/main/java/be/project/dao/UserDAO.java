@@ -2,9 +2,13 @@ package be.project.dao;
 
 import java.util.ArrayList;
 import javax.ws.rs.core.MediaType;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
+
+import be.project.javabeans.GiftList;
 import be.project.javabeans.User;
 
 public class UserDAO extends DAO<User>{
@@ -66,7 +70,21 @@ public class UserDAO extends DAO<User>{
 
 	@Override
 	public ArrayList<User> findAll() {
-		return null;
+		String responseJSON = resource.path("user")
+				.header("key",apiKey)
+				.accept(MediaType.APPLICATION_JSON).get(String.class);
+		JSONArray arrayResponseJSON = new JSONArray(responseJSON);
+		ArrayList<User> users = new ArrayList<>();
+		try {
+			for(int i = 0; i < arrayResponseJSON.length(); i++) {
+				User user = User.getUserByJSONObject((JSONObject) arrayResponseJSON.get(i));
+				users.add(user);
+			}
+			return users;
+		} catch (Exception e) {
+			System.out.println("error findAll de UserDAO client = "+e.getMessage());
+			return null;
+		}
 	}
 
 	public boolean login(String email, String password) {

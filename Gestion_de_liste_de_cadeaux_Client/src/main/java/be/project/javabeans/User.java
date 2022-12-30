@@ -145,6 +145,10 @@ public class User implements Serializable{
 		user.setEmail(json.getString("email"));
 		return user;
 	}
+	
+	public static ArrayList<User> getAll(){
+		return userDAO.findAll();
+	}
 	public boolean createUser() {
 		return userDAO.insert(this) == 1;
 	}
@@ -156,6 +160,13 @@ public class User implements Serializable{
 		giftLists.add(gl);
 		return gl.create();
 	}
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email
+				+ ", password=" + password + ", giftLists=" + giftLists + ", invitations=" + invitations
+				+ ", notifications=" + notifications + ", participations=" + participations + "]";
+	}
+	
 	
 	
 	

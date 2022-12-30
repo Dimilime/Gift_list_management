@@ -143,6 +143,10 @@ public class User implements Serializable{
 		return ((UserDAO)userDAO).findByEmail(email);
 	}
 	
+	public static ArrayList<User> getAll(){
+		return userDAO.findAll();
+	}
+	
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email
