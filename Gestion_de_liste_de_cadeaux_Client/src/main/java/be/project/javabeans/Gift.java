@@ -165,4 +165,12 @@ public class Gift implements Serializable{
 		
 	}
 
+	@Override
+	public String toString() {
+		return "Gift [giftId=" + giftId + ", priorityLevel=" + priorityLevel + ", name=" + name + ", description="
+				+ description + ", averagePrice=" + averagePrice + ", reserved=" + reserved + ", link=" + link
+				+ ", image=" + image + ", giftList=" + giftList + ", participations=" + participations + "]";
+	}
+	
+
 }

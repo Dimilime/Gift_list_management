@@ -26,7 +26,7 @@ public class DatabaseConnection {
 			
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			instance=DriverManager.getConnection(connectionString,username,password);
-			if(instance == null)
+			if(instance == null || instance.isClosed())
 				System.out.println("La base de donnée est inaccessible");
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -39,8 +39,12 @@ public class DatabaseConnection {
 	}
 	
 	public static Connection getInstance(){
-		if(instance == null)
-			new DatabaseConnection();
+		try {
+			if(instance == null || instance.isClosed())
+				new DatabaseConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return instance;
 	}
 

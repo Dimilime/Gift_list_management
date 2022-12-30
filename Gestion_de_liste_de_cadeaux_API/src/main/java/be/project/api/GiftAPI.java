@@ -41,7 +41,7 @@ public class GiftAPI extends API {
 					return Response.status(Status.BAD_REQUEST).build();
 				
 				GiftList giftList = GiftList.getGiftList(listId);
-				
+
 				//byte[] byteData = giftImg.getBytes();
 				Blob imgBlob = null;
 				try {
@@ -49,7 +49,9 @@ public class GiftAPI extends API {
 					Double avgPrice = Double.valueOf(averagePrice);
 					int priorityLvl = Integer.valueOf(priorityLevel);
 					Gift gift= new Gift(0,priorityLvl,giftName, description, avgPrice,"N",link,imgBlob,giftList);
+					System.out.println("from api"+gift);
 					int giftId=gift.create();
+					
 					if(giftId != 0) {
 							return Response
 									.status(Status.CREATED)

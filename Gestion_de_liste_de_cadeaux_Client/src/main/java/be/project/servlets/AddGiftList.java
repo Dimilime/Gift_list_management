@@ -40,13 +40,15 @@ public class AddGiftList extends HttpServlet {
 		if(occasion != null && occasion.trim().length()>0) {
 			ArrayList<GiftList> giftLists = new ArrayList<>();
 			GiftList giftList = new GiftList(0,occasion,user,expirationDate, null, "Y");
-			user.setGiftList(giftLists);
+			if(user.getGiftList().isEmpty())
+				user.setGiftList(giftLists);
 			int idCreated = user.addGiftList(giftList);
 			if(idCreated !=0) {
 				giftList.setListId(idCreated);
 				session.setAttribute("giftList", giftList);
 				request.setAttribute("message", "Liste ajouté!");
-				request.getRequestDispatcher("/addGift").forward(request, response);
+				request.setAttribute("giftListForward", "yes");
+				request.getRequestDispatcher("addGift").forward(request, response);
 				return;
 			}
 			request.setAttribute("errorAddGiftList", "Liste non ajouté!");

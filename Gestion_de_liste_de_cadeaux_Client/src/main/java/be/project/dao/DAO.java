@@ -46,7 +46,6 @@ public abstract class DAO<T> {
 		client = Client.create(config);
 		apiUrl=getApiUrl();
 		resource=client.resource(getBaseUri());
-		parameters = new MultivaluedMapImpl();
 		apiKey = getApiKey();
 		mapper = new ObjectMapper();
 	}

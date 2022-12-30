@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8" errorPage="handleException.jsp"%>
 <!DOCTYPE html>
 <html>
 <jsp:include page="head.jsp">
@@ -18,7 +18,7 @@
 	</div>
 	<%} %>
 	<div class="d-flex justify-content-center">
-		<form action="" method="post">
+		<form action="addList" method="post">
 			<div class="mb-3">
 				<label for="ocassion" class="form-label">Occasion</label> 
 					<select id="ocassion" class="form-select" name="occasion">
