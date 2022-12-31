@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="./resources/css/styles.css" type="text/css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
-	<script type="text/javascript" src="./resources/js/script.js"></script>
+	<script type="text/javascript" src="./resources/js/script.js" defer></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<title><%= request.getParameter("title") %></title>
 </head>

@@ -24,6 +24,8 @@
 		<servlet-name>AddGiftList</servlet-name>
 		<servlet-name>AddGift</servlet-name>
 		<servlet-name>AddNewGift</servlet-name>
+		<servlet-name>ShareList</servlet-name>
+		<servlet-name>EditList</servlet-name>
 	</filter-mapping>
 	
 	<!-- CONTEXT PARAMS -->
