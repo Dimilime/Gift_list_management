@@ -79,6 +79,7 @@ public class UserDAO extends DAO<User>{
 	public User findByEmail(String email) {
 		Struct struc=null;
 		User user=null;
+		GiftListDAO giftListDAO = new GiftListDAO(conn);
 		String sql="{call getUserByEmail(?,?)}";
 		try (CallableStatement callableStatement = conn.prepareCall(sql)){
 			
@@ -92,7 +93,18 @@ public class UserDAO extends DAO<User>{
 				int userId= Integer.valueOf(objects[0].toString());
 				String firstname=(String)objects[1];
 				String lastname=(String)objects[2];
+				Array array = (Array) objects[5];
+				Object[] invitations = (Object[]) array.getArray();
+				ArrayList<GiftList> userInvitations = new ArrayList<>();
+				if(invitations != null) {
+					for (int i = 0; i < invitations.length; i++) {
+						String  invitationId = invitations[i].toString();
+						GiftList giftList = giftListDAO.find(Integer.valueOf(invitationId));
+						userInvitations.add(giftList);
+					}
+				}
 				user = new User(userId, firstname, lastname, email, null);
+				user.setInvitations(userInvitations);
 			}
 		
 		} catch (SQLException e) {

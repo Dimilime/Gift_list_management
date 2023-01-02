@@ -42,7 +42,9 @@ function createUserList(usersList) {
 			+ '	<td>' + user.firstname + '</td>'
 			+ '	<td>' + user.email + '</td>'
 			+ '	<td>'
-			+ '		<a class="btn btn-secondary" href="./shareList?id=' + user.email + '">Partager</a>'
+			+ `<form action="shareList" method="post">
+					<button class="btn btn-secondary" type="submit" name="userEmail" value="${user.email}">Partager</button>
+			   </form>`
 			+ '	</td>';
 
 		searchResult.appendChild(listItem)

@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import be.project.models.Gift;
 import be.project.models.User;
 
 @Path("/user")
@@ -23,7 +22,7 @@ public class UserAPI extends API {
 	@GET
 	@Path("{email}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUser(@PathParam("email") String email,
+	public Response getUserByEmail(@PathParam("email") String email,
 			@HeaderParam("key") String key) {
 		if(key!=null) {
 			if(key.equals(apiKey)) {

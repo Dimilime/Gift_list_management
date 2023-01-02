@@ -32,7 +32,7 @@ public abstract class DAO<T> {
 	protected static  String apiUrl;
 	protected Client client;
 	protected WebResource resource;
-	protected MultivaluedMap<String, String> parameters;
+	protected MultivaluedMap<String, String> parameters = new MultivaluedMapImpl();
 	protected ClientResponse clientResponse;
 	protected String apiKey;
 	protected ObjectMapper mapper;

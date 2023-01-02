@@ -26,7 +26,7 @@ public class GiftListAPI extends API{
 	public Response createGiftList(
 			@FormParam("occasion") String occasion,
 			@FormParam("expirationDate") String expirationDate,
-			@FormParam("userId") int userId,
+			@FormParam("email") String email,
 			@HeaderParam("key") String key
 			)
 	{
@@ -34,10 +34,10 @@ public class GiftListAPI extends API{
 		if(key.equals(apiKey)) 
 		{ 
 			
-			if(occasion == null || userId == 0)
+			if(occasion == null || email == null)
 				return Response.status(Status.BAD_REQUEST).build();
 			System.out.println(expirationDate);
-			User user = User.getUser(userId);
+			User user = User.getUserByEmail(email);
 			GiftList giftList= new GiftList(0,occasion, user, expirationDate,null, "Y");
 			int giftListId=giftList.create();
 			if(giftListId != 0) {

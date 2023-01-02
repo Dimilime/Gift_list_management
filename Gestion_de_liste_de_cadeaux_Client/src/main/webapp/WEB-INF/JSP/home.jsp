@@ -35,7 +35,8 @@
 			</tr>
 			<%
 				User u = (User)session.getAttribute("connectedUser");
-				ArrayList<GiftList> giftLists = u.getGiftList();
+				ArrayList<GiftList> giftLists = u.getGiftLists();
+				//session.setAttribute("user", u);
 				for ( GiftList giftList : giftLists) {
 			%>
 			<tr>

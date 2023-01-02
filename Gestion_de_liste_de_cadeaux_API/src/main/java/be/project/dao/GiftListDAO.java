@@ -1,5 +1,6 @@
 package be.project.dao;
 
+import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -62,13 +63,24 @@ public class GiftListDAO extends DAO<GiftList>{
  			Object[] objects = struc != null ? struc.getAttributes() : null;
 			if(objects != null) {
 				int giftListId= Integer.valueOf(objects[0].toString());
-				String expirationDate=objects[1] != null ? objects[1].toString() : null;;
+				String expirationDate=objects[1] != null ? objects[1].toString() : null;
 				String occasion=objects[2].toString();
 				String enabled =objects[3].toString();
 				String key = (String)objects[4];
 				int userId = Integer.valueOf(objects[5].toString());
 				User u = userDao.find(userId);
+				Array array = (Array) objects[6];
+				Object[] sharedUsers = (Object[]) array.getArray();
+				ArrayList<User> listSharedUsers = new ArrayList<>();
+				if(sharedUsers != null) {
+					for (int i = 0; i < sharedUsers.length; i++) {
+						String  sharedUserId = sharedUsers[i].toString();
+						User sharedUser = userDao.find(Integer.valueOf(sharedUserId) );
+						listSharedUsers.add(sharedUser);
+					}
+				}
 				giftList = new GiftList(giftListId,occasion, u, expirationDate, key, enabled);
+				giftList.setSharedUsers(listSharedUsers);
 			}
 		
 		} catch (NumberFormatException e) {
@@ -105,7 +117,18 @@ public class GiftListDAO extends DAO<GiftList>{
 						String key = (String)os[4];
 						int userId = Integer.valueOf(os[5].toString());
 						User u = userDao.find(userId);
+						Array arrayShared = (Array) os[6];
+						Object[] sharedUsers = (Object[]) arrayShared.getArray();
+						ArrayList<User> listSharedUsers = new ArrayList<>();
+						if(sharedUsers != null) {
+							for (int j = 0; j < sharedUsers.length; j++) {
+								String  sharedUserId = sharedUsers[j].toString();
+								User sharedUser = userDao.find(Integer.valueOf(sharedUserId) );
+								listSharedUsers.add(sharedUser);
+							}
+						}
 						GiftList giftList = new GiftList(giftListId,occasion, u, expirationDate, key, enabled);
+						giftList.setSharedUsers(listSharedUsers);
 						giftLists.add(giftList);		
 					}
 					

@@ -8,10 +8,10 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -27,12 +27,10 @@ public class GiftList implements Serializable{
 	
 	private int listId;
 	private String occasion;
-	@JsonProperty("expirationDate")
 	private LocalDate expirationDate;
 	private boolean enabled;
 	private ArrayList<Gift> gifts;
 	private ArrayList<User> sharedUsers;
-	@JsonProperty("giftListUser")
 	private User giftListUser;
 	private String key;
 	
@@ -47,6 +45,7 @@ public class GiftList implements Serializable{
 		this.setExpirationDate(expirationDate);
 		this.giftListUser = giftListUser;
 		this.gifts = new ArrayList<>();
+		this.sharedUsers = new ArrayList<>();
 	}
 	
 	
@@ -80,14 +79,14 @@ public class GiftList implements Serializable{
 
 	public void setExpirationDate(String expirationDate) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		LocalDate parsedExpirationDate = null;
+		LocalDate parsedExpirationDate = null;		
 		
-		
-		try {
-		if(expirationDate != null) {
-			expirationDate = expirationDate.contains("-")? expirationDate.replace("-", "/"): expirationDate;
-			parsedExpirationDate = LocalDate.parse(expirationDate, formatter);
-		}
+		try 
+		{
+			if(expirationDate != null) {
+				expirationDate = expirationDate.contains("-")? expirationDate.replace("-", "/"): expirationDate;
+				parsedExpirationDate = LocalDate.parse(expirationDate, formatter);
+			}
 		
 		}catch (DateTimeParseException e) {
 			e.printStackTrace();
@@ -122,7 +121,7 @@ public class GiftList implements Serializable{
 	}
 
 	public ArrayList<User> getSharedUsers() {
-		return sharedUsers;
+		return sharedUsers ;
 	}
 
 	public void setSharedUsers(ArrayList<User> sharedUsers) {
@@ -151,6 +150,17 @@ public class GiftList implements Serializable{
 		gifts.remove(g);
 	}
 	
+	public boolean addUserToSharedList(User u) {
+		if(u != null) {
+			sharedUsers.add(u);
+			return true;
+		}
+		return false;
+	}
+
+	public static GiftList get(int id) {
+		return giftListDAO.find(id);
+	}
 	public int create() {
 		return giftListDAO.insert(this);
 	}
@@ -173,7 +183,16 @@ public class GiftList implements Serializable{
 		String enabled = jsonObject.getBoolean("enabled") ? "Y" : "N" ;
 		JSONObject userObject = jsonObject.getJSONObject("giftListUser");
 		user = User.getUserByJSONObject(userObject);
+		JSONArray sharedUsersObject = jsonObject.isNull("sharedUsers") ? null :jsonObject.getJSONArray("sharedUsers");
+		ArrayList<User> sharedUsers = new ArrayList<>();
+		if(sharedUsersObject != null)
+			for (int i = 0; i < sharedUsersObject.length(); i++) {
+				JSONObject sharedUserObject = sharedUsersObject.getJSONObject(i);
+				User sharedUser = User.getUserByJSONObject(sharedUserObject);
+				sharedUsers.add(sharedUser);
+			}
 		giftList = new GiftList(listId, occasion, user, expirationDate, null, enabled);
+		giftList.setSharedUsers(sharedUsers);
 		return giftList;
 		
 	}

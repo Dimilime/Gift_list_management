@@ -11,6 +11,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import be.project.javabeans.GiftList;
+import be.project.javabeans.User;
 
 public class GiftListDAO extends DAO<GiftList>{
 	
@@ -21,10 +22,10 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public int insert(GiftList obj) {
-		parameters = new MultivaluedMapImpl();
+		parameters.clear();
 		parameters.add("occasion", obj.getOccasion());
 		parameters.add("expirationDate", obj.getExpirationDate().toString());
-		parameters.add("userId", String.valueOf(obj.getGiftListUser().getUserId()));
+		parameters.add("email", obj.getGiftListUser().getEmail());
 		clientResponse=resource
 				.path("giftList")
 				.header("key",apiKey)
@@ -46,7 +47,21 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public GiftList find(int id) {
-		return null;
+		String responseJSON=resource
+				.path("giftList")
+				.path(String.valueOf(id))
+				.header("key",apiKey)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(String.class);
+		GiftList giftList=null;
+		try {
+			JSONObject json = new JSONObject(responseJSON);
+			giftList = GiftList.mapListFromJson(json);
+			return giftList;
+		} catch (Exception e) {
+			System.out.println("error find de GiftListDAO client = "+e.getMessage());
+			return null;
+		}
 	}
 
 	@Override
@@ -55,9 +70,10 @@ public class GiftListDAO extends DAO<GiftList>{
 		String responseJSON = resource.path("giftList")
 				.header("key",apiKey)
 				.accept(MediaType.APPLICATION_JSON).get(String.class);
-		JSONArray arrayResponseJSON = new JSONArray(responseJSON);
+		
 		ArrayList<GiftList> giftLists = new ArrayList<>();
 		try {
+			JSONArray arrayResponseJSON = new JSONArray(responseJSON);
 			for(int i = 0; i < arrayResponseJSON.length(); i++) {
 				GiftList giftList = GiftList.mapListFromJson((JSONObject) arrayResponseJSON.get(i));
 				giftLists.add(giftList);

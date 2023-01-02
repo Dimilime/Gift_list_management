@@ -20,7 +20,7 @@ public class UserDAO extends DAO<User>{
 
 	@Override
 	public int insert(User obj) {
-		parameters = new MultivaluedMapImpl();
+		parameters.clear();
 		parameters.add("email", obj.getEmail());
 		parameters.add("firstname", obj.getFirstname());
 		parameters.add("lastname",obj.getLastname());
@@ -90,7 +90,7 @@ public class UserDAO extends DAO<User>{
 
 	public boolean login(String email, String password) {
 		boolean success=false;
-		parameters = new MultivaluedMapImpl();
+		parameters.clear();
 		parameters.add("email",email);
 		parameters.add("password", password);
 		clientResponse=resource

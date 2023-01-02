@@ -3,8 +3,10 @@ package be.project.javabeans;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -93,13 +95,13 @@ public class User implements Serializable{
 		this.password = password;
 	}
 
-	public ArrayList<GiftList> getGiftList() {
+	public ArrayList<GiftList> getGiftLists() {
 		return giftLists = GiftList.getAll().stream()
 				.filter( list -> list.getGiftListUser().getUserId() == this.userId)
 				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
-	public void setGiftList(ArrayList<GiftList> giftLists) {
+	public void setGiftLists(ArrayList<GiftList> giftLists) {
 		this.giftLists = giftLists;
 	}
 
@@ -133,9 +135,7 @@ public class User implements Serializable{
 	public static User getUserByEmail(String email) {
 		return ((UserDAO)userDAO).findByEmail(email);
 	}
-	public static User getUser(int id) {
-		return userDAO.find(id);
-	}
+	
 
 	public static User getUserByJSONObject(JSONObject json)throws JsonParseException, JsonMappingException, JSONException, IOException {
 		User user=new User();
@@ -143,6 +143,15 @@ public class User implements Serializable{
 		user.setFirstname(json.getString("firstname"));
 		user.setlastname(json.getString("lastname"));
 		user.setEmail(json.getString("email"));
+		JSONArray invitationsObject = json.isNull("invitations") ? null: json.getJSONArray("invitations");
+		ArrayList<GiftList> invitations = new ArrayList<>();
+		if(invitationsObject != null)
+			for (int i = 0; i < invitationsObject.length(); i++) {
+				JSONObject invitationObject = invitationsObject.getJSONObject(i);
+				GiftList invitation = GiftList.mapListFromJson(invitationObject);
+				invitations.add(invitation);
+			}
+		user.setInvitations(invitations);
 		return user;
 	}
 	
@@ -159,6 +168,28 @@ public class User implements Serializable{
 	public int addGiftList(GiftList gl) {
 		giftLists.add(gl);
 		return gl.create();
+	}
+	
+	public boolean shareList(GiftList giftList) {
+		GiftList list= giftLists.stream().filter( gl -> gl.getListId() == giftList.getListId()).findFirst().orElse(null);
+		for (User u : list.getSharedUsers()) {
+			System.out.println("user list: "+u);
+		}
+		return list.addUserToSharedList(this);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(userId);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof User))
+			return false;
+		User other = (User) obj;
+		return userId == other.userId;
 	}
 	@Override
 	public String toString() {
