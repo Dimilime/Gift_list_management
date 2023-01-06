@@ -2,6 +2,10 @@
 <%@page import="be.project.javabeans.Gift"%>
 <%@page import="be.project.javabeans.Participation"%>
 <%@page import="be.project.javabeans.User"%>
+<%@page import="java.time.LocalDate"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
+
+
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" errorPage="handleException.jsp"%>
@@ -30,6 +34,10 @@
 					break;
 			}
 			return td;
+		}
+		public static String convertDateEUFormat(LocalDate date){
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		    return date.format(formatter);	
 		}
 	%>
 	
@@ -60,7 +68,7 @@
 			<tr>
 				<th><%= giftList.getGiftListUser().getLastname() + " " +  giftList.getGiftListUser().getFirstname()  %></th>
 				<td><%= giftList.getOccasion()%></td>
-				<td><%= giftList.getExpirationDate() == null ? "Pas de date d'expiration": giftList.getExpirationDate() %></td>
+				<td><%= giftList.getExpirationDate() == null ? "Pas de date d'expiration": convertDateEUFormat(giftList.getExpirationDate()) %></td>
 				<td><%= giftList.isEnabled() ? "Activée":" Désactivée"%></td>
 				<% if(giftList.getSharedUsers().isEmpty()){%>
 					<td>Aucun participant pour le moment</td>
@@ -96,23 +104,24 @@
 				<th>Actions</th>
 			</tr>
 			<%
-				for (Gift gift : giftList.getCurrentGifts()) {
+				if(giftList.getCurrentGifts() != null){
+					for (Gift gift : giftList.getCurrentGifts()) {
 			%>
 			<tr>
 				<%= manageCodeColorPriorityLevel(gift.getPriorityLevel()) %>
 				<td><%= gift.getName()%></td>
 				<td><%= gift.getDescription()%></td>
-				<td><%= gift.getAveragePrice()%></td>
-				<td><%= gift.isReserved() ? "Oui":" Non"%></td>
+				<td><%= String.format("%.2f",  gift.getAveragePrice())%> euros</td>
 				<td><%= gift.getLink() == null ? "Pas de lien fourni": gift.getLink()  %></td>
 				<td><%= gift.getImage() == null ? "Pas d'image fournie": gift.getImage() %></td>
+				<td><%= gift.isReserved() ? "Oui":" Non"%></td>
 				<% if(gift.getParticipations() != null){%>
 					<td>
 						<ul>
 						<%for(Participation participation: gift.getParticipations()){ %>
 							<li><%= participation.getParticipant().getLastname() 
 								+ " " + participation.getParticipant().getFirstname() 
-								+ "-> participe à hauteur de " + participation.getParticipationpart() + " euros"
+								+ "-> participe à hauteur de " + String.format("%.2f", participation.getParticipationpart()) + " euros"
 								%>
 							</li>
 						<%} %>
@@ -121,16 +130,17 @@
 				<%} %>
 				<%if(u.getUserId() == giftList.getGiftListUser().getUserId() && !gift.isReserved()){%>
 				<td>
-					<a href="./editGift?id=<%=gift.getGiftId()%>">Modifier le cadeau</a>
+					<a href="./editGift?id=<%=gift.getGiftId()%>">Modifier le cadeau</a><br>
+					<a href="./offerGift?id=<%=gift.getGiftId()%>">Offrir en partie ou totalement ce cadeau</a>
 				</td>
 				<%} %>
-				<%if(!gift.isFullyPaid()){%>
+				<%if(!gift.isFullyPaid() && u.getUserId() != giftList.getGiftListUser().getUserId()){%>
 				<td>
 					<a href="./offerGift?id=<%=gift.getGiftId()%>">Offrir en partie ou totalement ce cadeau</a>
 				</td>
 				<%} %>
 			</tr>
-			<%} %>
+			<%}} %>
 		</table>
 		 
 	</div>

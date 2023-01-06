@@ -145,6 +145,9 @@ public class Gift implements Serializable{
 	}
 	
 	public boolean isFullyPaid() {
+		if(this.getParticipations() == null) 
+			return false;
+		
 		double somme =0;
 		for(Participation participation : this.getParticipations()) {
 			somme+= participation.getParticipationpart();
@@ -171,12 +174,5 @@ public class Gift implements Serializable{
 		
 	}
 
-	@Override
-	public String toString() {
-		return "Gift [giftId=" + giftId + ", priorityLevel=" + priorityLevel + ", name=" + name + ", description="
-				+ description + ", averagePrice=" + averagePrice + ", reserved=" + reserved + ", link=" + link
-				+ ", image=" + image + ", giftList=" + giftList + ", participations=" + participations + "]";
-	}
-	
 
 }

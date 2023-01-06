@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
@@ -130,9 +131,13 @@ public class GiftList implements Serializable{
 		return giftListDAO.insert(this);
 	}
 	
-	public boolean addUserToSharedList(User u) {
-		return ((GiftListDAO)giftListDAO).addUserTosharedList(this, u);
+	public int update() {
+		return giftListDAO.update(this);
 	}
+	
+	/*public boolean addUserToSharedList(User u) {
+		return ((GiftListDAO)giftListDAO).addUserTosharedList(this, u);
+	}*/
 	public static ArrayList<GiftList> getAll() {
 		return giftListDAO.findAll();
 	}
@@ -155,22 +160,35 @@ public class GiftList implements Serializable{
 	public String returnEnabledAsString() {
 		return enabled ? "Y" : "N";
 	}
-
-
-	@Override
-	public String toString() {
-		return "GiftList [listId=" + listId + ", occasion=" + occasion + ", expirationDate=" + expirationDate
-				+ ", enabled=" + enabled + ", gifts=" + gifts + ", sharedUsers=" + sharedUsers + ", giftListUser="
-				+ giftListUser + ", key=" + key + "]";
+	
+	public int[] getAllSharedUserId() {
+		if(sharedUsers != null) {
+			int[] idArray = new int[sharedUsers.size()];
+			for(int i=0; i<sharedUsers.size();i++) {
+				idArray[i] = sharedUsers.get(i).getUserId();
+			}
+			return idArray;
+		}
+		return null;
 	}
 
 
-	public int update() {
-		return giftListDAO.update(this);
+	public static boolean addSharedList(int listId, ArrayList<String> sharedUsersId) {
+		try {
+			
+			String[] stringArray = sharedUsersId.toArray(new String[0]);
+			int[] intArray = Arrays.stream(stringArray)
+	                .mapToInt(Integer::parseInt)
+	                .toArray();
+			System.out.println("check du int[] dans model:");
+			for(int i=0;i<intArray.length;i++) {
+				System.out.println(intArray[i]);
+			}
+			return ((GiftListDAO)giftListDAO).addSharedList(listId, intArray);
+		}catch(Exception e) {
+			System.out.println("Exception dans addSharedList de GiftList model API:" + e.getMessage() );
+			return false;
+		}
+		
 	}
-	
-	
-	
-	
-
 }

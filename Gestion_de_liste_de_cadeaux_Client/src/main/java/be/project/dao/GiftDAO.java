@@ -27,8 +27,6 @@ public class GiftDAO extends DAO<Gift> {
 		parameters.add("giftImg", obj.getImage());
 		parameters.add("link", String.valueOf(obj.getLink()));
 		parameters.add("listId", String.valueOf(obj.getGiftList().getListId()));
-		System.out.println(parameters);
-		System.out.println("from client avant l'envoie"+obj);
 		clientResponse=resource
 				.path("gift")
 				.header("key",apiKey)
@@ -54,11 +52,18 @@ public class GiftDAO extends DAO<Gift> {
 
 	@Override
 	public ArrayList<Gift> findAll() {
-		String responseJSON = resource.path("gift")
+		clientResponse= resource.path("gift")
 				.header("key",apiKey)
-				.accept(MediaType.APPLICATION_JSON).get(String.class);
-		JSONArray arrayResponseJSON = new JSONArray(responseJSON);
+				.accept(MediaType.APPLICATION_JSON)
+				.get(ClientResponse.class);
+		
+		String responseJSON=clientResponse.getEntity(String.class);
+		int status=clientResponse.getStatus();
+		//gérer les listes de cadeaux vides
+		if(status == 404) 
+			return null;
 		ArrayList<Gift> gifts = new ArrayList<>();
+		JSONArray arrayResponseJSON = new JSONArray(responseJSON);
 		try {
 			for(int i = 0; i < arrayResponseJSON.length(); i++) {
 				Gift gift = Gift.mapGiftFromJson((JSONObject) arrayResponseJSON.get(i));

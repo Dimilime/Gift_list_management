@@ -29,7 +29,6 @@ public class GiftListAPI extends API{
 			@HeaderParam("key") String key
 			)
 	{
-		
 		if(key.equals(apiKey)) 
 		{ 
 			
@@ -50,6 +49,49 @@ public class GiftListAPI extends API{
 		
 	}
 	
+	@POST
+	@Path("/{id}/sharedUsers")
+	public Response addSharedUsers(
+			@PathParam("id") int listIdFromPath,
+			@FormParam("listId") int listId,
+			@FormParam("jsonArrayUsersId") String JSONArraySharedUsersId,
+			@HeaderParam("key") String key
+			)
+	{
+		if(key.equals(apiKey) && listIdFromPath ==listId) {
+			System.out.println("on envoit côté API");
+			System.out.println("listid " + listId);
+			System.out.println("json " + JSONArraySharedUsersId);
+			ArrayList<String> sharedUsersId = null;
+			//check si tableau vide ou si contient des valeurs on extrait le ou les ID
+			if(JSONArraySharedUsersId.length()>2) {
+				sharedUsersId = new ArrayList<String>();
+				//cas multiple valeurs
+				if(JSONArraySharedUsersId.contains(",")) {
+					String[] sharedUsersID = JSONArraySharedUsersId.replaceAll("\\[", "")
+	                          .replaceAll("]", "")
+	                          .split(",");
+					for(int i=0;i<sharedUsersID.length;i++) {
+						sharedUsersId.add(sharedUsersID[i]);
+					}
+				}
+				//cas 1 seule valeur
+				else {
+					String sharedUserId = null;
+					sharedUserId= JSONArraySharedUsersId.replaceAll("\\[", "")
+							.replaceAll("]", "");
+					sharedUsersId.add(sharedUserId);
+				}
+			}
+			if(GiftList.addSharedList(listId, sharedUsersId)) {
+				return Response.status(Status.CREATED).build();
+			}
+			return Response.status(Status.SERVICE_UNAVAILABLE).build();
+		}
+		return Response.status(Status.UNAUTHORIZED).build();
+		
+	}
+	
 	@PUT
 	@Path("/update/{id}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -61,23 +103,41 @@ public class GiftListAPI extends API{
 			@FormParam("userListId") int userListId,
 			@FormParam("enabled") String enabled,
 			@HeaderParam("key") String key) {
+
 		if(key.equals(apiKey)) {
 			try {
-				if(listIdForm == 0 || occasion == null || userListId ==0 || listId!=listIdForm)
+				if(listIdForm == 0 || occasion == null || userListId == 0 || listId!=listIdForm) 
 					return Response.status(Status.BAD_REQUEST).build();
+				
 				User connectedUser = new User();
 				connectedUser.setUserId(userListId);
-				//create sharedUser
-				ArrayList<User> sharedUsers = new ArrayList<User>();
-				String[] sharedUsersID = JSONsharedUsersId.replaceAll("\\[", "")
-                          .replaceAll("]", "")
-                          .split(",");
-				for(int i=0;i<sharedUsersID.length;i++) {
-					User user = new User();
-					user.setUserId(Integer.valueOf(sharedUsersID[i]));
-					sharedUsers.add(user);
+
+				ArrayList<User> sharedUsers = null;
+				//check si tableau vide ou si contient des valeurs on extrait le ou les ID
+				if(JSONsharedUsersId.length()>2) {
+					sharedUsers = new ArrayList<User>();
+					//cas multiple valeurs
+					if(JSONsharedUsersId.contains(",")) {
+						String[] sharedUsersID = JSONsharedUsersId.replaceAll("\\[", "")
+		                          .replaceAll("]", "")
+		                          .split(",");
+						for(int i=0;i<sharedUsersID.length;i++) {
+							User user = new User();
+							user.setUserId(Integer.valueOf(sharedUsersID[i]));
+							sharedUsers.add(user);
+						}
+					}
+					//cas 1 seule valeur
+					else {
+						String sharedUserId = null;
+						sharedUserId= JSONsharedUsersId.replaceAll("\\[", "")
+								.replaceAll("]", "");
+						User user = new User();
+						user.setUserId(Integer.valueOf(sharedUserId));
+						sharedUsers.add(user);
+					}
 				}
-			
+				
 				GiftList giftList = new GiftList(listId,occasion,expirationDate,null, sharedUsers, connectedUser, null, enabled);
 				int updateCode=giftList.update();
 				if(updateCode==0){
@@ -86,6 +146,7 @@ public class GiftListAPI extends API{
 					return Response.status(Status.OK).build();
 				}
 			} catch (Exception e) {
+				System.out.println("Exception dans giftListAPI update " + e.getMessage());
 				return Response.status(Status.UNSUPPORTED_MEDIA_TYPE).build();
 			}
 		}
@@ -125,7 +186,7 @@ public class GiftListAPI extends API{
 		return Response.status(Status.UNAUTHORIZED).build();
 	}
 	
-	@POST
+	/*@POST
 	@Path("/sharedList")
 	public Response createSharedList(
 			@FormParam("userId") int userId,
@@ -152,7 +213,7 @@ public class GiftListAPI extends API{
 		}
 		return Response.status(Status.UNAUTHORIZED).build();
 		
-	}
+	}*/
 	
 	
 }

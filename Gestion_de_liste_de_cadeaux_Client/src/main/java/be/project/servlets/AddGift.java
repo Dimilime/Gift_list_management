@@ -53,7 +53,6 @@ public class AddGift extends HttpServlet {
 			return;
 		}
 			
-		System.out.println("doPost addgift");
 		HttpSession session = request.getSession(false);
 		
 		GiftList giftList = null;
@@ -82,27 +81,23 @@ public class AddGift extends HttpServlet {
 					int priorityLvl = Integer.valueOf(priorityLevel);
 					Gift gift = null;
 					if(avgPrice >0 && priorityLvl > 0) {
-						
 						gift = new Gift(0, priorityLvl, giftName, description, avgPrice, link, giftImg, giftList);
 						ArrayList<Gift> gifts = new ArrayList<>();
-						if(giftList.getGifts().isEmpty() || giftList.getGifts() == null)
+						if( giftList.getGifts() == null || giftList.getGifts().isEmpty())
 							giftList.setGifts(gifts);
-						
 					}
-					if(giftList.addGift(gift)) {
-							
+					if(giftList.addGift(gift)) {		
 						//session.setAttribute("giftList", giftList);
 						request.setAttribute("message","Cadeau ajouté!");
 						if(addAnother) {
 							doGet(request, response);
 							return;
 						}else {
+							request.setAttribute("message","Liste créée avec succès");
+							request.setAttribute("giftForward", "yes");
 							request.getRequestDispatcher("home").forward(request, response);
 							return;
-						}
-							
-							
-						
+						}	
 				}
 				request.setAttribute("errorGift","Cadeau non ajouté!");
 				doGet(request, response);

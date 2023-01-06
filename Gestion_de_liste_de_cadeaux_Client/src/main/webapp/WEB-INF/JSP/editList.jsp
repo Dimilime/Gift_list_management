@@ -77,7 +77,7 @@
 			<div class="mb-3">
 				<label for="enabledCheckbox" class="form-label">Activation de la liste</label>
 				<input id="enabledCheckbox" type="checkbox" class="form-check-input" 
-				name="enabled" checked="<%= giftList.isEnabled()%>">
+				name="enabled" <%if(giftList.isEnabled()) {%>checked <%} %>>
 			</div>
 			<% }else{%>
 			<strong>La liste ayant déjà expiré, vous ne pouvez pas la désactiver/activer<br>

@@ -143,14 +143,4 @@ public class Gift implements Serializable{
 	public static ArrayList<Gift> getAll(){
 		return giftDAO.findAll();
 	}
-
-	@Override
-	public String toString() {
-		return "Gift [giftId=" + giftId + ", priorityLevel=" + priorityLevel + ", name=" + name + ", description="
-				+ description + ", averagePrice=" + averagePrice + ", reserved=" + reserved + ", link=" + link
-				+ ", image=" + image + ", participations=" + participations + ", giftList=" + giftList + "]";
-	}
-	
-	
-
 }

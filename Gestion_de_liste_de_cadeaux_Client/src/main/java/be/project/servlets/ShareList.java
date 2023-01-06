@@ -44,9 +44,6 @@ public class ShareList extends HttpServlet {
 			index = (int)session.getAttribute("index");// get the index of the giftList
 			sharedUsersNumber = (int) session.getAttribute("sharedUsersNumber");
 		}
-		
-		System.out.println(index);
-		System.out.println("shareList doPost");
 		String userEmail = request.getParameter("userEmail");
 		User sharedUser = User.getUserByEmail(userEmail);
 		sharedUser.setNotifications(new ArrayList<>());
@@ -56,11 +53,10 @@ public class ShareList extends HttpServlet {
 				
 				if(user.getGiftLists().get(index).addUserToSharedList(sharedUser))
 				{
-
 					sharedUsersNumber++;
 					session.setAttribute("sharedUsersNumber", sharedUsersNumber);
 					session.setAttribute("giftList", user.getGiftLists().get(index));
-					request.setAttribute("message", sharedUser.getFirstname()+" a été invité à participé à la liste !");
+					request.setAttribute("message", sharedUser.getFirstname()+" a été ajouté à la liste de partage temporaire ! N'oublier pas de cliquez sur Valider le partager pour confirmer");
 					request.getRequestDispatcher("/WEB-INF/JSP/shareList.jsp").forward(request, response);
 					return;
 				}

@@ -119,6 +119,7 @@ th, td{text-align: center;}
 }
 select[id=participantsSelect]{
 	width: 50%;
+	height: 150px;
     overflow-x: scroll;
 }
 

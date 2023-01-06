@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import be.project.models.GiftList;
 import be.project.models.User;
 import oracle.jdbc.OracleTypes;
+import oracle.sql.ARRAY;
+import oracle.sql.ArrayDescriptor;
 
 public class GiftListDAO extends DAO<GiftList>{
 
@@ -44,15 +46,28 @@ public class GiftListDAO extends DAO<GiftList>{
 	@Override
 	public int update(GiftList obj) {
 		int codeError = -1;
-		try(CallableStatement callableStatement = conn.prepareCall("{call update_giftList(?,?,?,?)}")) {
+		try(CallableStatement callableStatement = conn.prepareCall("{call update_giftList(?,?,?,?,?,?)}")) {
 				callableStatement.setInt(1, obj.getListId());
 				callableStatement.setString(2, obj.getOccasion());
 				callableStatement.setDate(3, obj.parseExpirationDateToDate());
 				callableStatement.setString(4, obj.returnEnabledAsString());
-				callableStatement.registerOutParameter(5, java.sql.Types.INTEGER);
-				//manque ajout shareduser + créer procédure
+				//recup tableau de sharedUsersId
+				int[] sharedUsersId = obj.getAllSharedUserId();
+				ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor("NUM_ARRAY", conn);
+				ARRAY array = new ARRAY(descriptor, conn, sharedUsersId);
+				callableStatement.setArray(5, array);
+				callableStatement.registerOutParameter(6, java.sql.Types.INTEGER);
+
+				System.out.println("Valeur recues dao api update :");
+				System.out.println(obj.getListId());
+				System.out.println(obj.getOccasion());
+				System.out.println(obj.parseExpirationDateToDate());
+				System.out.println(obj.returnEnabledAsString());
+				System.out.println(obj.getAllSharedUserId());
+				System.out.println(array);
+
 				callableStatement.executeUpdate();
-				codeError=callableStatement.getInt(5);
+				codeError=callableStatement.getInt(6);
 		}catch(SQLException e) {
 			System.out.println("Exception dans update update giftList Api "+ e.getMessage());
 		}
@@ -129,19 +144,18 @@ public class GiftListDAO extends DAO<GiftList>{
 						String key = (String)os[4];
 						int userId = Integer.valueOf(os[5].toString());
 						User u = userDao.find(userId);
-						//TODO : effacer commentaire
-//						Array arrayShared = (Array) os[6];
-//						Object[] sharedUsers = (Object[]) arrayShared.getArray();
-//						ArrayList<User> listSharedUsers = new ArrayList<>();
-//						if(sharedUsers != null) {
-//							for (int j = 0; j < sharedUsers.length; j++) {
-//								String  sharedUserId = sharedUsers[j].toString();
-//								User sharedUser = userDao.find(Integer.valueOf(sharedUserId) );
-//								listSharedUsers.add(sharedUser);
-//							}
-//						}
+						Array arrayShared = (Array) os[6];
+						Object[] sharedUsers = (Object[]) arrayShared.getArray();
+						ArrayList<User> listSharedUsers = new ArrayList<>();
+						if(sharedUsers != null) {
+							for (int j = 0; j < sharedUsers.length; j++) {
+								String  sharedUserId = sharedUsers[j].toString();
+								User sharedUser = userDao.find(Integer.valueOf(sharedUserId));
+								listSharedUsers.add(sharedUser);
+							}						
+						}
 						GiftList giftList = new GiftList(giftListId,occasion, u, expirationDate, key, enabled);
-//						giftList.setSharedUsers(listSharedUsers);
+						giftList.setSharedUsers(listSharedUsers);
 						giftLists.add(giftList);		
 					}
 				}
@@ -156,7 +170,7 @@ public class GiftListDAO extends DAO<GiftList>{
 	}
 	
 	
-	public boolean addUserTosharedList(GiftList obj, User user) {
+	/*public boolean addUserTosharedList(GiftList obj, User user) {
 		int id=0;
 		String sql="{call INSERT_USER_SHARED_LIST(?,?,?)}";
 		try(CallableStatement callableStatement = conn.prepareCall(sql)) {
@@ -170,6 +184,27 @@ public class GiftListDAO extends DAO<GiftList>{
 			e.printStackTrace();
 		}
 		return id !=0 ;
+	}*/
+
+	public boolean addSharedList(int listId, int[] sharedUsersId) {
+		int codeError = -1;
+		try(CallableStatement callableStatement = conn.prepareCall("{call insert_sharedList(?,?,?)}")) {
+			System.out.println("check du int[] dans dao:");
+			for(int i=0;i<sharedUsersId.length;i++) {
+				System.out.println(sharedUsersId[i]);
+			}
+				callableStatement.setInt(1, listId);
+				ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor("NUM_ARRAY", conn);
+				ARRAY array = new ARRAY(descriptor, conn, sharedUsersId);
+				callableStatement.setArray(2, array);
+				callableStatement.registerOutParameter(3, java.sql.Types.INTEGER);
+				callableStatement.executeUpdate();
+				codeError=callableStatement.getInt(3);
+				System.out.println("Code error recu de la procédure " + codeError);
+		}catch(SQLException e) {
+			System.out.println("Exception dans giftlistdao de l'api -> addSharedList "+ e.getMessage());
+		}
+		return codeError == 0 ? true : false;
 	}
 
 }

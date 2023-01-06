@@ -2,6 +2,8 @@ package be.project.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,12 +29,18 @@ public class ConsultList extends HttpServlet {
 		try {
 			if(session != null ) {
 				user = (User)session.getAttribute("connectedUser");
-				if(session.getAttribute("listId") !=null) 
+				if(session.getAttribute("listId") != null) 
 					session.removeAttribute("listId");
 			}
-				
+			ArrayList<GiftList> giftList = null;
+			//si vient après modif on refresh la liste
+			if(request.getAttribute("refreshList")!=null) {
+				giftList = user.findAllGiftList();
+			}else {
+				giftList = user.getGiftLists();
+			}
+			
 			//check si bien accès à la liste récup dans la query string
-			ArrayList<GiftList> giftList = user.getGiftLists();
 			if(request.getParameter("id") != null) {
 				listId = Integer.valueOf(request.getParameter("id"));
 				for(GiftList list : giftList) {
@@ -43,7 +51,9 @@ public class ConsultList extends HttpServlet {
 				}
 				if(rightAccess) {
 					ArrayList<Gift> gifts = currentGiftList.getGifts();
-					System.out.println(gifts);
+					//trier par ordre de priorité
+					Collections.sort(gifts, Comparator.comparing(Gift::getPriorityLevel));
+					Collections.reverse(gifts);
 					currentGiftList.setGifts(gifts);
 					request.setAttribute("giftList", currentGiftList);
 					request.getRequestDispatcher("/WEB-INF/JSP/consultList.jsp").forward(request, response);

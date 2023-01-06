@@ -118,8 +118,7 @@ public class GiftDAO extends DAO<Gift> {
 						GiftList giftList = giftListDAO.find(listId);
 						Gift gift = new Gift(giftId, priorityLevel, name, description, averagePrice , reserved, link, img, giftList);
 						gifts.add(gift);		
-					}
-					
+					}	
 				}
 			}
 		

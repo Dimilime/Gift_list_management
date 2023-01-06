@@ -71,7 +71,7 @@ public class EditList extends HttpServlet {
 			}
 				
 			String servletPath = request.getServletPath().substring(1);
-			if(servletPath.equals("editList") && listId!=0 ) {
+			if(listId!=0) {
 				//recup params obligatoire
 				if(request.getParameter("occasion")!=null && request.getParameter("expirationDate") !=null) {
 					String occasion = request.getParameter("occasion");
@@ -94,10 +94,10 @@ public class EditList extends HttpServlet {
 						enabled = true;
 					}
 					GiftList giftList = new GiftList(listId,occasion,expirationDate,null, sharedUsers, connectedUser, null, Utils.convertBoolToString(enabled));
+	
 					if(giftList.update()) {
-						System.out.println("update ok");
 						request.setAttribute("message", "La liste a bien été modifiée");
-						//rajouter l'id dans queryString?
+						request.setAttribute("refreshList", "yes");
 						request.getRequestDispatcher("consultList?id="+listId).forward(request, response);
 						return;
 					}

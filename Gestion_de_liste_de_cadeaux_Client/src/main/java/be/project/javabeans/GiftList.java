@@ -114,9 +114,13 @@ public class GiftList implements Serializable{
 		return gifts;
 	}
 	public ArrayList<Gift> getGifts() {
-		return gifts = Gift.getAll().stream()
-				.filter( gift -> gift.getGiftList().listId == this.listId)
-				.collect(Collectors.toCollection(ArrayList::new));
+		//exception générée si .stream d'un objet null
+		if(Gift.getAll() != null) {
+			return gifts = Gift.getAll().stream()
+					.filter( gift -> gift.getGiftList().listId == this.listId)
+					.collect(Collectors.toCollection(ArrayList::new));
+		}
+		return null;
 	}
 
 	public void setGifts(ArrayList<Gift> gifts) {
@@ -160,13 +164,12 @@ public class GiftList implements Serializable{
 		}
 		return false;
 	}
+	
 	public boolean share() {
 		if(sharedUsers != null) {
-			for(User sharedUser : sharedUsers) {
-				if(!((GiftListDAO)giftListDAO).addUserTosharedList(this, sharedUser)) {//if sharedList was not created return false
-					return false;
-				}
-			}
+			((GiftListDAO)giftListDAO).addSharedUsers(this);
+
+
 			ArrayList<User> usersUnotified = sharedUsers.stream().filter( u -> u.getNotifications() != null)
 					.collect(Collectors.toCollection(ArrayList::new));
 			// si je fais ça, ça va pas trop aller parce qu'il peuvent déjà avoir des notifications si je recupère les users avec leur notifications directement
@@ -192,6 +195,7 @@ public class GiftList implements Serializable{
 	}
 	
 	public boolean update() {
+		System.out.println("passe dans update");
 		return giftListDAO.update(this);
 	}
 	
@@ -232,10 +236,5 @@ public class GiftList implements Serializable{
 		
 	}
 
-	@Override
-	public String toString() {
-		return "GiftList [listId=" + listId + ", occasion=" + occasion + ", expirationDate=" + expirationDate
-				+ ", enabled=" + enabled + ", gifts=" + gifts + ", sharedUsers=" + sharedUsers + ", giftListUser="
-				+ giftListUser + ", key=" + key + "]";
-	}
+
 }
