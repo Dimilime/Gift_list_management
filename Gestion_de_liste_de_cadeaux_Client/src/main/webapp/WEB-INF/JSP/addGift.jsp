@@ -51,7 +51,7 @@
 			</div>
 			<div class="mb-3">
 				<label for="image" class="form-label">Inserer une image du cadeau</label> 
-				<input type="file" id="image" name="giftImg" accept="image/png, image/jpeg, image/jpg" aria-described="imageHelp">
+				<input type="file" id="image" name="giftImg" accept="image/*" aria-described="imageHelp">
 				<div id="imageHelp" class="form-text">Facultatif! Si vous avez une image vous pouvez l'inclure</div>
 			</div>
 			<div class="mb-3">

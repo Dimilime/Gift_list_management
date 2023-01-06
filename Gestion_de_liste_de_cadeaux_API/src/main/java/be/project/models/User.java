@@ -104,15 +104,10 @@ public class User implements Serializable{
 		this.giftLists = giftLists;
 	}
 
-	/**
-	 * @return the invitations
-	 */
 	public ArrayList<GiftList> getInvitations() {
 		return invitations;
 	}
-	/**
-	 * @param invitations the invitations to set
-	 */
+
 	public void setInvitations(ArrayList<GiftList> invitations) {
 		this.invitations = invitations;
 	}

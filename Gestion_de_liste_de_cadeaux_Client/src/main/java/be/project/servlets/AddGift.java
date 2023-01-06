@@ -1,9 +1,15 @@
 package be.project.servlets;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,15 +44,21 @@ public class AddGift extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-//		Part part = request.getPart("giftImg");//genere exception
-//		InputStream is = part.getInputStream();
-//		ServletFileUpload sf = new ServletFileUpload(new DiskFileItemFactory());
-//		try {
-//			List<FileItem> fileItem = sf.parseRequest(request);
-//		} catch (FileUploadException e) {
-//			e.printStackTrace();
-//		}file.getinputstreampour recupe limage
+				String img =null;
+		try {
+			if(request.getPart("giftImg") != null) {
+				Part part = request.getPart("giftImg");
+				InputStream inputStream = part.getInputStream();
+				
+				//convert inputstream to string
+				img =  new String(inputStream.readAllBytes(),StandardCharsets.UTF_8);
+
+			}
+			
+		} catch (Exception e) {
+		}
+
+
 		
 		if(request.getAttribute("giftListForward") != null) {
 			doGet(request, response);
@@ -69,12 +81,10 @@ public class AddGift extends HttpServlet {
 		String description = request.getParameter("description");
 		String averagePrice = request.getParameter("averagePrice");
 		String priorityLevel =  request.getParameter("priorityLevel");
-		String giftImg = request.getParameter("giftImg");
+		String giftImg = img;
 		String link = request.getParameter("link");
 		boolean addAnother = request.getParameter("addAnother") != null;
-//		System.out.println(giftName);
-//		System.out.println(giftImg);
-//		System.out.println(link);
+
 		if(giftName != null && averagePrice != null && priorityLevel != null
 				&& giftName.trim().length() > 0 && averagePrice.trim().length() > 0 && priorityLevel.trim().length() > 0) {
 			try {
@@ -90,8 +100,7 @@ public class AddGift extends HttpServlet {
 						
 					}
 					if(giftList.addGift(gift)) {
-							
-						//session.setAttribute("giftList", giftList);
+
 						request.setAttribute("message","Cadeau ajouté!");
 						if(addAnother) {
 							doGet(request, response);
