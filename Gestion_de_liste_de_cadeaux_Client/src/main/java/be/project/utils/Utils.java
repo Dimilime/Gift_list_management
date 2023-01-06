@@ -1,5 +1,7 @@
 package be.project.utils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 public class Utils {
@@ -29,5 +31,25 @@ public class Utils {
 			return true;
 		}
 		return false;
+	}
+	
+	public static String convertBoolToString(boolean bool) {
+		if(bool) {
+			return "Y";
+		}
+		return "N";
+	}
+	
+	public static LocalDate convertStringToLocalDate(String localDateString) {
+		LocalDate dateParsing;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");	
+		localDateString = localDateString.contains("-")? localDateString.replace("-", "/"): localDateString;
+		dateParsing = LocalDate.parse(localDateString, formatter);
+		return dateParsing;
+	}
+	
+	public static String convertLocalDateToString(LocalDate localDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");	
+		return localDate.format(formatter);
 	}
 }

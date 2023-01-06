@@ -8,8 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
+
+import be.project.javabeans.Gift;
 import be.project.javabeans.GiftList;
 import be.project.javabeans.User;
+import be.project.utils.Utils;
 
 public class GiftListDAO extends DAO<GiftList>{
 	
@@ -20,6 +23,7 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public int insert(GiftList obj) {
+		
 		parameters.clear();
 		parameters.add("occasion", obj.getOccasion());
 		parameters.add("expirationDate", obj.getExpirationDate().toString());
@@ -40,7 +44,48 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public boolean update(GiftList obj) {
-		return false;
+		JSONArray jsonArray= new JSONArray();
+		for(User user : obj.getSharedUsers()) {
+			jsonArray.put(user.getUserId());
+		}
+		parameters.clear();
+		parameters.add("listId",String.valueOf(obj.getListId()));
+		parameters.add("occasion", obj.getOccasion());
+		parameters.add("expirationDate",Utils.convertLocalDateToString(obj.getExpirationDate()));
+		parameters.add("sharedUsersId",jsonArray.toString());
+		parameters.add("userListId",String.valueOf(obj.getGiftListUser().getUserId()));
+		parameters.add("enabled",Utils.convertBoolToString(obj.isEnabled()));
+		clientResponse=resource
+				.path("giftList")
+				.path("update")
+				.path(String.valueOf(obj.getListId()))
+				.header("key",apiKey)
+				.put(ClientResponse.class,parameters)
+				;
+		return clientResponse.getStatus() == 204 ? true : false;
+	}
+	
+	public boolean addSharedUsers(GiftList obj) {
+		JSONArray jsonArray= new JSONArray();
+		for(User user : obj.getSharedUsers()) {
+			jsonArray.put(user.getUserId());
+		}
+		parameters.clear();
+		parameters.add("listId", String.valueOf(obj.getListId()));
+		parameters.add("jsonArrayUsersId", jsonArray.toString());
+		
+		System.out.println("on envoit côté dao");
+		System.out.println("listid " + obj.getListId());
+		System.out.println("json " + jsonArray);
+		
+		clientResponse=resource
+				.path("giftList")
+				.path(String.valueOf(obj.getListId()))
+				.path("sharedUsers")
+				.header("key",apiKey)
+				.post(ClientResponse.class,parameters);
+		
+		return clientResponse.getStatus() == 201 ? true : false;
 	}
 
 	@Override
@@ -64,11 +109,16 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public ArrayList<GiftList> findAll() {
-		
-		String responseJSON = resource.path("giftList")
+		clientResponse= resource.path("giftList")
 				.header("key",apiKey)
-				.accept(MediaType.APPLICATION_JSON).get(String.class);
+				.accept(MediaType.APPLICATION_JSON)
+				.get(ClientResponse.class);
 		
+		String responseJSON=clientResponse.getEntity(String.class);
+		int status=clientResponse.getStatus();
+		//gérer cas aucune listes
+		if(status == 404) 
+			return null;
 		ArrayList<GiftList> giftLists = new ArrayList<>();
 		try {
 			JSONArray arrayResponseJSON = new JSONArray(responseJSON);

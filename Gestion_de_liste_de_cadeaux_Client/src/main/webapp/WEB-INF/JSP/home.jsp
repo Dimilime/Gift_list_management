@@ -1,6 +1,8 @@
 <%@page import="be.project.javabeans.GiftList"%>
 <%@page import="be.project.javabeans.User"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="java.time.LocalDate"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" errorPage="handleException.jsp"%>
 <!DOCTYPE html>
@@ -9,6 +11,12 @@
 	<jsp:param value="Mes listes de cadeaux" name="title" />
 </jsp:include> 
 <body>
+	<%!
+		public static String convertDateEUFormat(LocalDate date){
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		    return date.format(formatter);	
+		}
+	%>
 	<%@ include file="base.jsp" %> 
 	<div class="d-flex justify-content-center"><h1>Mes listes de cadeaux</h1></div>
 	<% if( request.getAttribute("message") != null){%>
@@ -32,12 +40,12 @@
 	<%} %>
 	<div class="container d-flex justify-content-center">
 		
-		<table class="table">
+		<table class="table table-bordered">
 			<tr>
-				<th>Ocassion</th>
+				<th>Occasion</th>
 				<th>Status</th>
 				<th>Date d'expiration</th>
-				<th>Modifier</th>
+				<th>Actions</th>
 			</tr>
 			<%
 				User u = (User)session.getAttribute("connectedUser");
@@ -47,11 +55,9 @@
 			<tr>
 				<td><%= giftList.getOccasion()%></td>
 				<td><%= giftList.isEnabled() ? "Activé":" Désactivé"%></td>
-				<td><%= giftList.getExpirationDate() == null ? "Pas de date d'expiration": giftList.getExpirationDate() %></td>
+				<td><%= giftList.getExpirationDate() == null ? "Pas de date d'expiration": convertDateEUFormat(giftList.getExpirationDate()) %></td>
 				<td>
-					<a class="btn btn-secondary" href="./editList?id=<%=giftList.getListId()%>">Modifier</a>
-				</td>
-				<td>
+					<a class="btn btn-secondary" href="./consultList?id=<%=giftList.getListId()%>">Consulter</a>
 					<a class="btn btn-secondary" href="./shareList?id=<%=giftList.getListId()%>&index=<%=i++%>">Partager</a>
 				</td>
 			</tr>

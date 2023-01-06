@@ -7,7 +7,6 @@ import java.sql.Struct;
 import java.util.ArrayList;
 
 import be.project.models.Notification;
-import be.project.models.User;
 import oracle.jdbc.OracleTypes;
 
 public class NotificationDAO extends DAO<Notification> {

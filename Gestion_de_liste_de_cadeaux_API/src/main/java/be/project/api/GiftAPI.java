@@ -36,7 +36,6 @@ public class GiftAPI extends API {
 			
 			if(key.equals(apiKey)) 
 			{ 
-				
 				if(giftName == null || averagePrice == 0 || priorityLevel == 0 || listId == 0)
 					return Response.status(Status.BAD_REQUEST).build();
 				
@@ -49,7 +48,6 @@ public class GiftAPI extends API {
 					Double avgPrice = Double.valueOf(averagePrice);
 					int priorityLvl = Integer.valueOf(priorityLevel);
 					Gift gift= new Gift(0,priorityLvl,giftName, description, avgPrice,"N",link,imgBlob,giftList);
-					System.out.println("from api"+gift);
 					int giftId=gift.create();
 					
 					if(giftId != 0) {

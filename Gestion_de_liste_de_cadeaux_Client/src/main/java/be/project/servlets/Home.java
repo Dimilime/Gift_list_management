@@ -20,21 +20,33 @@ public class Home extends HttpServlet {
 		User user = null;
 		if(session != null )
 			user = (User)session.getAttribute("connectedUser");
-		if(user != null)
+		if(user != null) {
+			user.findAllGiftList();
+			session.setAttribute("connectedUser", user);
 			request.getRequestDispatcher("/WEB-INF/JSP/home.jsp").forward(request, response);
+		}else {
+			response.sendRedirect("logout");
+		}
 
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//gère la redirection après la création d'une liste
+		if(request.getAttribute("giftForward") != null) {
+			doGet(request, response);
+			return;
+		}
+		
 		HttpSession session = request.getSession(false);
 		User user = null;
 		int index = -1;
 		if(session != null ) {
 			user = (User)session.getAttribute("connectedUser");
-			index = (int)session.getAttribute("index");
+			if(session.getAttribute("index") != null) 
+				index = (int)session.getAttribute("index") ;
 		}
 		
-		if(user !=null && user.getGiftLists().get(index)!=null) {
+		if(user !=null && index != -1 && user.getGiftLists().get(index)!=null) {
 			try {
 				
 				if(user.shareList(index)) {

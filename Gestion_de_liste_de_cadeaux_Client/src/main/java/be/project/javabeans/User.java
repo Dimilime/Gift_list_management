@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,6 +14,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
+import be.project.dao.GiftListDAO;
 import be.project.dao.UserDAO;
 
 public class User implements Serializable{
@@ -200,11 +203,14 @@ public class User implements Serializable{
 		User other = (User) obj;
 		return userId == other.userId;
 	}
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email
-				+ ", password=" + password + ", giftLists=" + giftLists + ", invitations=" + invitations
-				+ ", notifications=" + notifications + ", participations=" + participations + "]";
+
+	public ArrayList<GiftList> findAllGiftList() {
+		if(GiftList.getAll() != null) {
+			return giftLists = GiftList.getAll().stream()
+					.filter( giftList -> giftList.getGiftListUser().getUserId() == this.userId)
+					.collect(Collectors.toCollection(ArrayList::new));
+		}
+		return null;
 	}
 	
 	
