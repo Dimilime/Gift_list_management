@@ -25,9 +25,11 @@
 		<servlet-name>AddGift</servlet-name>
 		<servlet-name>AddNewGift</servlet-name>
 		<servlet-name>ShareList</servlet-name>
+		<servlet-name>ConsultList</servlet-name>
 		<servlet-name>EditList</servlet-name>
 		<servlet-name>Notifications</servlet-name>
 		<servlet-name>SharedList</servlet-name>
+		<servlet-name>EditGift</servlet-name>
 	</filter-mapping>
 	
 	<!-- CONTEXT PARAMS -->
@@ -82,9 +84,19 @@
 		<servlet-class>be.project.servlets.AddNewGift</servlet-class>
 	</servlet>
 	<servlet>
+		<servlet-name>ConsultList</servlet-name>
+		<servlet-class>be.project.servlets.ConsultList</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>EditList</servlet-name>
 		<servlet-class>be.project.servlets.EditList</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>EditGift</servlet-name>
+		<servlet-class>be.project.servlets.EditGift</servlet-class>
+	</servlet>
+	
 	<servlet>
 		<servlet-name>ShareList</servlet-name>
 		<servlet-class>be.project.servlets.ShareList</servlet-class>
@@ -150,8 +162,19 @@
 	</servlet-mapping>
 	
 	<servlet-mapping>
+		<servlet-name>ConsultList</servlet-name>
+		<url-pattern>/consultList</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
 		<servlet-name>EditList</servlet-name>
 		<url-pattern>/editList</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>EditGift</servlet-name>
+		<url-pattern>/editGift</url-pattern>
+		<url-pattern>/offerGift</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>

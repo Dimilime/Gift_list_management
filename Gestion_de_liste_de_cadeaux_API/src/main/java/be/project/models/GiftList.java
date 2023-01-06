@@ -163,6 +163,11 @@ public class GiftList implements Serializable{
 				+ ", enabled=" + enabled + ", gifts=" + gifts + ", sharedUsers=" + sharedUsers + ", giftListUser="
 				+ giftListUser + ", key=" + key + "]";
 	}
+
+
+	public int update() {
+		return giftListDAO.update(this);
+	}
 	
 	
 	

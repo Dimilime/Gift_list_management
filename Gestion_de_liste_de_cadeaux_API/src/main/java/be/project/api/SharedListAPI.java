@@ -8,7 +8,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import be.project.models.GiftList;
-import be.project.models.User;
 
 @Path("/sharedList")
 public class SharedListAPI extends API {
@@ -27,7 +26,6 @@ public class SharedListAPI extends API {
 			if(userId != 0 || listId != 0)
 				return Response.status(Status.BAD_REQUEST).build();
 			
-			User user = User.get(userId);
 			GiftList giftList= GiftList.getGiftList(listId);
 			
 			int giftListId=giftList.create();

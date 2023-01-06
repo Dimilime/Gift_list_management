@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -145,6 +144,13 @@ public class Gift implements Serializable{
 		return giftDAO.findAll();
 	}
 	
+	public boolean isFullyPaid() {
+		double somme =0;
+		for(Participation participation : this.getParticipations()) {
+			somme+= participation.getParticipationpart();
+		}
+		return this.averagePrice == somme;
+	}
 	public static Gift mapGiftFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException  {
 		Gift gift = null;
 		GiftList giftList = null;
