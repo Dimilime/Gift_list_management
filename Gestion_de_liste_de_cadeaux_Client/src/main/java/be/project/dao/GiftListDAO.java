@@ -3,6 +3,7 @@ package be.project.dao;
 import java.util.ArrayList;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,6 +13,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import be.project.javabeans.GiftList;
 import be.project.javabeans.User;
+import be.project.utils.Utils;
 
 public class GiftListDAO extends DAO<GiftList>{
 	
@@ -42,7 +44,24 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public boolean update(GiftList obj) {
-		return false;
+		JSONArray jsonArray= new JSONArray();
+		for(User user : obj.getSharedUsers()) {
+			jsonArray.put(user.getUserId());
+		}
+		parameters.add("listId",String.valueOf(obj.getListId()));
+		parameters.add("occasion", obj.getOccasion());
+		parameters.add("expirationDate",Utils.convertLocalDateToString(obj.getExpirationDate()));
+		parameters.add("sharedUsersId",jsonArray.toString());
+		parameters.add("userListId",String.valueOf(obj.getGiftListUser().getUserId()));
+		parameters.add("enabled",Utils.convertBoolToString(obj.isEnabled()));
+		clientResponse=resource
+				.path("giftList")
+				.path("update")
+				.path(String.valueOf(obj.getListId()))
+				.header("key",apiKey)
+				.put(ClientResponse.class,parameters)
+				;
+		return clientResponse.getStatus() == 204 ? true : false;
 	}
 
 	@Override

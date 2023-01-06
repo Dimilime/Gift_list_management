@@ -12,10 +12,10 @@ import javax.servlet.http.HttpSession;
 import be.project.javabeans.User;
 import be.project.utils.Utils;
 
-public class AuthenticationServlet extends HttpServlet {
+public class Authentication extends HttpServlet {
 	private static final long serialVersionUID = 1L;     
    
-    public AuthenticationServlet() {
+    public Authentication() {
         super();
     }
     

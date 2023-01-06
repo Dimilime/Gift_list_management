@@ -44,7 +44,20 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public int update(GiftList obj) {
-		return 0;
+		int codeError = -1;
+		try(CallableStatement callableStatement = conn.prepareCall("{call update_giftList(?,?,?,?)}")) {
+				callableStatement.setInt(1, obj.getListId());
+				callableStatement.setString(2, obj.getOccasion());
+				callableStatement.setDate(3, obj.parseExpirationDateToDate());
+				callableStatement.setString(4, obj.returnEnabledAsString());
+				callableStatement.registerOutParameter(5, java.sql.Types.INTEGER);
+				//manque ajout shareduser + créer procédure
+				callableStatement.executeUpdate();
+				codeError=callableStatement.getInt(5);
+		}catch(SQLException e) {
+			System.out.println("Exception dans update update giftList Api "+ e.getMessage());
+		}
+		return codeError;
 	}
 
 	@Override

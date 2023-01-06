@@ -109,7 +109,9 @@ public class GiftList implements Serializable{
 	public void setGiftListUser(User giftListUser) {
 		this.giftListUser = giftListUser;
 	}
-	
+	public ArrayList<Gift> getCurrentGifts() {
+		return gifts;
+	}
 	public ArrayList<Gift> getGifts() {
 		return gifts = Gift.getAll().stream()
 				.filter( gift -> gift.getGiftList().listId == this.listId)
@@ -169,6 +171,11 @@ public class GiftList implements Serializable{
 		return giftListDAO.findAll();
 	}
 	
+	public boolean dateIsExpired() {
+		LocalDate now = LocalDate.now();
+		return now.isAfter(expirationDate);
+	}
+	
 	public static GiftList mapListFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException  {
 		GiftList giftList = null;
 		User user = null;
@@ -195,6 +202,10 @@ public class GiftList implements Serializable{
 		giftList.setSharedUsers(sharedUsers);
 		return giftList;
 		
+	}
+
+	public boolean update() {
+		return giftListDAO.update(this);
 	}
 	
 	

@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import be.project.javabeans.User;
 import be.project.utils.Utils;
 
-public class SignUpServlet extends HttpServlet {
+public class SignUp extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public SignUpServlet() {
+    public SignUp() {
         super();
     }
     

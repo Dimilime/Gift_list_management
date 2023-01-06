@@ -1,5 +1,124 @@
+:root{
+    --background-color: #87870d9c;
+    --primary-color: #8db52ccc;
+    --primary-light: #8db52cc7;
+    --button-color-primary: #DB4848;
+}
 
-.justify-content-center{
-    margin-top: 20px
+body{
+    margin:0;
+    padding:0;       
+}
+
+h1{
+    text-transform: uppercase;
+    font-size: 2rem; 
+    font-weight: bold;
+    text-align : center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+nav{background-color:var(--primary-color);}
+
+nav li{
+    font-style: italic;
+    font-weight: 400;
+}
+
+table{caption-side: top !important;}
+caption{text-align: center;}
+th, td{text-align: center;}
+
+.center{text-align: center;}
+
+.code-red{color : red;}
+.code-orange{color: orange;}
+.code-green{color: green;}
+
+.button{
+    width: 40vw;
+    height: 40px;
+    font-size: 1.2rem;
+    text-decoration: underline;
+    background-color: var(--primary-color);
+    border-radius: 20px;
+    padding: 0;
+    border: none;
+
+}
+
+.button:hover{
+    transform: scale(1.1);
+    transition: 30ms;
+}
+
+.btn-red{
+    color: black !important;
+    background-color:var(--button-color-primary);
+    font-size: 1.1rem;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: none;
+    text-align: center;
+}
+
+.btn-confirm{
+	background-color: var(--primary-color); 
+	margin-bottom: 15px;
+}
+
+.btn-logout{
+	margin-right: 10%;
+}
+
+.authentication-container{
+    display: flex;
+    height: 100vh;
+}
+
+.authentication-container .image-container{
+    position: relative;
+    width: 50vw;
+    height: 100vh;
+    background: url(../imgs/gift-box-g7451eea27_640.jpg) no-repeat center center;
+    background-color:var(--background-color);
+}
+
+.login-content,.signup-content{
+    width: 50vw;
+    height: 100vh;
+}
+
+.login-message h1, .signup-message h1
+{
+    margin-top: 30px;
+    margin-bottom: 0;
+    color:var(--primary-color);
+}
+
+.login-message a, .signup-message a{
+    font-style: italic;
+    color: var(--primary-light);
+}
+
+.line{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border-top: 1px solid black;
+}
+
+.login-form, .signup-form{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.modifyList-form{
+	width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+select[id=participantsSelect]{
+	width: 50%;
+    overflow-x: scroll;
 }
 
