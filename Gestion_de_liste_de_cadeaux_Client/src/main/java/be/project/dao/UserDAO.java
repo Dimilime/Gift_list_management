@@ -8,8 +8,6 @@ import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
 
-import com.sun.jersey.core.util.MultivaluedMapImpl;
-
 import be.project.javabeans.User;
 
 public class UserDAO extends DAO<User>{
@@ -57,7 +55,6 @@ public class UserDAO extends DAO<User>{
 				.header("key",apiKey)
 				.accept(MediaType.APPLICATION_JSON)
 				.get(String.class);
-		System.out.println(responseJSON);
 		User user=null;
 		try {
 			JSONObject json = new JSONObject(responseJSON);

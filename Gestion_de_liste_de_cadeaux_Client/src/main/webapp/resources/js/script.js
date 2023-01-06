@@ -17,11 +17,14 @@ copyLinkBtn.addEventListener("click", () => {
 });
 
 (function getUsers() {
-
 	var xhr = new XMLHttpRequest()
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState === 4 && xhr.status === 200) {
+			searchResult.innerHTML= "";
 			readData(xhr.responseText);//responseText is users
+		}
+		else {
+			searchResult.innerHTML= "<h3>Chargement ...</h3>";
 		}
 	};
 	xhr.open("GET", "http://localhost:8080/Gestion_de_liste_de_cadeaux_API/api/user", true);
@@ -29,8 +32,11 @@ copyLinkBtn.addEventListener("click", () => {
 	xhr.send();
 })();
 
+
+
 function readData(data) {
 	dataArray = JSON.parse(data);
+	localStorage.setItem("dataArray", JSON.parse(data));
 	createUserList(dataArray);
 }
 function createUserList(usersList) {
@@ -42,7 +48,7 @@ function createUserList(usersList) {
 			+ '	<td>' + user.firstname + '</td>'
 			+ '	<td>' + user.email + '</td>'
 			+ '	<td>'
-			+ `<form action="shareList" method="post">
+			+ `<form action="shareList" method="post" >
 					<button class="btn btn-secondary" type="submit" name="userEmail" value="${user.email}">Partager</button>
 			   </form>`
 			+ '	</td>';

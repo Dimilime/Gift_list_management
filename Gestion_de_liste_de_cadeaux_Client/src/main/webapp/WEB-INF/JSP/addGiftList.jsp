@@ -6,7 +6,7 @@
 	<jsp:param value="Ajouter une nouvelle liste" name="title" />
 </jsp:include>
 <body>
-	<%@ include file="base.html"%>
+	<%@ include file="base.jsp"%>
 	<div class="d-flex justify-content-center"><h1>Ajouter une nouvelle liste</h1></div>
 	<%
 		String error = (String)request.getAttribute("errorAddGiftList");

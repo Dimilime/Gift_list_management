@@ -6,7 +6,7 @@
 	<jsp:param value="Erreur" name="title" />
 </jsp:include>
 <body>
-	<%@ include file="base.html" %> 
+	<%@ include file="base.jsp" %> 
 	<h1>Exception!</h1>
 	<hr />
 	<h2>Description de l'exception : <%= exception.toString() %></h2>

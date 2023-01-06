@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
+import be.project.dao.GiftListDAO;
 import be.project.models.GiftList;
 
 public class GiftList implements Serializable{
@@ -129,6 +130,9 @@ public class GiftList implements Serializable{
 		return giftListDAO.insert(this);
 	}
 	
+	public boolean addUserToSharedList(User u) {
+		return ((GiftListDAO)giftListDAO).addUserTosharedList(this, u);
+	}
 	public static ArrayList<GiftList> getAll() {
 		return giftListDAO.findAll();
 	}

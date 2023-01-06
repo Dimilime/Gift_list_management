@@ -9,6 +9,7 @@ import java.sql.Struct;
 import java.util.ArrayList;
 
 import be.project.models.GiftList;
+import be.project.models.Notification;
 import be.project.models.User;
 import oracle.jdbc.OracleTypes;
 
@@ -117,24 +118,23 @@ public class GiftListDAO extends DAO<GiftList>{
 						String key = (String)os[4];
 						int userId = Integer.valueOf(os[5].toString());
 						User u = userDao.find(userId);
-						Array arrayShared = (Array) os[6];
-						Object[] sharedUsers = (Object[]) arrayShared.getArray();
-						ArrayList<User> listSharedUsers = new ArrayList<>();
-						if(sharedUsers != null) {
-							for (int j = 0; j < sharedUsers.length; j++) {
-								String  sharedUserId = sharedUsers[j].toString();
-								User sharedUser = userDao.find(Integer.valueOf(sharedUserId) );
-								listSharedUsers.add(sharedUser);
-							}
-						}
+						//TODO : effacer commentaire
+//						Array arrayShared = (Array) os[6];
+//						Object[] sharedUsers = (Object[]) arrayShared.getArray();
+//						ArrayList<User> listSharedUsers = new ArrayList<>();
+//						if(sharedUsers != null) {
+//							for (int j = 0; j < sharedUsers.length; j++) {
+//								String  sharedUserId = sharedUsers[j].toString();
+//								User sharedUser = userDao.find(Integer.valueOf(sharedUserId) );
+//								listSharedUsers.add(sharedUser);
+//							}
+//						}
 						GiftList giftList = new GiftList(giftListId,occasion, u, expirationDate, key, enabled);
-						giftList.setSharedUsers(listSharedUsers);
+//						giftList.setSharedUsers(listSharedUsers);
 						giftLists.add(giftList);		
 					}
-					
 				}
 			}
-		
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -142,6 +142,23 @@ public class GiftListDAO extends DAO<GiftList>{
 		}
 
 		return giftLists;
+	}
+	
+	
+	public boolean addUserTosharedList(GiftList obj, User user) {
+		int id=0;
+		String sql="{call INSERT_USER_SHARED_LIST(?,?,?)}";
+		try(CallableStatement callableStatement = conn.prepareCall(sql)) {
+			callableStatement.setInt(1, user.getUserId());
+			callableStatement.setInt(2, obj.getListId());
+			callableStatement.registerOutParameter(3, java.sql.Types.INTEGER);
+			callableStatement.executeUpdate();
+			id = callableStatement.getInt(3);
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return id !=0 ;
 	}
 
 }

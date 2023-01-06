@@ -26,8 +26,33 @@ public class Home extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		doGet(request, response);
+		HttpSession session = request.getSession(false);
+		User user = null;
+		int index = -1;
+		if(session != null ) {
+			user = (User)session.getAttribute("connectedUser");
+			index = (int)session.getAttribute("index");
+		}
+		
+		if(user !=null && user.getGiftLists().get(index)!=null) {
+			try {
+				
+				if(user.shareList(index)) {
+					session.removeAttribute("index");
+					session.removeAttribute("giftList");
+					request.setAttribute("message", "La liste a bien été partagé!");
+				}
+					
+				else
+					request.setAttribute("errorList", "La liste n'a été partagé!");
+				request.getRequestDispatcher("/WEB-INF/JSP/home.jsp").forward(request, response);
+				return;
+			} catch (NumberFormatException e) {
+				request.setAttribute("error", "Erreur dans Home "+e.getMessage());
+				request.getRequestDispatcher("/WEB-INF/JSP/error.jsp").forward(request, response);
+			}
+		}
+			
 	}
 
 }

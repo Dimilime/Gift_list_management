@@ -8,8 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
-
 import be.project.javabeans.GiftList;
 import be.project.javabeans.User;
 
@@ -85,6 +83,18 @@ public class GiftListDAO extends DAO<GiftList>{
 		}
 	}
 	
+	public boolean addUserTosharedList(GiftList obj, User u) {
+		parameters.clear();
+		parameters.add("userId", String.valueOf(u.getUserId()));
+		parameters.add("listId", String.valueOf(obj.getListId()));
+		clientResponse=resource
+				.path("giftList")
+				.path("sharedList")
+				.header("key",apiKey)
+				.post(ClientResponse.class,parameters);
+		
+		return clientResponse.getStatus() == 201 ? true : false;
+	}
 	
 
 }

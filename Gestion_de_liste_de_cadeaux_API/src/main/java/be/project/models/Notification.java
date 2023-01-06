@@ -1,15 +1,22 @@
 package be.project.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
+import be.project.dao.AbstractDAOFactory;
+import be.project.dao.DAO;
+import be.project.dao.NotificationDAO;
 public class Notification implements Serializable{
 
 	private static final long serialVersionUID = -6017335916474263287L;
 	
+	private static AbstractDAOFactory adf = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	private static DAO<Notification> notificationDAO = adf.getNotificationDAO();
+	
 	private int notificationId;
 	private String title;
 	private String message;
-	private User user;
+	private ArrayList<User> users;
 	
 	public Notification() {
 		
@@ -45,14 +52,35 @@ public class Notification implements Serializable{
 		this.message = message;
 	}
 
-	public User getUser() {
-		return user;
+
+	public ArrayList<User> getUsers() {
+		return users;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+
+	public void setUsers(ArrayList<User> users) {
+		this.users = users;
 	}
 	
+	public int create() {
+		
+		int idCreated=notificationDAO.insert(this);
+		
+		if(idCreated != 0) {
+			for (User user : users) {
+				int idU=((NotificationDAO)notificationDAO).insertUserNotification(idCreated, user.getUserId());
+				
+				if(idU == 0)
+					return idU;
+			}
+		}
+		return idCreated;
+	}
+	
+	public static Notification get(int id) {
+		return notificationDAO.find(id);
+	}
+
 	
 	
 	

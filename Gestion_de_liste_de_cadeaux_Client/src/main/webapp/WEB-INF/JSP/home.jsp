@@ -9,11 +9,17 @@
 	<jsp:param value="Mes listes de cadeaux" name="title" />
 </jsp:include> 
 <body>
-	<%@ include file="base.html" %> 
+	<%@ include file="base.jsp" %> 
 	<div class="d-flex justify-content-center"><h1>Mes listes de cadeaux</h1></div>
 	<% if( request.getAttribute("message") != null){%>
 		<div class="alert alert-success alert-dismissible fade show" role="alert">
 			${ message }
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	<%}
+		if( request.getAttribute("errorList") != null){%>
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">
+			${ errorList }
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
 	<%}
@@ -35,9 +41,8 @@
 			</tr>
 			<%
 				User u = (User)session.getAttribute("connectedUser");
-				ArrayList<GiftList> giftLists = u.getGiftLists();
-				//session.setAttribute("user", u);
-				for ( GiftList giftList : giftLists) {
+				int i=0;
+				for ( GiftList giftList : u.getGiftLists()) {
 			%>
 			<tr>
 				<td><%= giftList.getOccasion()%></td>
@@ -47,7 +52,7 @@
 					<a class="btn btn-secondary" href="./editList?id=<%=giftList.getListId()%>">Modifier</a>
 				</td>
 				<td>
-					<a class="btn btn-secondary" href="./shareList?id=<%=giftList.getListId()%>">Partager</a>
+					<a class="btn btn-secondary" href="./shareList?id=<%=giftList.getListId()%>&index=<%=i++%>">Partager</a>
 				</td>
 			</tr>
 			<%

@@ -96,11 +96,11 @@ public class User implements Serializable{
 		this.password = password;
 	}
 
-	public ArrayList<GiftList> getGiftList() {
+	public ArrayList<GiftList> getGiftLists() {
 		return giftLists;
 	}
 
-	public void setGiftList(ArrayList<GiftList> giftLists) {
+	public void setGiftLists(ArrayList<GiftList> giftLists) {
 		this.giftLists = giftLists;
 	}
 
@@ -140,9 +140,13 @@ public class User implements Serializable{
 		return ((UserDAO)userDAO).findByEmail(email);
 	}
 	
+	public static User get(int id) {
+		return userDAO.find(id);
+	}
 	public static ArrayList<User> getAll(){
 		return userDAO.findAll();
 	}
+	
 	
 	@Override
 	public String toString() {

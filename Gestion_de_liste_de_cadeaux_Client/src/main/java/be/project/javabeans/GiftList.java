@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
+import be.project.dao.GiftListDAO;
 
 public class GiftList implements Serializable{
 
@@ -157,6 +158,28 @@ public class GiftList implements Serializable{
 		}
 		return false;
 	}
+	public boolean share() {
+		if(sharedUsers != null) {
+			for(User sharedUser : sharedUsers) {
+				if(!((GiftListDAO)giftListDAO).addUserTosharedList(this, sharedUser)) {//if sharedList was not created return false
+					return false;
+				}
+			}
+			ArrayList<User> usersUnotified = sharedUsers.stream().filter( u -> u.getNotifications() != null)
+					.collect(Collectors.toCollection(ArrayList::new));
+			// si je fais ça, ça va pas trop aller parce qu'il peuvent déjà avoir des notifications si je recupère les users avec leur notifications directement
+			// avec le getUserByEmail, je serais obligé de faire une fonction en sgbd quui retourne toutes les notifs de l'user directement 
+			// et si je fais ça les users que j'ajoute dans la liste de shredUsers ont déjà une notification, donc ça sera pas vide
+			// les user que je recupère avec la liste n'ont d'office pas de notification, donc plutot que de recup ceux qui ont une liste de notif vide
+			//ce serait mieux de recup ceux qui n'ont pas de liste de notif vide car ils correspondent à ceux que je viens d'inserer 
+			//-- quand je rentre je crée la fonction qui récup toute les notifs de l'user directement => order by id desc l'id est dans l'ordre de reception donc pas besoin de date
+			System.out.println("usersUnotified: " + usersUnotified);
+			Notification notification = new Notification(0, "Invitation",
+					"Tu es invité à participé à la liste de cadeau de "+giftListUser.getLastname()+" "+giftListUser.getFirstname(),usersUnotified);
+			return notification.create();
+		}
+		return false;
+	}
 
 	public static GiftList get(int id) {
 		return giftListDAO.find(id);
@@ -196,6 +219,15 @@ public class GiftList implements Serializable{
 		return giftList;
 		
 	}
+
+	@Override
+	public String toString() {
+		return "GiftList [listId=" + listId + ", occasion=" + occasion + ", expirationDate=" + expirationDate
+				+ ", enabled=" + enabled + ", gifts=" + gifts + ", sharedUsers=" + sharedUsers + ", giftListUser="
+				+ giftListUser + ", key=" + key + "]";
+	}
+	
+	
 	
 	
 	

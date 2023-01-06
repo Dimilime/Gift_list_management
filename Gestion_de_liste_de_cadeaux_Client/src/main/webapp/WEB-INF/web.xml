@@ -26,6 +26,8 @@
 		<servlet-name>AddNewGift</servlet-name>
 		<servlet-name>ShareList</servlet-name>
 		<servlet-name>EditList</servlet-name>
+		<servlet-name>Notifications</servlet-name>
+		<servlet-name>SharedList</servlet-name>
 	</filter-mapping>
 	
 	<!-- CONTEXT PARAMS -->
@@ -49,15 +51,15 @@
 	<!-- SERVLETS -->
 	<servlet>
 		<servlet-name>Authentication</servlet-name>
-		<servlet-class>be.project.servlets.AuthenticationServlet</servlet-class>
+		<servlet-class>be.project.servlets.Authentication</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>Logout</servlet-name>
-		<servlet-class>be.project.servlets.LogoutServlet</servlet-class>
+		<servlet-class>be.project.servlets.Logout</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>SignUp</servlet-name>
-		<servlet-class>be.project.servlets.SignUpServlet</servlet-class>
+		<servlet-class>be.project.servlets.SignUp</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>Home</servlet-name>
@@ -86,6 +88,18 @@
 	<servlet>
 		<servlet-name>ShareList</servlet-name>
 		<servlet-class>be.project.servlets.ShareList</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>Notifications</servlet-name>
+		<servlet-class>be.project.servlets.Notifications</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>Invitations</servlet-name>
+		<servlet-class>be.project.servlets.Invitations</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>SharedList</servlet-name>
+		<servlet-class>be.project.servlets.SharedList</servlet-class>
 	</servlet>
 
 	<!-- MAPPING SERVLET -->
@@ -143,6 +157,21 @@
 	<servlet-mapping>
 		<servlet-name>ShareList</servlet-name>
 		<url-pattern>/shareList</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Notifications</servlet-name>
+		<url-pattern>/notifications</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Invitations</servlet-name>
+		<url-pattern>/invitations</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>SharedList</servlet-name>
+		<url-pattern>/sharedList</url-pattern>
 	</servlet-mapping>
 
 </web-app>

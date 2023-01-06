@@ -6,7 +6,7 @@
 	<jsp:param value="Oups une erreur est survenue" name="title"/>
 </jsp:include>
 <body>
-	<%@ include file="base.html" %>
+	<%@ include file="base.jsp" %>
 	<% String error = (String)request.getAttribute("error"); %>
 	<div class="alert alert-danger" role="alert">
 		<h3>Oups une erreur est survenue</h3>

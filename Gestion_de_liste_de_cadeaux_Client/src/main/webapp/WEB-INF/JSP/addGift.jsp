@@ -6,7 +6,7 @@
 	<jsp:param value="Ajouter un cadeau" name="title" />
 </jsp:include>
 <body>
-	<%@ include file="base.html"%>
+	<%@ include file="base.jsp"%>
 	<div class="d-flex justify-content-center"><h1>Ajouter un cadeau </h1></div>
 	<% if( request.getAttribute("message") != null){%>
 		<div class="alert alert-success alert-dismissible fade show" role="alert">

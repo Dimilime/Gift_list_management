@@ -4,15 +4,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
 import be.project.dao.UserDAO;
@@ -96,9 +93,7 @@ public class User implements Serializable{
 	}
 
 	public ArrayList<GiftList> getGiftLists() {
-		return giftLists = GiftList.getAll().stream()
-				.filter( list -> list.getGiftListUser().getUserId() == this.userId)
-				.collect(Collectors.toCollection(ArrayList::new));
+		return giftLists;
 	}
 
 	public void setGiftLists(ArrayList<GiftList> giftLists) {
@@ -151,7 +146,25 @@ public class User implements Serializable{
 				GiftList invitation = GiftList.mapListFromJson(invitationObject);
 				invitations.add(invitation);
 			}
+		JSONArray giftListsObject = json.isNull("giftLists") ? null: json.getJSONArray("giftLists");
+		ArrayList<GiftList> giftLists = new ArrayList<>();
+		if(giftListsObject != null)
+			for (int i = 0; i < giftListsObject.length(); i++) {
+				JSONObject giftlistObject = giftListsObject.getJSONObject(i);
+				GiftList giftList = GiftList.mapListFromJson(giftlistObject);
+				giftLists.add(giftList);
+			}
+		JSONArray notificationsObject = json.isNull("notifications") ? null: json.getJSONArray("notifications");
+		ArrayList<Notification> notifications = new ArrayList<>();
+		if(notificationsObject != null)
+			for (int i = 0; i < notificationsObject.length(); i++) {
+				JSONObject notificationObject = notificationsObject.getJSONObject(i);
+				Notification notification = Notification.mapNotificationFromJson(notificationObject);
+				notifications.add(notification);
+			}
 		user.setInvitations(invitations);
+		user.setGiftLists(giftLists);
+		user.setNotifications(notifications);
 		return user;
 	}
 	
@@ -170,12 +183,8 @@ public class User implements Serializable{
 		return gl.create();
 	}
 	
-	public boolean shareList(GiftList giftList) {
-		GiftList list= giftLists.stream().filter( gl -> gl.getListId() == giftList.getListId()).findFirst().orElse(null);
-		for (User u : list.getSharedUsers()) {
-			System.out.println("user list: "+u);
-		}
-		return list.addUserToSharedList(this);
+	public boolean shareList(int index) {
+		return giftLists.get(index).share();
 	}
 	
 	@Override
