@@ -44,7 +44,7 @@ public class AddGift extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-				String img =null;
+		String img =null;
 		try {
 			if(request.getPart("giftImg") != null) {
 				Part part = request.getPart("giftImg");
@@ -98,7 +98,6 @@ public class AddGift extends HttpServlet {
 					}
 
 					if(giftList.addGift(gift)) {		
-						//session.setAttribute("giftList", giftList);
 						request.setAttribute("message","Cadeau ajouté!");
 						if(addAnother) {
 							doGet(request, response);

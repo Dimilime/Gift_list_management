@@ -41,13 +41,11 @@ public class GiftAPI extends API {
 				
 				GiftList giftList = GiftList.getGiftList(listId);
 
-				//byte[] byteData = giftImg.getBytes();
-				Blob imgBlob = null;
 				try {
-					//imgBlob = new SerialBlob(byteData);
+
 					Double avgPrice = Double.valueOf(averagePrice);
 					int priorityLvl = Integer.valueOf(priorityLevel);
-					Gift gift= new Gift(0,priorityLvl,giftName, description, avgPrice,"N",link,imgBlob,giftList);
+					Gift gift= new Gift(0,priorityLvl,giftName, description, avgPrice,"N",link,giftImg,giftList);
 					int giftId=gift.create();
 					
 					if(giftId != 0) {

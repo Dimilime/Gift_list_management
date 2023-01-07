@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.sql.Struct;
 import java.util.ArrayList;
 
-import be.project.models.GiftList;
-import be.project.models.Notification;
 import be.project.models.User;
 import oracle.jdbc.OracleTypes;
 
@@ -78,8 +76,6 @@ public class UserDAO extends DAO<User>{
 	public User findByEmail(String email) {
 		Struct struc=null;
 		User user=null;
-		GiftListDAO giftListDAO = new GiftListDAO(conn);
-		NotificationDAO notificationDAO = new NotificationDAO(conn);
 		String sql="{call getUserByEmail(?,?)}";
 		try (CallableStatement callableStatement = conn.prepareCall(sql)){
 			
@@ -93,29 +89,7 @@ public class UserDAO extends DAO<User>{
 				int userId= Integer.valueOf(objects[0].toString());
 				String firstname=(String)objects[1];
 				String lastname=(String)objects[2];
-				Array arrayInvitation = (Array) objects[5];
-				Object[] invitations = (Object[]) arrayInvitation.getArray();
-				ArrayList<GiftList> userInvitations = new ArrayList<>();
-				if(invitations != null) {
-					for (int i = 0; i < invitations.length; i++) {
-						String  invitationId = invitations[i].toString();
-						GiftList giftList = giftListDAO.find(Integer.valueOf(invitationId));
-						userInvitations.add(giftList);
-					}
-				}
-				Array arrayList = (Array) objects[6];
-				Object[] giftListsObject = (Object[]) arrayList.getArray();
-				ArrayList<GiftList> userGiftLists = new ArrayList<>();
-				if(giftListsObject != null) {
-					for (int i = 0; i < giftListsObject.length; i++) {
-						String  giftListId = giftListsObject[i].toString();
-						GiftList giftList = giftListDAO.find(Integer.valueOf(giftListId));
-						userGiftLists.add(giftList);
-					}
-				}
 				user = new User(userId, firstname, lastname, email, null);
-				user.setInvitations(userInvitations);
-				user.setGiftLists(userGiftLists);
 			}
 		
 		}
@@ -134,7 +108,6 @@ public class UserDAO extends DAO<User>{
 		Array array=null;
 		ArrayList<User> users= new ArrayList<>();
 		String sql="{call getAllUsers(?)}";
-//		GiftListDAO giftListDAO = new GiftListDAO(conn);
 		try (CallableStatement callableStatement = conn.prepareCall(sql)){
 			
 			callableStatement.registerOutParameter(1, OracleTypes.ARRAY, "TABLE_USERS");
@@ -151,30 +124,8 @@ public class UserDAO extends DAO<User>{
 						String firstname=(String)os[1];
 						String lastname=(String)os[2];
 						String email=(String)os[3];
-						//TODO: effacer si pas besoin
-//						Array arrayI = (Array) os[5];
-//						Object[] invitations = (Object[]) arrayI.getArray();
-//						ArrayList<GiftList> userInvitations = new ArrayList<>();
-//						if(invitations != null) {
-//							for (int j = 0; j < invitations.length; j++) {
-//								String  invitationId = invitations[j].toString();
-//								GiftList giftList = giftListDAO.find(Integer.valueOf(invitationId));
-//								userInvitations.add(giftList);
-//							}
-//						}
-//						Array arrayList = (Array) os[6];
-//						Object[] giftListsObject = (Object[]) arrayList.getArray();
-//						ArrayList<GiftList> userGiftLists = new ArrayList<>();
-//						if(giftListsObject != null) {
-//							for (int j = 0; j< giftListsObject.length; j++) {
-//								String  giftListId = giftListsObject[j].toString();
-//								GiftList giftList = giftListDAO.find(Integer.valueOf(giftListId));
-//								userGiftLists.add(giftList);
-//							}
-//						}
+
 						User user = new User(userId, firstname, lastname, email, null);
-//						user.setInvitations(userInvitations);
-//						user.setGiftLists(userGiftLists);
 						users.add(user);		
 					}
 					
