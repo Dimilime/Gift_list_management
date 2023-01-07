@@ -186,34 +186,6 @@ public class GiftListAPI extends API{
 		return Response.status(Status.UNAUTHORIZED).build();
 	}
 	
-	/*@POST
-	@Path("/sharedList")
-	public Response createSharedList(
-			@FormParam("userId") int userId,
-			@FormParam("listId") int listId,
-			@HeaderParam("key") String key
-			)
-	{
-		
-		if(key.equals(apiKey)) 
-		{ 
-			
-			if(userId == 0 || listId == 0)
-				return Response.status(Status.BAD_REQUEST).build();
-			
-			User user = User.get(userId);
-			GiftList giftList= GiftList.getGiftList(listId);
-			
-			if(giftList.addUserToSharedList(user)) {
-				return Response
-						.status(Status.CREATED)
-						.build();
-			}
-			return Response.status(Status.SERVICE_UNAVAILABLE).build();
-		}
-		return Response.status(Status.UNAUTHORIZED).build();
-		
-	}*/
 	
 	
 }

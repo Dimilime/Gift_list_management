@@ -45,8 +45,8 @@
 			<% 
 			if (request.getAttribute("notifications") != null) {
 				ArrayList<Notification> notifications = (ArrayList<Notification>)request.getAttribute("notifications");
-			
-				for ( Notification notif : notifications) {
+				if(notifications != null)
+					for ( Notification notif : notifications) {
 			%>
 			<tr>
 				<td><%= notif.getTitle()%></td>

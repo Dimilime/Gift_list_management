@@ -167,8 +167,17 @@ public class User implements Serializable{
 			}
 		user.setInvitations(invitations);
 		user.setGiftLists(giftLists);
-		user.setNotifications(notifications);
 		return user;
+	}
+	
+	public ArrayList<Notification> findAllNotifications(){
+		if(Notification.getAll() !=null) {
+			notifications=  Notification.getAll().stream()
+				.filter( n -> n.getUsers().stream().anyMatch( u -> u.userId == this.userId))
+				.collect(Collectors.toCollection(ArrayList::new));
+		}
+		 
+		 return notifications;
 	}
 	
 	public static ArrayList<User> getAll(){

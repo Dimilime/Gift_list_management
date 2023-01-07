@@ -167,15 +167,16 @@ public class GiftList implements Serializable{
 	
 	public boolean share() {
 		if(sharedUsers != null) {
-			((GiftListDAO)giftListDAO).addSharedUsers(this);
-
-
-			ArrayList<User> usersUnotified = sharedUsers.stream().filter( u -> u.getNotifications() != null)
-					.collect(Collectors.toCollection(ArrayList::new));
-			System.out.println("usersUnotified: " + usersUnotified);
-			Notification notification = new Notification(0, "Invitation",
-					"Tu es invité à participé à la liste de cadeau de "+giftListUser.getLastname()+" "+giftListUser.getFirstname(),usersUnotified);
-			return notification.create();
+			if(((GiftListDAO)giftListDAO).addSharedUsers(this)) {
+			
+				ArrayList<User> usersUnotified = sharedUsers.stream().filter( u -> u.getNotifications() != null)
+						.collect(Collectors.toCollection(ArrayList::new));
+				System.out.println("usersUnotified: " + usersUnotified);
+				Notification notification = new Notification(0, "Invitation",
+						"Tu es invité à participé à la liste de cadeau de "+giftListUser.getLastname()+" "+giftListUser.getFirstname()+
+						"  <a class=\"btn btn-secondary\" href=\"./sharedList?id="+listId+"\">Consulter</a>",usersUnotified);
+				return notification.create();
+			}
 		}
 		return false;
 	}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,7 +65,7 @@ public class Notification implements Serializable{
 		return users;
 	}
 
-	public void setUser(ArrayList<User> users) {
+	public void setUsers(ArrayList<User> users) {
 		this.users = users;
 	}
 	
@@ -79,8 +80,29 @@ public class Notification implements Serializable{
 		notification.setTitle(jsonObject.getString("title"));
 		notification.setMessage(jsonObject.getString("message"));
 		
+		JSONArray usersObject = jsonObject.isNull("users") ? null :jsonObject.getJSONArray("users");
+		ArrayList<User> users = new ArrayList<>();
+		if(usersObject != null)
+			for (int i = 0; i < usersObject.length(); i++) {
+				JSONObject userObject = usersObject.getJSONObject(i);
+				User user = User.getUserByJSONObject(userObject);
+				users.add(user);
+			}
+		notification.setUsers(users);
 		return notification;
 	}
+	
+	public static ArrayList<Notification> getAll(){
+		return notificationDAO.findAll();
+	}
+
+	@Override
+	public String toString() {
+		return "Notification [notificationId=" + notificationId + ", title=" + title + ", message=" + message
+				+ ", users=" + users + "]";
+	}
+	
+	
 	
 	
 	

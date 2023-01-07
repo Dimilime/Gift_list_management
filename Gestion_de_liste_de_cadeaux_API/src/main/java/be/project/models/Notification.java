@@ -80,6 +80,10 @@ public class Notification implements Serializable{
 	public static Notification get(int id) {
 		return notificationDAO.find(id);
 	}
+	
+	public static ArrayList<Notification> getAll(){
+		return notificationDAO.findAll();
+	}
 
 	
 	

@@ -113,20 +113,9 @@ public class UserDAO extends DAO<User>{
 						userGiftLists.add(giftList);
 					}
 				}
-				Array arrayNotif = (Array) objects[7];
-				Object[] notificationsObject = (Object[]) arrayNotif.getArray();
-				ArrayList<Notification> notifications = new ArrayList<>();
-				if(notificationsObject != null) {
-					for (int i = 0; i < notificationsObject.length; i++) {
-						String  notificationId = notificationsObject[i].toString();
-						Notification notification = notificationDAO.find(Integer.valueOf(notificationId));
-						notifications.add(notification);
-					}
-				}
 				user = new User(userId, firstname, lastname, email, null);
 				user.setInvitations(userInvitations);
 				user.setGiftLists(userGiftLists);
-				user.setNotifications(notifications);
 			}
 		
 		}

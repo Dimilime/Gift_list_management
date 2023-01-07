@@ -21,13 +21,13 @@
 			switch(priorityLevel){
 				case 1: case 2: case 3:
 				case 4:
-					td= "<td class='code-green'>"+ priorityLevel + "</td>";
+					td= "<td class='code-green'>"+ priorityLevel + "/10 </td>";
 					break;
 				case 5: case 6 : case 7:
-					td= "<td class='code-orange'>"+ priorityLevel + "</td>";
+					td= "<td class='code-orange'>"+ priorityLevel + "/10 </td>";
 					break;
 				case 8: case 9 : case 10:
-					td= "<td class='code-red'>"+ priorityLevel + "</td>";
+					td= "<td class='code-red'>"+ priorityLevel + "/10 </td>";
 					break;
 				default:
 					td= "<td>"+ priorityLevel + "</td>";
@@ -108,9 +108,9 @@
 					for (Gift gift : giftList.getCurrentGifts()) {
 			%>
 			<tr>
-				<%= manageCodeColorPriorityLevel(gift.getPriorityLevel()) %>
+				<%= manageCodeColorPriorityLevel(gift.getPriorityLevel())%>
 				<td><%= gift.getName()%></td>
-				<td><%= gift.getDescription()%></td>
+				<td><%= gift.getDescription() == null ? "Pas de description fourni": gift.getDescription()%></td>
 				<td><%= String.format("%.2f",  gift.getAveragePrice())%> euros</td>
 				<td><%= gift.getLink() == null ? "Pas de lien fourni": gift.getLink()  %></td>
 				<td><%= gift.getImage() == null ? "Pas d'image fournie": gift.getImage() %></td>

@@ -1,8 +1,15 @@
 package be.project.dao;
 
 import java.util.ArrayList;
+
+import javax.ws.rs.core.MediaType;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.sun.jersey.api.client.ClientResponse;
 
+import be.project.javabeans.GiftList;
 import be.project.javabeans.Notification;
 import be.project.javabeans.User;
 
@@ -49,7 +56,28 @@ public class NotificationDAO extends DAO<Notification>{
 
 	@Override
 	public ArrayList<Notification> findAll() {
-		return null;
+		clientResponse= resource.path("notification")
+				.header("key",apiKey)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(ClientResponse.class);
+		
+		String responseJSON=clientResponse.getEntity(String.class);
+		int status=clientResponse.getStatus();
+
+		if(status == 404) 
+			return null;
+		ArrayList<Notification> notifications = new ArrayList<>();
+		try {
+			JSONArray arrayResponseJSON = new JSONArray(responseJSON);
+			for(int i = 0; i < arrayResponseJSON.length(); i++) {
+				Notification notification = Notification.mapNotificationFromJson((JSONObject) arrayResponseJSON.get(i));
+				notifications.add(notification);
+			}
+			return notifications;
+		} catch (Exception e) {
+			System.out.println("error findAll de NotificationDAO client = "+e.getMessage());
+			return null;
+		}
 	}
 	
 

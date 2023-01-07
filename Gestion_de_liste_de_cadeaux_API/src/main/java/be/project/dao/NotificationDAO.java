@@ -1,12 +1,17 @@
 package be.project.dao;
 
+import java.sql.Array;
+import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Struct;
 import java.util.ArrayList;
 
+import be.project.models.Gift;
+import be.project.models.GiftList;
 import be.project.models.Notification;
+import be.project.models.User;
 import oracle.jdbc.OracleTypes;
 
 public class NotificationDAO extends DAO<Notification> {
@@ -74,7 +79,49 @@ public class NotificationDAO extends DAO<Notification> {
 
 	@Override
 	public ArrayList<Notification> findAll() {
-		return null;
+		UserDAO userDAO = new UserDAO(conn);
+		Array array=null;
+		ArrayList<Notification> notifications= new ArrayList<>();
+		String sql="{call getAllNotification(?)}";
+		try (CallableStatement callableStatement = conn.prepareCall(sql)){
+			
+			callableStatement.registerOutParameter(1, OracleTypes.ARRAY, "TABLE_NOTIFICATION");
+			callableStatement.execute();
+			
+			array = callableStatement.getArray(1);
+			Object [] objects = (Object[]) array.getArray();
+			if(objects != null) {
+				for (int i = 0; i < objects.length; i++) {
+					Object [] os = ((Struct)objects[i]).getAttributes();
+					if(os != null) {
+						
+						int notificationId= Integer.valueOf(os[0].toString());
+						String title=os[1].toString();
+						String message= os[2].toString();
+						Array arrayUser = (Array) os[3];
+						Object[] usersObject = (Object[]) arrayUser.getArray();
+						ArrayList<User> users = new ArrayList<>();
+						if(usersObject != null) {
+							for (int j = 0; j < usersObject.length; j++) {
+								String  userId = usersObject[j].toString();
+								User user = userDAO.find(Integer.valueOf(userId));
+								users.add(user);
+							}
+						}
+						Notification notification = new Notification(notificationId, title, message);
+						notification.setUsers(users);
+						notifications.add(notification);		
+					}	
+				}
+			}
+		
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return notifications;
 	}
 	
 	public int insertUserNotification(int notifId, int userId) {
