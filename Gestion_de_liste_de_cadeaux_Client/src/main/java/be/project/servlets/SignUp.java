@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import be.project.javabeans.User;
 import be.project.utils.Utils;
@@ -19,8 +20,6 @@ public class SignUp extends HttpServlet {
     
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//check si arrive ici après un lien --> String servletPath = request.getServletPath().substring(1); on recup la clé
-		//on met la clé dans les attributs de la requete + fait passer dans le form en input hidden
 		request.getRequestDispatcher("/WEB-INF/JSP/signup.jsp").forward(request,response);
 	}
 
@@ -37,6 +36,7 @@ public class SignUp extends HttpServlet {
 			lastname=request.getParameter("lastname");
 			password=request.getParameter("password");
 		}
+		//clé de partage
 		if(request.getParameter("key")!=null) {
 			key = request.getParameter("key");
 		}
@@ -54,18 +54,20 @@ public class SignUp extends HttpServlet {
 			try {
 				User user = new User(firstname, lastname,email, password);
 				boolean success= false;
-				if(key!=null) {
-					success= user.createUser(true);
-				}else {
-					success= user.createUser();
-				}
+				
+				success= user.createUser();
+				
 				if(success) {
 					message="Compte créé avec succès!";
 					request.setAttribute("message", message);
-					//check si s'inscrit après un lien direct le co et go liste details 
+					//check si s'inscrit après un lien direct le co et go à la liste partagée 
 					if(key!=null) {
+						HttpSession session = request.getSession(true);
+						User connectedUser=User.getUserByEmail(email);
+						session.setAttribute("connectedUser", connectedUser);
 						request.setAttribute("key", key);
-						request.getRequestDispatcher("sharedlistdetails").forward(request, response);
+	
+						request.getRequestDispatcher("sharedList?key="+key).forward(request, response);
 						return;
 					}
 					//sinon go ecran connexion

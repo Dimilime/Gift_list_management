@@ -183,11 +183,9 @@ public class User implements Serializable{
 	public static ArrayList<User> getAll(){
 		return userDAO.findAll();
 	}
+	
 	public boolean createUser() {
 		return userDAO.insert(this) == 1;
-	}
-	public boolean createUser(boolean withSharedList) {
-		return false;
 	}
 	
 	public int addGiftList(GiftList gl) {

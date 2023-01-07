@@ -57,15 +57,6 @@ public class GiftListDAO extends DAO<GiftList>{
 				ARRAY array = new ARRAY(descriptor, conn, sharedUsersId);
 				callableStatement.setArray(5, array);
 				callableStatement.registerOutParameter(6, java.sql.Types.INTEGER);
-
-				System.out.println("Valeur recues dao api update :");
-				System.out.println(obj.getListId());
-				System.out.println(obj.getOccasion());
-				System.out.println(obj.parseExpirationDateToDate());
-				System.out.println(obj.returnEnabledAsString());
-				System.out.println(obj.getAllSharedUserId());
-				System.out.println(array);
-
 				callableStatement.executeUpdate();
 				codeError=callableStatement.getInt(6);
 		}catch(SQLException e) {
@@ -108,6 +99,40 @@ public class GiftListDAO extends DAO<GiftList>{
 				}
 				giftList = new GiftList(giftListId,occasion, u, expirationDate, key, enabled);
 				giftList.setSharedUsers(listSharedUsers);
+			}
+		
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return giftList;
+	}
+	
+	public GiftList findByKey(String key) {
+		UserDAO userDao = new UserDAO(conn);
+		Struct struc=null;
+		GiftList giftList=null;
+		String sql="{call getGiftListByKey(?,?)}";
+		try (CallableStatement callableStatement = conn.prepareCall(sql)){
+			
+			callableStatement.setString(1, key);
+			callableStatement.registerOutParameter(2, OracleTypes.STRUCT, "GIFTLIST_OBJECT");
+			callableStatement.execute();
+			
+			struc = (Struct) callableStatement.getObject(2);
+ 			Object[] objects = struc != null ? struc.getAttributes() : null;
+			if(objects != null) {
+				int giftListId= Integer.valueOf(objects[0].toString());
+				String expirationDate=objects[1] != null ? objects[1].toString() : null;
+				String occasion=objects[2].toString();
+				String enabled =objects[3].toString();
+				String keyDB = (String)objects[4];
+				int userId = Integer.valueOf(objects[5].toString());
+				User u = userDao.find(userId);
+				
+				giftList = new GiftList(giftListId,occasion, u, expirationDate, keyDB, enabled);
 			}
 		
 		} catch (NumberFormatException e) {

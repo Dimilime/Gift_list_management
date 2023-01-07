@@ -95,6 +95,10 @@
 	<servlet>
 		<servlet-name>EditGift</servlet-name>
 		<servlet-class>be.project.servlets.EditGift</servlet-class>
+		<multipart-config>
+                <max-file-size>10485760</max-file-size><!-- 10 MB -->
+                <max-request-size>10485760</max-request-size>
+        </multipart-config>
 	</servlet>
 	
 	<servlet>

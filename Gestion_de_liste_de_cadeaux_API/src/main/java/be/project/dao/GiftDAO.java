@@ -8,9 +8,14 @@ import java.sql.SQLException;
 import java.sql.Struct;
 import java.util.ArrayList;
 
+import javax.ws.rs.FormParam;
+import javax.ws.rs.HeaderParam;
+
 import be.project.models.Gift;
 import be.project.models.GiftList;
 import oracle.jdbc.OracleTypes;
+import oracle.sql.ARRAY;
+import oracle.sql.ArrayDescriptor;
 
 public class GiftDAO extends DAO<Gift> {
 
@@ -48,7 +53,22 @@ public class GiftDAO extends DAO<Gift> {
 
 	@Override
 	public int update(Gift obj) {
-		return 0;
+		int codeError = -1;
+		try(CallableStatement callableStatement = conn.prepareCall("{call update_gift(?,?,?,?,?,?,?)}")) {
+				callableStatement.setInt(1, obj.getGiftId());
+				callableStatement.setString(2, obj.getName());
+				callableStatement.setString(3, obj.getDescription());
+				callableStatement.setDouble(4, obj.getAveragePrice());
+				callableStatement.setInt(5, obj.getPriorityLevel());
+				//callableStatement.setBlob(6, obj.getImage());
+				callableStatement.setString(6, obj.getLink());
+				callableStatement.registerOutParameter(7, java.sql.Types.INTEGER);
+				callableStatement.executeUpdate();
+				codeError=callableStatement.getInt(7);
+		}catch(SQLException e) {
+			System.out.println("Exception dans update giftDAO Api "+ e.getMessage());
+		}
+		return codeError;
 	}
 
 	@Override

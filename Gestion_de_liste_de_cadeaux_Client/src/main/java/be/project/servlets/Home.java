@@ -1,6 +1,8 @@
 package be.project.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.servlet.http.HttpSession;
 
+import be.project.javabeans.Notification;
 import be.project.javabeans.User;
 
 
@@ -20,8 +23,15 @@ public class Home extends HttpServlet {
 		User user = null;
 		if(session != null )
 			user = (User)session.getAttribute("connectedUser");
+			//supprime l'attribut signifiant la création d'une nouvelle liste de cadeau
+			if(session.getAttribute("newList")!= null)
+				session.removeAttribute("newList");
 		if(user != null) {
 			user.findAllGiftList();
+			ArrayList<Notification> notifs = user.findAllNotifications();
+			if(notifs.size()>0) {
+				session.setAttribute("notif", notifs.size());
+			}
 			session.setAttribute("connectedUser", user);
 			request.getRequestDispatcher("/WEB-INF/JSP/home.jsp").forward(request, response);
 		}else {

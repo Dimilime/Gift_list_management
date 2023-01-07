@@ -146,6 +146,10 @@ public class GiftList implements Serializable{
 		return giftListDAO.find(id);
 	}
 	
+	public static GiftList getGiftListByKey(String key) {
+		return ((GiftListDAO)giftListDAO).findByKey(key);
+	}
+	
 	public Date parseExpirationDateToDate() {
 		try {
 		if(expirationDate != null) 
@@ -191,4 +195,7 @@ public class GiftList implements Serializable{
 		}
 		
 	}
+
+
+	
 }

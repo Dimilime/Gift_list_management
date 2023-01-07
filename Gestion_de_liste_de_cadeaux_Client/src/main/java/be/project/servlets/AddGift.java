@@ -38,13 +38,13 @@ public class AddGift extends HttpServlet {
 
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("doGet addGift");
 		request.getRequestDispatcher("/WEB-INF/JSP/addGift.jsp").forward(request, response);
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-				String img =null;
+		HttpSession session = request.getSession(false);	
+		String img =null;
 		try {
 			if(request.getPart("giftImg") != null) {
 				Part part = request.getPart("giftImg");
@@ -61,11 +61,17 @@ public class AddGift extends HttpServlet {
 
 		
 		if(request.getAttribute("giftListForward") != null) {
+			//attribut permettant de différencier l'ajout d'un cadeau lors de l'ajout d'une liste
+			//ou sur le coup d'une modification
+			session.setAttribute("newList", "true");
 			doGet(request, response);
 			return;
 		}
-			
-		HttpSession session = request.getSession(false);
+		
+		
+		
+		
+		
 		
 		GiftList giftList = null;
 		if(session != null ) {
@@ -93,8 +99,11 @@ public class AddGift extends HttpServlet {
 					if(avgPrice >0 && priorityLvl > 0) {
 						gift = new Gift(0, priorityLvl, giftName, description, avgPrice, link, giftImg, giftList);
 						ArrayList<Gift> gifts = new ArrayList<>();
-						if( giftList.getGifts() == null || giftList.getGifts().isEmpty())
-							giftList.setGifts(gifts);
+						
+						if(giftList != null) {
+							if( giftList.getGifts() == null || giftList.getGifts().isEmpty())
+								giftList.setGifts(gifts);
+						}
 					}
 
 					if(giftList.addGift(gift)) {		
@@ -103,12 +112,17 @@ public class AddGift extends HttpServlet {
 						if(addAnother) {
 							doGet(request, response);
 							return;
-						}else {
+						}else if(session.getAttribute("newList") != null && session.getAttribute("newList").equals("true") ) {
 							request.setAttribute("message","Liste créée avec succès");
 							request.setAttribute("giftForward", "yes");
 							request.getRequestDispatcher("home").forward(request, response);
 							return;
-						}	
+						}else {
+							request.setAttribute("message","Cadeau créée avec succès!");
+							request.setAttribute("refreshList", "yes");
+							request.getRequestDispatcher("consultList?id="+giftList.getListId()).forward(request, response);
+							return;
+						}
 				}
 				request.setAttribute("errorGift","Cadeau non ajouté!");
 				doGet(request, response);

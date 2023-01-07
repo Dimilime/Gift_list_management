@@ -31,6 +31,8 @@ public class ConsultList extends HttpServlet {
 				user = (User)session.getAttribute("connectedUser");
 				if(session.getAttribute("listId") != null) 
 					session.removeAttribute("listId");
+				if(session.getAttribute("giftId") != null) 
+					session.removeAttribute("giftId");
 			}
 			ArrayList<GiftList> giftList = null;
 			//si vient après modif on refresh la liste
@@ -55,6 +57,7 @@ public class ConsultList extends HttpServlet {
 					Collections.sort(gifts, Comparator.comparing(Gift::getPriorityLevel));
 					Collections.reverse(gifts);
 					currentGiftList.setGifts(gifts);
+					session.setAttribute("giftList", currentGiftList);
 					request.setAttribute("giftList", currentGiftList);
 					request.getRequestDispatcher("/WEB-INF/JSP/consultList.jsp").forward(request, response);
 					return;

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import be.project.javabeans.GiftList;
 import be.project.javabeans.User;
 
 
@@ -18,19 +19,19 @@ public class ShareList extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		HttpSession session = request.getSession(false);
-		
 		int sharedUsersNumber = 0;
 		if(session != null ) {
 			session.setAttribute("sharedUsersNumber", sharedUsersNumber);
 			if(request.getParameter("index") != null){
 				int index = Integer.valueOf(request.getParameter("index"));
 				session.setAttribute("index", index);
+				if(request.getParameter("id") !=null){
+					GiftList list = GiftList.get(Integer.valueOf(request.getParameter("id")));
+					session.setAttribute("list", list);
+				}
+				
 			}
 		}
-		
-		
-		System.out.println("doget shareList");
-
 		request.getRequestDispatcher("/WEB-INF/JSP/shareList.jsp").forward(request, response);
 	}
 	

@@ -9,6 +9,8 @@ import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
 import be.project.javabeans.Gift;
+import be.project.javabeans.User;
+import be.project.utils.Utils;
 
 public class GiftDAO extends DAO<Gift> {
 	
@@ -42,7 +44,25 @@ public class GiftDAO extends DAO<Gift> {
 
 	@Override
 	public boolean update(Gift obj) {
-		return false;
+		System.out.println("arrive dans update dao du client");
+		
+		parameters.clear();
+		parameters.add("giftId",String.valueOf(obj.getGiftId()));
+		parameters.add("giftName",obj.getName());
+		parameters.add("description", obj.getDescription());
+		parameters.add("price", String.valueOf(obj.getAveragePrice()));
+		parameters.add("priorityLevel",String.valueOf(obj.getPriorityLevel()));
+		parameters.add("image",obj.getImage());
+		parameters.add("link",obj.getLink());
+
+		clientResponse=resource
+				.path("gift")
+				.path(String.valueOf(obj.getGiftId()))
+				.header("key",apiKey)
+				.put(ClientResponse.class,parameters)
+				;
+
+		return clientResponse.getStatus() == 204 ? true : false;
 	}
 
 	@Override

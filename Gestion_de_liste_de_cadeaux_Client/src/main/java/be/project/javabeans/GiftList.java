@@ -165,13 +165,13 @@ public class GiftList implements Serializable{
 		return false;
 	}
 	
+	
 	public boolean share() {
 		if(sharedUsers != null) {
 			if(((GiftListDAO)giftListDAO).addSharedUsers(this)) {
 			
 				ArrayList<User> usersUnotified = sharedUsers.stream().filter( u -> u.getNotifications() != null)
 						.collect(Collectors.toCollection(ArrayList::new));
-				System.out.println("usersUnotified: " + usersUnotified);
 				Notification notification = new Notification(0, "Invitation",
 						"Tu es invité à participé à la liste de cadeau de "+giftListUser.getLastname()+" "+giftListUser.getFirstname()+
 						"  <a class=\"btn btn-secondary\" href=\"./sharedList?id="+listId+"\">Consulter</a>",usersUnotified);
@@ -185,12 +185,15 @@ public class GiftList implements Serializable{
 		return giftListDAO.find(id);
 	}
 	
+	public static GiftList getByKey(String key) {
+		return ((GiftListDAO)giftListDAO).findByKey(key);
+	}
+	
 	public int create() {
 		return giftListDAO.insert(this);
 	}
 	
 	public boolean update() {
-		System.out.println("passe dans update");
 		return giftListDAO.update(this);
 	}
 	
@@ -214,9 +217,14 @@ public class GiftList implements Serializable{
 			expirationDate = String.format("%04d/%02d/%02d", 
 					dateObject.getInt("year"),dateObject.getInt("monthValue"), dateObject.getInt("dayOfMonth"));
 		}
+		String key = jsonObject.isNull("key") ? null : jsonObject.getString("key");
 		String enabled = jsonObject.getBoolean("enabled") ? "Y" : "N" ;
-		JSONObject userObject = jsonObject.getJSONObject("giftListUser");
-		user = User.getUserByJSONObject(userObject);
+		
+		JSONObject userObject = jsonObject.isNull("giftListUser") ? null : jsonObject.getJSONObject("giftListUser");
+		if(userObject != null) {
+			user = User.getUserByJSONObject(userObject);
+		}
+		
 		JSONArray sharedUsersObject = jsonObject.isNull("sharedUsers") ? null :jsonObject.getJSONArray("sharedUsers");
 		ArrayList<User> sharedUsers = new ArrayList<>();
 		if(sharedUsersObject != null)
@@ -225,11 +233,20 @@ public class GiftList implements Serializable{
 				User sharedUser = User.getUserByJSONObject(sharedUserObject);
 				sharedUsers.add(sharedUser);
 			}
-		giftList = new GiftList(listId, occasion, user, expirationDate, null, enabled);
+		giftList = new GiftList(listId, occasion, user, expirationDate, key, enabled);
 		giftList.setSharedUsers(sharedUsers);
 		return giftList;
 		
 	}
+
+	@Override
+	public String toString() {
+		return "GiftList [listId=" + listId + ", occasion=" + occasion + ", expirationDate=" + expirationDate
+				+ ", enabled=" + enabled + ", gifts=" + gifts + ", sharedUsers=" + sharedUsers + ", giftListUser="
+				+ giftListUser + ", key=" + key + "]";
+	}
+
+	
 
 
 }

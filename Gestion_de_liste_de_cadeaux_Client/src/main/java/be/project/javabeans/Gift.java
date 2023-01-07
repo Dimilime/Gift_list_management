@@ -140,6 +140,10 @@ public class Gift implements Serializable{
 		return giftDAO.insert(this);
 	}
 	
+	public boolean update() {
+		return giftDAO.update(this);
+	}
+	
 	public static ArrayList<Gift> getAll(){
 		return giftDAO.findAll();
 	}
@@ -173,6 +177,15 @@ public class Gift implements Serializable{
 		return gift;
 		
 	}
+
+	@Override
+	public String toString() {
+		return "Gift [giftId=" + giftId + ", priorityLevel=" + priorityLevel + ", name=" + name + ", description="
+				+ description + ", averagePrice=" + averagePrice + ", reserved=" + reserved + ", link=" + link
+				+ ", image=" + image + ", giftList=" + giftList + ", participations=" + participations + "]";
+	}
+
+	
 
 
 }

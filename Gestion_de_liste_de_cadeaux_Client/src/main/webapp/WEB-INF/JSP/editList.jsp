@@ -55,7 +55,7 @@
 	<%@ include file="base.jsp" %> 
 	<div class="d-flex justify-content-center"><h1>Modification de la liste numéro <%=giftList.getListId() %></h1></div>
 
-	<div class="modifyList-form">
+	<div class="modify-form">
 			<% if(request.getAttribute("error")!=null){%>
 				<div class="alert alert-danger" role="alert">
 	  				<%= request.getAttribute("error") %>

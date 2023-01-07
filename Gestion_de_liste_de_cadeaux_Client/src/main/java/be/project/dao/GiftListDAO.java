@@ -57,7 +57,6 @@ public class GiftListDAO extends DAO<GiftList>{
 		parameters.add("enabled",Utils.convertBoolToString(obj.isEnabled()));
 		clientResponse=resource
 				.path("giftList")
-				.path("update")
 				.path(String.valueOf(obj.getListId()))
 				.header("key",apiKey)
 				.put(ClientResponse.class,parameters)
@@ -74,10 +73,6 @@ public class GiftListDAO extends DAO<GiftList>{
 		parameters.add("listId", String.valueOf(obj.getListId()));
 		parameters.add("jsonArrayUsersId", jsonArray.toString());
 		
-		System.out.println("on envoit côté dao");
-		System.out.println("listid " + obj.getListId());
-		System.out.println("json " + jsonArray);
-		
 		clientResponse=resource
 				.path("giftList")
 				.path(String.valueOf(obj.getListId()))
@@ -93,6 +88,25 @@ public class GiftListDAO extends DAO<GiftList>{
 		String responseJSON=resource
 				.path("giftList")
 				.path(String.valueOf(id))
+				.header("key",apiKey)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(String.class);
+		GiftList giftList=null;
+		try {
+			JSONObject json = new JSONObject(responseJSON);
+			giftList = GiftList.mapListFromJson(json);
+			return giftList;
+		} catch (Exception e) {
+			System.out.println("error find de GiftListDAO client = "+e.getMessage());
+			return null;
+		}
+	}
+	
+	public GiftList findByKey(String key) {
+		String responseJSON=resource
+				.path("giftList")
+				.path("key")
+				.path(key)
 				.header("key",apiKey)
 				.accept(MediaType.APPLICATION_JSON)
 				.get(String.class);
