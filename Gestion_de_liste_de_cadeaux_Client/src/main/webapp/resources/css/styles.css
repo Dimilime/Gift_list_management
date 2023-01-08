@@ -123,5 +123,10 @@ select[id=participantsSelect]{
     overflow-x: scroll;
 }
 
+img{
+	object-fit: cover;
+	object-position: center;
+}
+
 
 

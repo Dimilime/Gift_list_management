@@ -24,6 +24,7 @@ public class SharedList extends HttpServlet {
 		if(user != null) {
 			int id =Integer.valueOf(request.getParameter("id"));
 			GiftList giftList = GiftList.get(id);
+			giftList.findAllGifts();
 			request.setAttribute("invitation", giftList);
 			request.getRequestDispatcher("/WEB-INF/JSP/sharedList.jsp").forward(request, response);
 		}

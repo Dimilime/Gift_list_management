@@ -1,7 +1,9 @@
 package be.project.dao;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -9,6 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Struct;
 import java.util.ArrayList;
+import java.util.Base64;
 
 import be.project.models.Gift;
 import be.project.models.GiftList;
@@ -31,7 +34,8 @@ public class GiftDAO extends DAO<Gift> {
 			callableStatement.setInt(cpt++, obj.getPriorityLevel());
 			callableStatement.setString(cpt++, obj.getReservedAsString());
 			System.out.println("giftdao api a recu: "+ obj.getImage());
-			InputStream inputStreamImg = new ByteArrayInputStream(obj.getImage().getBytes());
+			byte [] bytes = Base64.getDecoder().decode(obj.getImage().getBytes());
+			InputStream inputStreamImg = new ByteArrayInputStream(bytes);
 			callableStatement.setBlob(cpt++, inputStreamImg);
 			callableStatement.setString(cpt++, obj.getLink());
 			callableStatement.setInt(cpt++, obj.getGiftList().getListId());
@@ -77,10 +81,15 @@ public class GiftDAO extends DAO<Gift> {
 				int priorityLevel =  Integer.valueOf( objects[4].toString());
 				String reserved = objects[5].toString();
 				String link = (String)objects[6];
-				System.out.println(objects[7]);
 				Blob imgBlob = (Blob)objects[7];
-				System.out.println(imgBlob);
-				String img = null;//TODO: get image objects[7]
+				String img =null;
+				if(imgBlob !=null) {
+					InputStream inputStream = imgBlob.getBinaryStream();
+					byte [] bytes = inputStream.readAllBytes();
+
+					img =  Base64.getEncoder().encodeToString(bytes);
+				}
+				
 				int listId = Integer.valueOf(objects[8].toString());
 				GiftList giftList = giftListDAO.find(listId);
 				gift = new Gift(giftId, priorityLevel, name, description, averagePrice, reserved, link, img, giftList);
@@ -90,6 +99,8 @@ public class GiftDAO extends DAO<Gift> {
 			e.printStackTrace();
 		} catch (SQLException e) {
 		e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		return gift;
@@ -120,7 +131,14 @@ public class GiftDAO extends DAO<Gift> {
 						int priorityLevel =  Integer.valueOf( os[4].toString());
 						String reserved = os[5].toString();
 						String link = (String)os[6];
-						String img = null;
+						Blob imgBlob = (Blob)os[7];
+						String img =null;
+						if(imgBlob !=null) {
+							InputStream inputStream = imgBlob.getBinaryStream();
+							byte [] bytes = inputStream.readAllBytes();
+
+							img =  Base64.getEncoder().encodeToString(bytes);
+						}
 						int listId = Integer.valueOf(os[8].toString());
 						GiftList giftList = giftListDAO.find(listId);
 						Gift gift = new Gift(giftId, priorityLevel, name, description, averagePrice , reserved, link, img, giftList);
@@ -132,6 +150,8 @@ public class GiftDAO extends DAO<Gift> {
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 

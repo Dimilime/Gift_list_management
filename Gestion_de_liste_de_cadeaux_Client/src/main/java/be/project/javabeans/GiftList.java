@@ -110,10 +110,10 @@ public class GiftList implements Serializable{
 	public void setGiftListUser(User giftListUser) {
 		this.giftListUser = giftListUser;
 	}
-	public ArrayList<Gift> getCurrentGifts() {
+	public ArrayList<Gift> getGifts() {
 		return gifts;
 	}
-	public ArrayList<Gift> getGifts() {
+	public ArrayList<Gift> findAllGifts() {
 		//exception générée si .stream d'un objet null
 		if(Gift.getAll() != null) {
 			return gifts = Gift.getAll().stream()

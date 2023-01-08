@@ -50,7 +50,7 @@ public class ConsultList extends HttpServlet {
 					}	
 				}
 				if(rightAccess) {
-					ArrayList<Gift> gifts = currentGiftList.getGifts();
+					ArrayList<Gift> gifts = currentGiftList.findAllGifts();
 					//trier par ordre de priorité
 					Collections.sort(gifts, Comparator.comparing(Gift::getPriorityLevel));
 					Collections.reverse(gifts);
