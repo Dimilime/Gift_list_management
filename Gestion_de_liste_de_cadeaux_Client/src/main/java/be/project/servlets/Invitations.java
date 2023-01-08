@@ -18,7 +18,7 @@ public class Invitations extends HttpServlet {
 		if(session != null )
 			user = (User)session.getAttribute("connectedUser");
 		if(user != null) {
-			request.setAttribute("invitations", user.getInvitations());
+			request.setAttribute("invitations", user.findAllInvitations());
 			request.getRequestDispatcher("/WEB-INF/JSP/invitations.jsp").forward(request, response);
 		}
 	}

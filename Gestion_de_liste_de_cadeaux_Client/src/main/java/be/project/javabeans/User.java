@@ -14,7 +14,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
-import be.project.dao.GiftListDAO;
 import be.project.dao.UserDAO;
 
 public class User implements Serializable{
@@ -149,35 +148,27 @@ public class User implements Serializable{
 				GiftList invitation = GiftList.mapListFromJson(invitationObject);
 				invitations.add(invitation);
 			}
-		JSONArray giftListsObject = json.isNull("giftLists") ? null: json.getJSONArray("giftLists");
-		ArrayList<GiftList> giftLists = new ArrayList<>();
-		if(giftListsObject != null)
-			for (int i = 0; i < giftListsObject.length(); i++) {
-				JSONObject giftlistObject = giftListsObject.getJSONObject(i);
-				GiftList giftList = GiftList.mapListFromJson(giftlistObject);
-				giftLists.add(giftList);
-			}
-		JSONArray notificationsObject = json.isNull("notifications") ? null: json.getJSONArray("notifications");
-		ArrayList<Notification> notifications = new ArrayList<>();
-		if(notificationsObject != null)
-			for (int i = 0; i < notificationsObject.length(); i++) {
-				JSONObject notificationObject = notificationsObject.getJSONObject(i);
-				Notification notification = Notification.mapNotificationFromJson(notificationObject);
-				notifications.add(notification);
-			}
 		user.setInvitations(invitations);
-		user.setGiftLists(giftLists);
 		return user;
 	}
 	
 	public ArrayList<Notification> findAllNotifications(){
 		if(Notification.getAll() !=null) {
-			notifications=  Notification.getAll().stream()
+			return notifications=  Notification.getAll().stream()//find only the user notifications
 				.filter( n -> n.getUsers().stream().anyMatch( u -> u.userId == this.userId))
 				.collect(Collectors.toCollection(ArrayList::new));
 		}
 		 
-		 return notifications;
+		 return null;
+	}
+	
+	public ArrayList<GiftList> findAllInvitations() {
+		if(GiftList.getAll() != null) {
+			return invitations = GiftList.getAll().stream()//find only the user invitations
+					.filter( invitation -> invitation.getSharedUsers().stream().anyMatch(u -> u.getUserId() == this.userId))
+					.collect(Collectors.toCollection(ArrayList::new));
+		}
+		return null;
 	}
 	
 	public static ArrayList<User> getAll(){

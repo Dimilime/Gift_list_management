@@ -1,5 +1,7 @@
 package be.project.dao;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -33,7 +35,9 @@ public class GiftDAO extends DAO<Gift> {
 			callableStatement.setDouble(cpt++, obj.getAveragePrice());
 			callableStatement.setInt(cpt++, obj.getPriorityLevel());
 			callableStatement.setString(cpt++, obj.getReservedAsString());
-			callableStatement.setBlob(cpt++, obj.getImage());
+			System.out.println("giftdao api a recu: "+ obj.getImage());
+			InputStream inputStreamImg = new ByteArrayInputStream(obj.getImage().getBytes());
+			callableStatement.setBlob(cpt++, inputStreamImg);
 			callableStatement.setString(cpt++, obj.getLink());
 			callableStatement.setInt(cpt++, obj.getGiftList().getListId());
 			callableStatement.registerOutParameter(cpt, java.sql.Types.INTEGER);
@@ -93,7 +97,10 @@ public class GiftDAO extends DAO<Gift> {
 				int priorityLevel =  Integer.valueOf( objects[4].toString());
 				String reserved = objects[5].toString();
 				String link = (String)objects[6];
-				Blob img = null;//TODO: get image objects[7]
+				System.out.println(objects[7]);
+				Blob imgBlob = (Blob)objects[7];
+				System.out.println(imgBlob);
+				String img = null;//TODO: get image objects[7]
 				int listId = Integer.valueOf(objects[8].toString());
 				GiftList giftList = giftListDAO.find(listId);
 				gift = new Gift(giftId, priorityLevel, name, description, averagePrice, reserved, link, img, giftList);
@@ -133,7 +140,7 @@ public class GiftDAO extends DAO<Gift> {
 						int priorityLevel =  Integer.valueOf( os[4].toString());
 						String reserved = os[5].toString();
 						String link = (String)os[6];
-						Blob img = null;
+						String img = null;
 						int listId = Integer.valueOf(os[8].toString());
 						GiftList giftList = giftListDAO.find(listId);
 						Gift gift = new Gift(giftId, priorityLevel, name, description, averagePrice , reserved, link, img, giftList);

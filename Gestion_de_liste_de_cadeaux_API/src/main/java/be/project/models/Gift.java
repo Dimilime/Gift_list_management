@@ -1,7 +1,6 @@
 package be.project.models;
 
 import java.io.Serializable;
-import java.sql.Blob;
 import java.util.ArrayList;
 
 import be.project.dao.AbstractDAOFactory;
@@ -18,7 +17,7 @@ public class Gift implements Serializable{
 	private double averagePrice;
 	private boolean reserved;
 	private String link;
-	private Blob image;
+	private String image;
 	private ArrayList<Participation> participations;
 	private GiftList giftList;
 	
@@ -29,7 +28,7 @@ public class Gift implements Serializable{
 	}
 	
 	public Gift(int giftId, int priorityLevel, String name, String description, double averagePrice, String reserved,String link,
-			Blob image, GiftList giftList) {
+			String image, GiftList giftList) {
 		this.giftId =giftId;
 		this.priorityLevel = priorityLevel;
 		this.name = name;
@@ -43,7 +42,7 @@ public class Gift implements Serializable{
 	}
 	
 	public Gift(int giftId, int priorityLevel, String name, String description, double averagePrice, String reserved, String link,
-			GiftList giftList,Blob image, ArrayList<Participation> participations) {
+			GiftList giftList,String image, ArrayList<Participation> participations) {
 		this(giftId,priorityLevel,name, description, averagePrice,reserved, link, image,giftList);
 		this.setParticipations(participations);
 	}
@@ -104,11 +103,11 @@ public class Gift implements Serializable{
 		this.link = link;
 	}
 
-	public Blob getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(Blob image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 

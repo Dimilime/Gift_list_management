@@ -99,7 +99,6 @@ public class AddGift extends HttpServlet {
 					if(avgPrice >0 && priorityLvl > 0) {
 						gift = new Gift(0, priorityLvl, giftName, description, avgPrice, link, giftImg, giftList);
 						ArrayList<Gift> gifts = new ArrayList<>();
-						
 						if(giftList != null) {
 							if( giftList.getGifts() == null || giftList.getGifts().isEmpty())
 								giftList.setGifts(gifts);
@@ -107,7 +106,6 @@ public class AddGift extends HttpServlet {
 					}
 
 					if(giftList.addGift(gift)) {		
-						//session.setAttribute("giftList", giftList);
 						request.setAttribute("message","Cadeau ajouté!");
 						if(addAnother) {
 							doGet(request, response);
