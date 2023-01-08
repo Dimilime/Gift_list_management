@@ -64,7 +64,6 @@ public class GiftDAO extends DAO<Gift> {
 				callableStatement.setString(3, obj.getDescription());
 				callableStatement.setDouble(4, obj.getAveragePrice());
 				callableStatement.setInt(5, obj.getPriorityLevel());
-				//callableStatement.setBlob(6, obj.getImage());
 				callableStatement.setString(6, obj.getLink());
 				callableStatement.registerOutParameter(7, java.sql.Types.INTEGER);
 				callableStatement.executeUpdate();
@@ -132,7 +131,6 @@ public class GiftDAO extends DAO<Gift> {
 				for (int i = 0; i < objects.length; i++) {
 					Object [] os = ((Struct)objects[i]).getAttributes();
 					if(os != null) {
-						
 						int giftId= Integer.valueOf(os[0].toString());
 						String name=os[1].toString();
 						String description= (String)os[2];

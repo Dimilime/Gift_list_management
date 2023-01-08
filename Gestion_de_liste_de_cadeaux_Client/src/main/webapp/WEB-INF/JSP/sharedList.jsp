@@ -17,11 +17,16 @@
 		GiftList giftList = (GiftList)request.getAttribute("GiftList");
 	%>
 	<% if( request.getAttribute("expiredList") != null){%>
-		<div class="alert alert-success alert-dismissible fade show" role="alert">
+		<div class="d-flex justify-content-center">
+		<h1>Liste désactivée</h1>
+		</div>
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
 			<%=request.getAttribute("expiredList")  %>
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
 	<%}%>
+	
+	<%if(giftList !=null){ %>
 	<div class="d-flex justify-content-center">
 	<h1>Liste <%=giftList.getOccasion()%> de <%=giftList.getGiftListUser().getLastname() + " " + giftList.getGiftListUser().getFirstname() %></h1>
 	</div>
@@ -40,6 +45,14 @@
 						<p class="card-text">
 						<%=gift.getDescription() %>
 						</p>
+						<p class="card-text">
+						<%=gift.getAveragePrice() %>
+						</p>
+						<%if(gift.isFullyPaid()){ %>
+							<p class="card-text">
+							Ce cadeau a déjà été offert
+							</p>
+						<%}%>
 						<div class="btn-group">
 							<button type ="button" class="btn btn-sm btn-outline-secondary">
 								Offrir
@@ -58,6 +71,7 @@
 			<%} %>
 		</div>
 	</div>
+	<%} %>
 	
 </body>
 </html>

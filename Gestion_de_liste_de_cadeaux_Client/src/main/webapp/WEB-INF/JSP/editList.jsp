@@ -50,7 +50,6 @@
 
 	%>
 	<% 	GiftList giftList = (GiftList)request.getAttribute("giftList");
-		ArrayList<User> allUsers = (ArrayList<User>)request.getAttribute("allUsers");
 	%>
 	<%@ include file="base.jsp" %> 
 	<div class="d-flex justify-content-center"><h1>Modification de la liste numéro <%=giftList.getListId() %></h1></div>
@@ -84,15 +83,6 @@
 					Veuillez d'abord modifier la date d'expiration
 			</strong>
 			<%} %>
-			<div class="mb-3">
-				<label for="participants" class="form-label">Participants:</label> 
-					<select class="mdb-select md-form colorful-select"
-					id="participantsSelect" multiple  name="participants">
-					<option value disabled>Partagez votre liste avec:</option>
-						<%= showParticipantsSelectOption(giftList.getSharedUsers(), allUsers)%>
-					</select>
-					<div id="participantsSelect" class="form-text" class="invalid-feedback">CTRL+ click pour une sélection multiple</div>	
-			</div>
 			
 			<div class="d-grid gap-2 col-6 mx-auto">
 				<button type="submit" class="btn-red btn-confirm">Modifier</button>

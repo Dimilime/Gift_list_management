@@ -29,7 +29,11 @@ public class NotificationAPI extends API{
 			
 			if(key.equals(apiKey)) 
 			{ 
-				
+				System.out.println("Est bien arrivé côté API pour créer la nnotif");
+				System.out.println("Infos recu :");
+				System.out.println(title);
+				System.out.println(message);
+				System.out.println(users);
 				if(title == null || message == null || users == null)
 					return Response.status(Status.BAD_REQUEST).build();
 				Notification notification = new Notification(0,title,message);

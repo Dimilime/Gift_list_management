@@ -35,9 +35,9 @@ public class EditGift extends HttpServlet {
 		try {
 			if(session != null )
 				user = (User)session.getAttribute("connectedUser");
-
+			//récup les giftlist du user pour verif s'il peut bien modif le cadeau
 			ArrayList<GiftList> giftList = user.getGiftLists();
-			if(request.getParameter("giftId") != null) {
+			if(request.getParameter("giftId") != null && request.getParameter("listId") != null) {
 				giftId = Integer.valueOf(request.getParameter("giftId"));
 				listId = Integer.valueOf(request.getParameter("listId"));
 				for(GiftList list : giftList) {
@@ -73,16 +73,13 @@ public class EditGift extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//gère les modifs
 		int giftId, listId;
 		giftId=listId=0;
-		User connectedUser = null;
 		HttpSession session = request.getSession(false);
 		try {
 			if(session != null ) {
 				listId= (int)session.getAttribute("listId");
 				giftId= (int)session.getAttribute("giftId");
-				connectedUser = (User)session.getAttribute("connectedUser");
 			}
 			if(listId!=0 && giftId!=0) {
 				if(request.getParameter("giftName")!=null && request.getParameter("description") !=null &&
@@ -92,16 +89,12 @@ public class EditGift extends HttpServlet {
 					String description = request.getParameter("description");
 					double price = Double.valueOf(request.getParameter("averagePrice")) ;
 					int priorityLevel = Integer.valueOf(request.getParameter("priorityLevel"));
-					//image
-					
 					String link = request.getParameter("link");
-					//TODO
-					//vérif des infos avec une méthode reprenant tous les params 
+
 					
 					GiftList giftList = new GiftList();
 					giftList.setListId(listId);
 					Gift gift = new Gift(giftId,priorityLevel,giftname,description,price,link,null,giftList);
-					System.out.println("gift crée editGift servlet" + gift);
 					if(gift.update()) {
 						request.setAttribute("message", "Le cadeau a bien été modifiée");
 						request.setAttribute("refreshList", "yes");

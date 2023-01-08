@@ -71,7 +71,7 @@ public class GiftList implements Serializable{
 		LocalDate parsedExpirationDate = null;
 		
 		try {
-		if(expirationDate != null) {
+		if(expirationDate != null && !expirationDate.isEmpty()) {
 			expirationDate = expirationDate.contains(" ")? expirationDate.split(" ")[0] : expirationDate;
 			expirationDate = expirationDate.contains("-")? expirationDate.replace("-", "/"): expirationDate;
 			parsedExpirationDate = LocalDate.parse(expirationDate, formatter);

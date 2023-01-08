@@ -22,7 +22,7 @@
 	  				<%= request.getAttribute("error") %>
 				</div>
 			<% } %>
-				<form action="editGift" method="POST" enctype="multipart/form-data">
+				<form action="editGift" method="POST">
 				<div class="mb-3">
 					<label for="giftNameInput" class="form-label">Nom</label> 
 					<input id="giftNameInput" type="text" class="form-control" name="giftName" value="<%=gift.getName()%>" >
@@ -53,14 +53,12 @@
 				</div>
 				
 				<div class="mb-3">
-					<label for="imageFile" class="form-label">Image</label> 
-					<input type="file" id="imageFile" name="giftImg" accept="image/*">
-				</div>
-				
-				<div class="mb-3">
-					<label for="linkInput" class="form-label">Lien du cadeau</label> 
-				<input id="linkInput" type="text" class="form-control" name="link">
-
+					<label for="linkInput" class="form-label">Lien du cadeau</label>
+					<%if(gift.getLink() == null){ %> 
+					<input id="linkInput" type="text" class="form-control" name="link">
+					<%}else{ %>
+					<input id="linkInput" type="text" class="form-control" name="link" value="<%=gift.getLink() %>">
+					<%} %>
 				</div>
 				
 				<div class="d-grid gap-2 col-6 mx-auto">

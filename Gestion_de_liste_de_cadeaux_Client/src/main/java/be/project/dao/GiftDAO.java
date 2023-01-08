@@ -44,15 +44,12 @@ public class GiftDAO extends DAO<Gift> {
 
 	@Override
 	public boolean update(Gift obj) {
-		System.out.println("arrive dans update dao du client");
-		
 		parameters.clear();
 		parameters.add("giftId",String.valueOf(obj.getGiftId()));
 		parameters.add("giftName",obj.getName());
 		parameters.add("description", obj.getDescription());
 		parameters.add("price", String.valueOf(obj.getAveragePrice()));
 		parameters.add("priorityLevel",String.valueOf(obj.getPriorityLevel()));
-		parameters.add("image",obj.getImage());
 		parameters.add("link",obj.getLink());
 
 		clientResponse=resource

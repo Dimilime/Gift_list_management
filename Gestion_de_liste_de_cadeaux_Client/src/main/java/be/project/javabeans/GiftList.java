@@ -84,7 +84,7 @@ public class GiftList implements Serializable{
 		
 		try 
 		{
-			if(expirationDate != null) {
+			if(expirationDate != null && !expirationDate.isEmpty()) {
 				expirationDate = expirationDate.contains("-")? expirationDate.replace("-", "/"): expirationDate;
 				parsedExpirationDate = LocalDate.parse(expirationDate, formatter);
 			}
@@ -114,7 +114,6 @@ public class GiftList implements Serializable{
 		return gifts;
 	}
 	public ArrayList<Gift> getGifts() {
-		//exception générée si .stream d'un objet null
 		if(Gift.getAll() != null) {
 			return gifts = Gift.getAll().stream()
 					.filter( gift -> gift.getGiftList().listId == this.listId)
@@ -169,7 +168,6 @@ public class GiftList implements Serializable{
 	public boolean share() {
 		if(sharedUsers != null) {
 			if(((GiftListDAO)giftListDAO).addSharedUsers(this)) {
-			
 				ArrayList<User> usersUnotified = sharedUsers.stream().filter( u -> u.getNotifications() != null)
 						.collect(Collectors.toCollection(ArrayList::new));
 				Notification notification = new Notification(0, "Invitation",
@@ -203,7 +201,10 @@ public class GiftList implements Serializable{
 	
 	public boolean dateIsExpired() {
 		LocalDate now = LocalDate.now();
-		return now.isAfter(expirationDate);
+		if(expirationDate != null) {
+			return now.isAfter(expirationDate);
+		}
+		return false;
 	}
 	
 	public static GiftList mapListFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException  {
@@ -238,15 +239,4 @@ public class GiftList implements Serializable{
 		return giftList;
 		
 	}
-
-	@Override
-	public String toString() {
-		return "GiftList [listId=" + listId + ", occasion=" + occasion + ", expirationDate=" + expirationDate
-				+ ", enabled=" + enabled + ", gifts=" + gifts + ", sharedUsers=" + sharedUsers + ", giftListUser="
-				+ giftListUser + ", key=" + key + "]";
-	}
-
-	
-
-
 }

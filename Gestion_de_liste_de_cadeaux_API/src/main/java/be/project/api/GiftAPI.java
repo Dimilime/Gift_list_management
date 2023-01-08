@@ -47,7 +47,6 @@ public class GiftAPI extends API {
 				@FormParam("description") String description,
 				@FormParam("price") double price,
 				@FormParam("priorityLevel") int priorityLevel,
-				@FormParam("image") String image,
 				@FormParam("link") String link,
 				@HeaderParam("key") String key) {
 			System.out.println("arrive dans api");

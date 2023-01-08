@@ -76,7 +76,6 @@ public class GiftListAPI extends API{
 			@FormParam("listId") int listIdForm,
 			@FormParam("occasion") String occasion,
 			@FormParam("expirationDate") String expirationDate,
-			@FormParam("sharedUsersId") String JSONsharedUsersId,
 			@FormParam("userListId") int userListId,
 			@FormParam("enabled") String enabled,
 			@HeaderParam("key") String key) {
@@ -89,33 +88,7 @@ public class GiftListAPI extends API{
 				User connectedUser = new User();
 				connectedUser.setUserId(userListId);
 
-				ArrayList<User> sharedUsers = null;
-				//check si tableau vide ou si contient des valeurs on extrait le ou les ID
-				if(JSONsharedUsersId.length()>2) {
-					sharedUsers = new ArrayList<User>();
-					//cas multiple valeurs
-					if(JSONsharedUsersId.contains(",")) {
-						String[] sharedUsersID = JSONsharedUsersId.replaceAll("\\[", "")
-		                          .replaceAll("]", "")
-		                          .split(",");
-						for(int i=0;i<sharedUsersID.length;i++) {
-							User user = new User();
-							user.setUserId(Integer.valueOf(sharedUsersID[i]));
-							sharedUsers.add(user);
-						}
-					}
-					//cas 1 seule valeur
-					else {
-						String sharedUserId = null;
-						sharedUserId= JSONsharedUsersId.replaceAll("\\[", "")
-								.replaceAll("]", "");
-						User user = new User();
-						user.setUserId(Integer.valueOf(sharedUserId));
-						sharedUsers.add(user);
-					}
-				}
-
-				GiftList giftList = new GiftList(listId,occasion,expirationDate,null, sharedUsers, connectedUser, null, enabled);
+				GiftList giftList = new GiftList(listId,occasion,expirationDate,null, null, connectedUser, null, enabled);
 				int updateCode=giftList.update();
 				if(updateCode==0){
 					return Response.status(Status.NO_CONTENT).build();

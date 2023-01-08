@@ -23,10 +23,10 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public int insert(GiftList obj) {
-		
+		String expirationDate = obj.getExpirationDate() == null? null : obj.getExpirationDate().toString();
 		parameters.clear();
 		parameters.add("occasion", obj.getOccasion());
-		parameters.add("expirationDate", obj.getExpirationDate().toString());
+		parameters.add("expirationDate", expirationDate);
 		parameters.add("email", obj.getGiftListUser().getEmail());
 		clientResponse=resource
 				.path("giftList")
@@ -44,15 +44,10 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public boolean update(GiftList obj) {
-		JSONArray jsonArray= new JSONArray();
-		for(User user : obj.getSharedUsers()) {
-			jsonArray.put(user.getUserId());
-		}
 		parameters.clear();
 		parameters.add("listId",String.valueOf(obj.getListId()));
 		parameters.add("occasion", obj.getOccasion());
 		parameters.add("expirationDate",Utils.convertLocalDateToString(obj.getExpirationDate()));
-		parameters.add("sharedUsersId",jsonArray.toString());
 		parameters.add("userListId",String.valueOf(obj.getGiftListUser().getUserId()));
 		parameters.add("enabled",Utils.convertBoolToString(obj.isEnabled()));
 		clientResponse=resource
@@ -85,13 +80,18 @@ public class GiftListDAO extends DAO<GiftList>{
 
 	@Override
 	public GiftList find(int id) {
-		String responseJSON=resource
+		clientResponse=resource
 				.path("giftList")
 				.path(String.valueOf(id))
 				.header("key",apiKey)
 				.accept(MediaType.APPLICATION_JSON)
-				.get(String.class);
+				.get(ClientResponse.class);
 		GiftList giftList=null;
+		String responseJSON=clientResponse.getEntity(String.class);
+		int status=clientResponse.getStatus();
+		//gérer cas aucune liste trouvée
+		if(status == 404) 
+			return null;
 		try {
 			JSONObject json = new JSONObject(responseJSON);
 			giftList = GiftList.mapListFromJson(json);

@@ -29,8 +29,10 @@ public class ConsultList extends HttpServlet {
 		try {
 			if(session != null ) {
 				user = (User)session.getAttribute("connectedUser");
+				//si reviens après modif de liste
 				if(session.getAttribute("listId") != null) 
 					session.removeAttribute("listId");
+				//si reviens après modif de gift
 				if(session.getAttribute("giftId") != null) 
 					session.removeAttribute("giftId");
 			}
@@ -39,6 +41,7 @@ public class ConsultList extends HttpServlet {
 			if(request.getAttribute("refreshList")!=null) {
 				giftList = user.findAllGiftList();
 			}else {
+				//retourne juste la liste courante
 				giftList = user.getGiftLists();
 			}
 			
@@ -52,13 +55,16 @@ public class ConsultList extends HttpServlet {
 					}	
 				}
 				if(rightAccess) {
+					//récupère l'ensemble des cadeaux pour cette liste
 					ArrayList<Gift> gifts = currentGiftList.getGifts();
 					//trier par ordre de priorité
 					Collections.sort(gifts, Comparator.comparing(Gift::getPriorityLevel));
 					Collections.reverse(gifts);
 					currentGiftList.setGifts(gifts);
+					
 					session.setAttribute("giftList", currentGiftList);
 					request.setAttribute("giftList", currentGiftList);
+					
 					request.getRequestDispatcher("/WEB-INF/JSP/consultList.jsp").forward(request, response);
 					return;
 				}
