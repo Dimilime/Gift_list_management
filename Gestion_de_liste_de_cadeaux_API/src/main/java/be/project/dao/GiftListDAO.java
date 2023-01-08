@@ -33,7 +33,7 @@ public class GiftListDAO extends DAO<GiftList>{
 			id = callableStatement.getInt(5);
 			
 		}catch(SQLException e) {
-			e.printStackTrace();
+			return id;
 		}
 		return id;
 	}
@@ -70,6 +70,7 @@ public class GiftListDAO extends DAO<GiftList>{
 				codeError=callableStatement.getInt(6);
 		}catch(SQLException e) {
 			System.out.println("Exception dans update update giftList Api "+ e.getMessage());
+			return codeError;
 		}
 		return codeError;
 	}
@@ -110,11 +111,9 @@ public class GiftListDAO extends DAO<GiftList>{
 				giftList.setSharedUsers(listSharedUsers);
 			}
 		
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		} catch (NumberFormatException | SQLException e ) {
+			return null;
+		} 
 
 		return giftList;
 	}
@@ -160,11 +159,9 @@ public class GiftListDAO extends DAO<GiftList>{
 					}
 				}
 			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		} catch (NumberFormatException | SQLException e) {
+			return null;
+		} 
 
 		return giftLists;
 	}

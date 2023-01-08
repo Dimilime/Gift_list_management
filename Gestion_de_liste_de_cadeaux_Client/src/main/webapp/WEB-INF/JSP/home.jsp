@@ -50,7 +50,8 @@
 			<%
 				User u = (User)session.getAttribute("connectedUser");
 				int i=0;
-				for ( GiftList giftList : u.getGiftLists()) {
+				if(u.getGiftLists() !=null){
+					for ( GiftList giftList : u.getGiftLists()) {
 			%>
 			<tr>
 				<td><%= giftList.getOccasion()%></td>
@@ -62,7 +63,7 @@
 				</td>
 			</tr>
 			<%
-			}
+			}}
 			%>
 		</table>
 		<div class="ms-5">

@@ -38,7 +38,7 @@ public class GiftList implements Serializable{
 	public GiftList() {
 	}
 
-	public GiftList(int listId, String occasion , User giftListUser,  String expirationDate, String key, String enabled) {
+	public GiftList(int listId, String occasion , User giftListUser,  String expirationDate, String key, String enabled) throws ExpirationDateException {
 		this.setListId(listId);
 		this.occasion = occasion;
 		this.setEnabled(enabled);
@@ -51,7 +51,7 @@ public class GiftList implements Serializable{
 	
 	
 	public GiftList(int listId, String occasion, String expirationDate, ArrayList<Gift> gifts, ArrayList<User> sharedUsers,
-			User giftListUser, String key, String enabled) {
+			User giftListUser, String key, String enabled) throws ExpirationDateException {
 		this(listId,occasion,giftListUser, expirationDate, key,enabled);
 		this.gifts = gifts;
 		this.sharedUsers = sharedUsers;
@@ -78,7 +78,7 @@ public class GiftList implements Serializable{
 		return expirationDate;
 	}
 
-	public void setExpirationDate(String expirationDate) {
+	public void setExpirationDate(String expirationDate) throws ExpirationDateException {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDate parsedExpirationDate = null;		
 		
@@ -87,6 +87,9 @@ public class GiftList implements Serializable{
 			if(expirationDate != null) {
 				expirationDate = expirationDate.contains("-")? expirationDate.replace("-", "/"): expirationDate;
 				parsedExpirationDate = LocalDate.parse(expirationDate, formatter);
+				if(parsedExpirationDate.isBefore(LocalDate.now()) || parsedExpirationDate.isEqual(LocalDate.now())) {
+					throw new ExpirationDateException();
+				}
 			}
 		
 		}catch (DateTimeParseException e) {
@@ -203,7 +206,7 @@ public class GiftList implements Serializable{
 		return now.isAfter(expirationDate);
 	}
 	
-	public static GiftList mapListFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException  {
+	public static GiftList mapListFromJson(JSONObject jsonObject) throws ExpirationDateException, JsonParseException, JsonMappingException, JSONException, IOException  {
 		GiftList giftList = null;
 		User user = null;
 		String expirationDate = null;

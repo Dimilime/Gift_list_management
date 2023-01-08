@@ -155,7 +155,7 @@ public class Gift implements Serializable{
 		}
 		return this.averagePrice == somme;
 	}
-	public static Gift mapGiftFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException  {
+	public static Gift mapGiftFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException, ExpirationDateException  {
 		Gift gift = null;
 		GiftList giftList = null;
 		int giftId = jsonObject.getInt("giftId");

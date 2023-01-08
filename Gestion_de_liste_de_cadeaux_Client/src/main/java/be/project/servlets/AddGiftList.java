@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import be.project.javabeans.ExpirationDateException;
 import be.project.javabeans.GiftList;
 import be.project.javabeans.User;
 
@@ -44,18 +45,27 @@ public class AddGiftList extends HttpServlet {
 		}
 		if(occasion != null && occasion.trim().length()>0) {
 			ArrayList<GiftList> giftLists = new ArrayList<>();
-			GiftList giftList = new GiftList(0,occasion,user,expirationDate, null, "Y");
-			if(user.getGiftLists().isEmpty())
-				user.setGiftLists(giftLists);
-			int idCreated = user.addGiftList(giftList);
-			if(idCreated !=0) {
-				giftList.setListId(idCreated);
-				session.setAttribute("giftList", giftList);
-				request.setAttribute("message", "Liste ajouté!");
-				request.setAttribute("giftListForward", "yes");
-				request.getRequestDispatcher("addGift").forward(request, response);
+			GiftList giftList;
+			try {
+				giftList = new GiftList(0,occasion,user,expirationDate, null, "Y");
+				
+				if(user.getGiftLists().isEmpty())
+					user.setGiftLists(giftLists);
+				int idCreated = user.addGiftList(giftList);
+				if(idCreated !=0) {
+					giftList.setListId(idCreated);
+					session.setAttribute("giftList", giftList);
+					request.setAttribute("message", "Liste ajouté!");
+					request.setAttribute("giftListForward", "yes");
+					request.getRequestDispatcher("addGift").forward(request, response);
+					return;
+				}
+			} catch (ExpirationDateException e) {
+				request.setAttribute("errorAddGiftList", "La date d'expiration doit être une date ultérieure!");
+				doGet(request, response);
 				return;
 			}
+			
 			request.setAttribute("errorAddGiftList", "Liste non ajouté!");
 			doGet(request, response);
 			return;

@@ -134,7 +134,7 @@ public class User implements Serializable{
 	}
 	
 
-	public static User getUserByJSONObject(JSONObject json)throws JsonParseException, JsonMappingException, JSONException, IOException {
+	public static User getUserByJSONObject(JSONObject json)throws JsonParseException, JsonMappingException, JSONException, IOException, ExpirationDateException {
 		User user=new User();
 		user.setUserId(json.getInt("userId"));
 		user.setFirstname(json.getString("firstname"));

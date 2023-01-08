@@ -73,7 +73,7 @@ public class Notification implements Serializable{
 		return notificationDAO.insert(this) != 0 ? true : false;
 	}
 	
-	public static Notification mapNotificationFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException
+	public static Notification mapNotificationFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException, ExpirationDateException
 	{
 		Notification notification = new Notification();
 		notification.setNotificationId(jsonObject.getInt("notificationId"));

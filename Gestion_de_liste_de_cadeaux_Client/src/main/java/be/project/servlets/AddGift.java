@@ -45,6 +45,12 @@ public class AddGift extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		if(request.getAttribute("giftListForward") != null) {
+			doGet(request, response);
+			return;
+		}
+		
 		String img =null;
 		try {
 			if(request.getPart("giftImg") != null) {
@@ -57,11 +63,7 @@ public class AddGift extends HttpServlet {
 			}
 			
 		} catch (Exception e) {
-		}
-
-
-		
-		if(request.getAttribute("giftListForward") != null) {
+			request.setAttribute("errorGift","La conversion de l'image ne s'est pas correctement déroulé essayez avec une image moins volumineux");
 			doGet(request, response);
 			return;
 		}
@@ -114,7 +116,8 @@ public class AddGift extends HttpServlet {
 				doGet(request, response);
 				return;
 			}catch(NumberFormatException e) {
-				e.printStackTrace();
+				request.setAttribute("errorGift","Veuillez entrer uniquement des nombre pour les champs prix et priorité");
+				doGet(request, response);
 			}
 		}else {
 			request.setAttribute("errorGift","Nom, prix ou priorité vide!");
