@@ -30,6 +30,7 @@
 		<servlet-name>Notifications</servlet-name>
 		<servlet-name>SharedList</servlet-name>
 		<servlet-name>EditGift</servlet-name>
+		<servlet-name>Invitations</servlet-name>
 	</filter-mapping>
 	
 	<!-- CONTEXT PARAMS -->
@@ -113,6 +114,10 @@
 		<servlet-name>SharedList</servlet-name>
 		<servlet-class>be.project.servlets.SharedList</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>ExceptionHandler</servlet-name>
+		<servlet-class>be.project.servlets.ExceptionHandler</servlet-class>
+	</servlet>
 
 	<!-- MAPPING SERVLET -->
 	<servlet-mapping>
@@ -130,6 +135,10 @@
 	<servlet-mapping>
 		<servlet-name>Logout</servlet-name>
 		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ExceptionHandler</servlet-name>
+		<url-pattern>/exceptionHandler</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -196,5 +205,10 @@
 		<servlet-name>SharedList</servlet-name>
 		<url-pattern>/sharedList</url-pattern>
 	</servlet-mapping>
+
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/exceptionHandler</location>
+	</error-page>
 
 </web-app>

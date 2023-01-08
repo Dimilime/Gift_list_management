@@ -3,6 +3,7 @@ package be.project.javabeans;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Base64;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -177,15 +178,4 @@ public class Gift implements Serializable{
 		return gift;
 		
 	}
-
-	@Override
-	public String toString() {
-		return "Gift [giftId=" + giftId + ", priorityLevel=" + priorityLevel + ", name=" + name + ", description="
-				+ description + ", averagePrice=" + averagePrice + ", reserved=" + reserved + ", link=" + link
-				+ ", image=" + image + ", giftList=" + giftList + ", participations=" + participations + "]";
-	}
-
-	
-
-
 }

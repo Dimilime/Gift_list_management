@@ -135,6 +135,10 @@ select[id=participantsSelect]{
     text-align: center;
     border-radius: 50%;
 }
+img{
+	object-fit: cover;
+	object-position: center;
+}
 
 
 

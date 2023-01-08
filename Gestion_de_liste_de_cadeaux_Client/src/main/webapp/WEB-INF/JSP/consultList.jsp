@@ -104,8 +104,8 @@
 				<th>Actions</th>
 			</tr>
 			<%
-				if(giftList.getCurrentGifts() != null){
-					for (Gift gift : giftList.getCurrentGifts()) {
+				if(giftList.getGifts() != null){
+					for (Gift gift : giftList.getGifts()) {
 			%>
 			<tr>
 				<%= manageCodeColorPriorityLevel(gift.getPriorityLevel())%>
@@ -113,7 +113,8 @@
 				<td><%= gift.getDescription() == null ? "Pas de description fourni": gift.getDescription()%></td>
 				<td><%= String.format("%.2f",  gift.getAveragePrice())%> euros</td>
 				<td><%= gift.getLink() == null ? "Pas de lien fourni": gift.getLink()  %></td>
-				<td><%= gift.getImage() == null ? "Pas d'image fournie": gift.getImage() %></td>
+				<td><%= gift.getImage() == null ? "Pas d'image fournie":
+					"<img alt='image du cadeau' src='data:image/png;base64,"+gift.getImage()+"' width='150' height='150'>"%> </td>
 				<td><%= gift.isReserved() ? "Oui":" Non"%></td>
 				<% if(gift.getParticipations() != null){%>
 					<td>

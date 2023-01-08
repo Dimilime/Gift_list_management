@@ -36,7 +36,7 @@ public class SharedList extends HttpServlet {
 					user.setNotifications(new ArrayList<>());
 					giftList.addUserToSharedList(user);
 					giftList.share();
-					giftList.setGifts(giftList.getGifts());
+					giftList.setGifts(giftList.findAllGifts());
 				}else {
 					request.setAttribute("expiredList", "Le lien de partage a expiré");
 				}
@@ -44,7 +44,7 @@ public class SharedList extends HttpServlet {
 				int id =Integer.valueOf(request.getParameter("id"));
 				giftList = GiftList.get(id);
 				if(giftList!=null) {
-					giftList.setGifts(giftList.getGifts());
+					giftList.setGifts(giftList.findAllGifts());
 				}
 			}
 			//liste désactivée ou plus existante
@@ -54,6 +54,7 @@ public class SharedList extends HttpServlet {
 				request.setAttribute("GiftList", null);
 				request.setAttribute("expiredList", "Cette liste n'est plus consultable, elle a été désactivée ou supprimée");
 			}
+			request.setAttribute("invitation", giftList);
 			request.getRequestDispatcher("/WEB-INF/JSP/sharedList.jsp").forward(request, response);
 		}
 	}

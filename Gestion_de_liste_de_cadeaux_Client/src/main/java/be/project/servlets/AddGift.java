@@ -22,6 +22,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 
 import be.project.javabeans.Gift;
 import be.project.javabeans.GiftList;
@@ -49,9 +50,9 @@ public class AddGift extends HttpServlet {
 			if(request.getPart("giftImg") != null) {
 				Part part = request.getPart("giftImg");
 				InputStream inputStream = part.getInputStream();
-				
+				byte [] bytes = inputStream.readAllBytes();
 				//convert inputstream to string
-				img =  new String(inputStream.readAllBytes(),StandardCharsets.UTF_8);
+				img =  Base64.getEncoder().encodeToString(bytes);
 
 			}
 			

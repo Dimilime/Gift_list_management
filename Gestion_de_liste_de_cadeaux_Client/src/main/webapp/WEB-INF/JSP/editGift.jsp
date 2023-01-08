@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 <jsp:include page="head.jsp">
-	<jsp:param value="Modification d'une liste" name="title" />
+	<jsp:param value="Modification d'un cadeau" name="title" />
 </jsp:include> 
 <body>
 	<% 	Gift gift = (Gift)request.getAttribute("gift");

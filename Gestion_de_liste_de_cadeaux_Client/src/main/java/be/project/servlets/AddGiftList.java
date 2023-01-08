@@ -1,6 +1,7 @@
 package be.project.servlets;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -36,6 +37,11 @@ public class AddGiftList extends HttpServlet {
 		if(session != null )
 			user = (User)session.getAttribute("connectedUser");
 		
+		try {
+			
+		} catch (Exception e) {
+			
+		}
 		if(occasion != null && occasion.trim().length()>0) {
 			ArrayList<GiftList> giftLists = new ArrayList<>();
 			GiftList giftList = new GiftList(0,occasion,user,expirationDate, null, "Y");
