@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import be.project.javabeans.Gift;
 import be.project.javabeans.GiftList;
 import be.project.javabeans.User;
 
@@ -20,7 +19,6 @@ public class SharedList extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String key=null;
-		ArrayList<Gift> gifts;
 		GiftList giftList;
 		HttpSession session = request.getSession(false);
 		User user = null;
@@ -54,7 +52,7 @@ public class SharedList extends HttpServlet {
 				request.setAttribute("GiftList", null);
 				request.setAttribute("expiredList", "Cette liste n'est plus consultable, elle a été désactivée ou supprimée");
 			}
-			request.setAttribute("invitation", giftList);
+			System.out.println(giftList);
 			request.getRequestDispatcher("/WEB-INF/JSP/sharedList.jsp").forward(request, response);
 		}
 	}

@@ -11,7 +11,12 @@
 	<%@ include file="base.jsp" %> 
 	<div class="d-flex justify-content-center"><h1>Mes invitations</h1></div>
 	<div class="container d-flex flex-wrap justify-content-center">
-	
+		<% if( request.getAttribute("message") != null){%>
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			${ message }
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	<%}%>
 		<table class="table">
 			<thead>
 				<tr>

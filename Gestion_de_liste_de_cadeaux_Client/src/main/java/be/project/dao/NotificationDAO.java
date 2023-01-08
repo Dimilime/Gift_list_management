@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
 
-import be.project.javabeans.GiftList;
 import be.project.javabeans.Notification;
 import be.project.javabeans.User;
 

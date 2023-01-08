@@ -12,6 +12,7 @@
 	<%@ include file="base.jsp" %> 
 	<% 	
 		GiftList giftList = (GiftList)request.getAttribute("GiftList");
+		User user = (User) session.getAttribute("connectedUser");
 	%>
 	<% if(request.getAttribute("expiredList") != null){%>
 		<div class="d-flex justify-content-center">
@@ -46,20 +47,27 @@
 							<p class="card-text">
 							Ce cadeau a déjà été offert
 							</p>
-						<%}%>
-						<div class="btn-group">
-							<button type ="button" class="btn btn-sm btn-outline-secondary">
-								Offrir
-							</button>
-							<button type ="button" class="btn btn-sm btn-outline-secondary ml-2">
+						<%}else if(gift.hasAlreadyOffer(user.getUserId())){%>
+					 		<p class="card-text">Vous avez déja participer à cette offre</p>
+						<%}else if(!gift.isFullyPaid() && gift.isReserved()){%>
+						<div class="btn">
+							<a href ="./shareoffer?id=<%=gift.getGiftId() %>" class="btn btn-sm btn-outline-secondary ml-2">
 								Offrir à plusieurs ?
-							</button>
-							
+							</a>
 						</div>
+						<%}else{ %>
+						<div class="btn-group">
+							<a href="./offergift?id=<%=gift.getGiftId() %>" class="btn btn-sm btn-outline-secondary">
+								Offrir
+							</a>
+							<a href="./shareoffer?id=<%=gift.getGiftId() %>"  class="btn btn-sm btn-outline-secondary ml-2">
+								Offrir à plusieurs ?
+							</a>
+							<%} %>
+						</div>
+
 					</div>
-					<div class="card-body">
-						<%=gift.getLink() ==null? "Pas de lien fourni": "<a href='"+gift.getLink()+"' class='card-link'>Lien marchand</a>" %>
-					</div>
+
 				</div>
 			</div>
 			<%} %>

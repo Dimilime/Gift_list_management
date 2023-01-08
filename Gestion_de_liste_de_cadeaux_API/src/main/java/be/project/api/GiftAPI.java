@@ -1,6 +1,5 @@
 package be.project.api;
 
-import java.sql.Blob;
 import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
@@ -18,11 +17,30 @@ import javax.ws.rs.core.Response.Status;
 
 import be.project.models.Gift;
 import be.project.models.GiftList;
+import be.project.models.Participation;
+import be.project.models.User;
 
 @Path("/gift")
 public class GiftAPI extends API {
 	
-	
+		@GET
+		@Path("{id}")
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getGift(@PathParam("id") int id,
+				@HeaderParam("key") String key) {
+			if(key!=null) {
+				if(key.equals(apiKey)) {
+					Gift gift=Gift.getGift(id);
+					if(gift == null)
+						return Response.status(Status.NOT_FOUND).build();
+					
+					return Response.status(Status.OK).entity(gift).build();
+				}
+			}
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+		
+		
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response getAllGift(@HeaderParam("key") String key) {
@@ -111,6 +129,37 @@ public class GiftAPI extends API {
 				}
 				
 				
+				return Response.status(Status.SERVICE_UNAVAILABLE).build();
+			}
+			return Response.status(Status.UNAUTHORIZED).build();
+			
+		}
+		
+		@POST
+		@Path("/{id}/offer")
+		public Response addOffer(
+				@PathParam("id") int giftId,
+				@FormParam("userId") int userId,
+				@FormParam("giftId") int giftIdForm,
+				@FormParam("price") double price,
+				@HeaderParam("key") String key
+				)
+		{
+			System.out.println("addOffer gift dao api : ");
+			System.out.println(userId);
+			System.out.println(giftIdForm);
+			System.out.println(price);
+			if(key.equals(apiKey) && giftId == giftIdForm) {
+				Gift gift = new Gift();
+				gift.setGiftId(giftId);
+				User u = new User();
+				u.setUserId(userId);
+				Participation participation = new Participation(0,u,price,gift);
+				gift.addParticipation(participation);
+				
+				if(gift.addOffer()) {
+					return Response.status(Status.CREATED).build();
+				}
 				return Response.status(Status.SERVICE_UNAVAILABLE).build();
 			}
 			return Response.status(Status.UNAUTHORIZED).build();

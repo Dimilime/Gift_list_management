@@ -3,7 +3,6 @@ package be.project.dao;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -13,14 +12,11 @@ import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Base64;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.HeaderParam;
-
 import be.project.models.Gift;
 import be.project.models.GiftList;
+import be.project.models.Participation;
+import be.project.models.User;
 import oracle.jdbc.OracleTypes;
-import oracle.sql.ARRAY;
-import oracle.sql.ArrayDescriptor;
 
 public class GiftDAO extends DAO<Gift> {
 
@@ -83,6 +79,8 @@ public class GiftDAO extends DAO<Gift> {
 		GiftListDAO giftListDAO = new GiftListDAO(conn);
 		Struct struc=null;
 		Gift gift=null;
+		ArrayList<Participation> participations=null;
+		int cpt=0;
 		String sql="{call getGift(?,?)}";
 		try (CallableStatement callableStatement = conn.prepareCall(sql)){
 			
@@ -91,7 +89,7 @@ public class GiftDAO extends DAO<Gift> {
 			callableStatement.execute();
 			
 			struc = (Struct) callableStatement.getObject(2);
-			Object[] objects = struc.getAttributes();
+			Object[] objects = struc == null ? null : struc.getAttributes();
 			if(objects != null) {
 				int giftId= Integer.valueOf(objects[0].toString());
 				String name=objects[1].toString();
@@ -110,8 +108,38 @@ public class GiftDAO extends DAO<Gift> {
 				}
 				
 				int listId = Integer.valueOf(objects[8].toString());
+				
+				//participations
+				Array array = (Array) objects[9];
+				Object[] participationsArray = (Object[])array.getArray();
+				if(participationsArray != null && participationsArray.length>0) {
+					cpt++;
+					if(cpt==1) {
+						participations = new ArrayList<Participation>();
+					}
+					for(int i=0; i<participationsArray.length;i++) {
+						Struct structCast = (Struct)participationsArray[i];
+						Object[] objCast = structCast.getAttributes();
+	
+						int userId  = Integer.valueOf(objCast[0].toString());
+						int giftID  = Integer.valueOf(objCast[1].toString());
+						double pricePart  = Double.valueOf(objCast[2].toString());
+						
+						User u = new User();
+						u.setUserId(userId);
+						if(giftID==giftId) {
+							Participation participation = new Participation(0,u,pricePart,null);
+							participations.add(participation);
+						}
+					
+					}
+					
+				}
 				GiftList giftList = giftListDAO.find(listId);
 				gift = new Gift(giftId, priorityLevel, name, description, averagePrice, reserved, link, img, giftList);
+				if(participations!=null) {
+					gift.setParticipations(participations);
+				}
 			}
 		
 		} catch (NumberFormatException e) {
@@ -130,6 +158,7 @@ public class GiftDAO extends DAO<Gift> {
 		GiftListDAO giftListDAO = new GiftListDAO(conn);
 		Array array=null;
 		ArrayList<Gift> gifts= new ArrayList<>();
+		
 		String sql="{call getAllGift(?)}";
 		try (CallableStatement callableStatement = conn.prepareCall(sql)){
 			
@@ -140,6 +169,7 @@ public class GiftDAO extends DAO<Gift> {
 			Object [] objects = (Object[]) array.getArray();
 			if(objects != null) {
 				for (int i = 0; i < objects.length; i++) {
+					ArrayList<Participation> participations=null;
 					Object [] os = ((Struct)objects[i]).getAttributes();
 					if(os != null) {
 						int giftId= Integer.valueOf(os[0].toString());
@@ -158,8 +188,35 @@ public class GiftDAO extends DAO<Gift> {
 							img =  Base64.getEncoder().encodeToString(bytes);
 						}
 						int listId = Integer.valueOf(os[8].toString());
+						
+						//participations
+						Array sqlArray = (Array) os[9];
+						Object[] participationsArray = (Object[])sqlArray.getArray();
+						if(participationsArray != null && participationsArray.length>0) {
+							participations = new ArrayList<Participation>();
+							for(int j=0; j<participationsArray.length;j++) {
+								
+								Struct structCast = (Struct)participationsArray[j];
+								Object[] objCast = structCast.getAttributes();
+			
+								int userId  = Integer.valueOf(objCast[0].toString());
+								int giftID  = Integer.valueOf(objCast[1].toString());
+								double pricePart  = Double.valueOf(objCast[2].toString());
+								User u = new User();
+								u.setUserId(userId);
+								if(giftID==giftId) {
+									Participation participation = new Participation(0,u,pricePart,null);
+									participations.add(participation);
+								}
+							}
+						}
+						
 						GiftList giftList = giftListDAO.find(listId);
 						Gift gift = new Gift(giftId, priorityLevel, name, description, averagePrice , reserved, link, img, giftList);
+						if(participations!=null) {
+							gift.setParticipations(participations);
+						}
+						
 						gifts.add(gift);		
 					}	
 				}
@@ -174,6 +231,30 @@ public class GiftDAO extends DAO<Gift> {
 		}
 
 		return gifts;
+	}
+
+	public boolean addOffer(Gift gift) {
+		int codeError = -1;
+		ArrayList<Participation> participations = gift.getParticipations();
+		try(CallableStatement callableStatement = conn.prepareCall("{call insert_offer(?,?,?,?)}")) {
+				int userid = participations.get(0).getParticipant().getUserId();
+				double price = participations.get(0).getParticipationpart();
+				int giftId = gift.getGiftId();
+				System.out.println("dans addOffer giftdao api, on passe les valeurs : ");
+				System.out.println(giftId);
+				System.out.println(price);
+				System.out.println(userid);
+				callableStatement.setInt(1, giftId);
+				callableStatement.setInt(2, userid);
+				callableStatement.setDouble(3, price);
+				callableStatement.registerOutParameter(4, java.sql.Types.INTEGER);
+				callableStatement.executeUpdate();
+				codeError=callableStatement.getInt(4);
+				System.out.println("Code erreur : " + codeError);
+		}catch(SQLException e) {
+			System.out.println("Exception dans giftdao de l'api -> addOffer "+ e.getMessage());
+		}
+		return codeError == 0 ? true : false;
 	}
 
 }

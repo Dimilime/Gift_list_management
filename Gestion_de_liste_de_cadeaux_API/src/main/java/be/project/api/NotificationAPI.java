@@ -11,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import be.project.models.GiftList;
 import be.project.models.Notification;
 import be.project.models.User;
 

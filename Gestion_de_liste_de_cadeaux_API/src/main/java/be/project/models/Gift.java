@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
+import be.project.dao.GiftDAO;
 
 public class Gift implements Serializable{
 
@@ -92,7 +93,7 @@ public class Gift implements Serializable{
 	}
 
 	public void setReserved(String reserved) {
-		this.reserved = reserved == "Y" ? true : false;
+		this.reserved = reserved.equals("Y") ? true : false;
 	}
 
 	public String getLink() {
@@ -117,6 +118,14 @@ public class Gift implements Serializable{
 
 	public void setParticipations(ArrayList<Participation> participations) {
 		this.participations = participations;
+	}
+	
+	public void addParticipation(Participation participation) {
+		if(participations==null) {
+			participations = new ArrayList<Participation>();
+		}
+		participations.add(participation);
+		
 	}
 
 	public GiftList getGiftList() {
@@ -145,5 +154,9 @@ public class Gift implements Serializable{
 	
 	public static ArrayList<Gift> getAll(){
 		return giftDAO.findAll();
+	}
+
+	public boolean addOffer() {
+		return ((GiftDAO)giftDAO).addOffer(this);
 	}
 }

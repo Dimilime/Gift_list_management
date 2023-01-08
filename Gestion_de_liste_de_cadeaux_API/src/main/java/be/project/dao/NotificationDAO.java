@@ -1,15 +1,12 @@
 package be.project.dao;
 
 import java.sql.Array;
-import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Struct;
 import java.util.ArrayList;
 
-import be.project.models.Gift;
-import be.project.models.GiftList;
 import be.project.models.Notification;
 import be.project.models.User;
 import oracle.jdbc.OracleTypes;
