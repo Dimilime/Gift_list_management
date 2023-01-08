@@ -73,6 +73,7 @@ public class Authentication extends HttpServlet {
 						}
 						//On met le user dans la session puis on renvoie vers la page d'accueil
 						session.setAttribute("connectedUser", connectedUser);
+						session.setAttribute("refreshNotif", "yes");
 						response.sendRedirect("home");
 						return;
 					}

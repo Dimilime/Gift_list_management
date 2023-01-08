@@ -18,6 +18,9 @@ public class Notifications extends HttpServlet {
 		User user = null;
 		if(session != null )
 			user = (User)session.getAttribute("connectedUser");
+		if(session.getAttribute("notif")!=null) {
+			session.removeAttribute("notif");
+		}	
 		if(user != null) {
 			request.setAttribute("notifications", user.findAllNotifications());
 			request.getRequestDispatcher("/WEB-INF/JSP/notifications.jsp").forward(request, response);

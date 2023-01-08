@@ -112,7 +112,7 @@ th, td{text-align: center;}
     margin-right: 10%;
 }
 
-.modifyList-form{
+.modify-form{
 	width: 50%;
     margin-left: auto;
     margin-right: auto;
@@ -123,6 +123,18 @@ select[id=participantsSelect]{
     overflow-x: scroll;
 }
 
+.notif_href{position:relative;}
+
+.notif_href span{
+	position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 25px;
+    line-height: 25px;
+    background-color: red;
+    text-align: center;
+    border-radius: 50%;
+}
 img{
 	object-fit: cover;
 	object-position: center;

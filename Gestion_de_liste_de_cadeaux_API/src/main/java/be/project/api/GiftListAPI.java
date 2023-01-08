@@ -21,6 +21,90 @@ import be.project.models.User;
 @Path("/giftList")
 public class GiftListAPI extends API{
 	
+	@GET
+	@Path("{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getGiftList(@PathParam("id") int id,
+			@HeaderParam("key") String key) {
+		if(key!=null) {
+			if(key.equals(apiKey)) {
+				GiftList giftList=GiftList.getGiftList(id);
+				if(giftList == null)
+					return Response.status(Status.NOT_FOUND).build();
+				
+				return Response.status(Status.OK).entity(giftList).build();
+			}
+		}
+		return Response.status(Status.UNAUTHORIZED).build();
+	}
+	
+	@GET
+	@Path("key/{key}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getGiftListByKey(@PathParam("key") String key,
+			@HeaderParam("key") String apiKeyHeader) {
+		if(key!=null) {
+			if(apiKeyHeader.equals(apiKey)) {
+				GiftList giftList=GiftList.getGiftListByKey(key);
+				if(giftList == null)
+					return Response.status(Status.NOT_FOUND).build();
+				
+				return Response.status(Status.OK).entity(giftList).build();
+			}
+		}
+		return Response.status(Status.UNAUTHORIZED).build();
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllList(@HeaderParam("key") String key) {
+		if(key!=null) {
+			if(key.equals(apiKey)) {
+				ArrayList<GiftList> giftLists=GiftList.getAll();
+				if(giftLists == null || giftLists.isEmpty())
+					return Response.status(Status.NOT_FOUND).build();
+				
+				return Response.status(Status.OK).entity(giftLists).build();
+			}
+		}
+		return Response.status(Status.UNAUTHORIZED).build();
+	}
+	
+	@PUT
+	@Path("{id}")
+	public Response updateGiftList(@PathParam("id") int listId,
+			@FormParam("listId") int listIdForm,
+			@FormParam("occasion") String occasion,
+			@FormParam("expirationDate") String expirationDate,
+			@FormParam("userListId") int userListId,
+			@FormParam("enabled") String enabled,
+			@HeaderParam("key") String key) {
+
+		if(key.equals(apiKey)) {
+			try {
+				if(listIdForm == 0 || occasion == null || userListId == 0 || listId!=listIdForm) 
+					return Response.status(Status.BAD_REQUEST).build();
+				
+				User connectedUser = new User();
+				connectedUser.setUserId(userListId);
+
+				GiftList giftList = new GiftList(listId,occasion,expirationDate,null, null, connectedUser, null, enabled);
+				int updateCode=giftList.update();
+				if(updateCode==0){
+					return Response.status(Status.NO_CONTENT).build();
+				}else {
+					return Response.status(Status.OK).build();
+				}
+			} catch (Exception e) {
+				System.out.println("Exception dans giftListAPI update " + e.getMessage());
+				return Response.status(Status.UNSUPPORTED_MEDIA_TYPE).build();
+			}
+		}
+		return Response.status(Status.UNAUTHORIZED).build();
+	}
+	
+	
+	
 	@POST
 	public Response createGiftList(
 			@FormParam("occasion") String occasion,
@@ -59,9 +143,6 @@ public class GiftListAPI extends API{
 			)
 	{
 		if(key.equals(apiKey) && listIdFromPath ==listId) {
-			System.out.println("on envoit côté API");
-			System.out.println("listid " + listId);
-			System.out.println("json " + JSONArraySharedUsersId);
 			ArrayList<String> sharedUsersId = null;
 			//check si tableau vide ou si contient des valeurs on extrait le ou les ID
 			if(JSONArraySharedUsersId.length()>2) {
@@ -92,99 +173,10 @@ public class GiftListAPI extends API{
 		
 	}
 	
-	@PUT
-	@Path("/update/{id}")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response updateInfraction(@PathParam("id") int listId,
-			@FormParam("listId") int listIdForm,
-			@FormParam("occasion") String occasion,
-			@FormParam("expirationDate") String expirationDate,
-			@FormParam("sharedUsersId") String JSONsharedUsersId,
-			@FormParam("userListId") int userListId,
-			@FormParam("enabled") String enabled,
-			@HeaderParam("key") String key) {
-
-		if(key.equals(apiKey)) {
-			try {
-				if(listIdForm == 0 || occasion == null || userListId == 0 || listId!=listIdForm) 
-					return Response.status(Status.BAD_REQUEST).build();
-				
-				User connectedUser = new User();
-				connectedUser.setUserId(userListId);
-
-				ArrayList<User> sharedUsers = null;
-				//check si tableau vide ou si contient des valeurs on extrait le ou les ID
-				if(JSONsharedUsersId.length()>2) {
-					sharedUsers = new ArrayList<User>();
-					//cas multiple valeurs
-					if(JSONsharedUsersId.contains(",")) {
-						String[] sharedUsersID = JSONsharedUsersId.replaceAll("\\[", "")
-		                          .replaceAll("]", "")
-		                          .split(",");
-						for(int i=0;i<sharedUsersID.length;i++) {
-							User user = new User();
-							user.setUserId(Integer.valueOf(sharedUsersID[i]));
-							sharedUsers.add(user);
-						}
-					}
-					//cas 1 seule valeur
-					else {
-						String sharedUserId = null;
-						sharedUserId= JSONsharedUsersId.replaceAll("\\[", "")
-								.replaceAll("]", "");
-						User user = new User();
-						user.setUserId(Integer.valueOf(sharedUserId));
-						sharedUsers.add(user);
-					}
-				}
-				
-				GiftList giftList = new GiftList(listId,occasion,expirationDate,null, sharedUsers, connectedUser, null, enabled);
-				int updateCode=giftList.update();
-				if(updateCode==0){
-					return Response.status(Status.NO_CONTENT).build();
-				}else {
-					return Response.status(Status.OK).build();
-				}
-			} catch (Exception e) {
-				System.out.println("Exception dans giftListAPI update " + e.getMessage());
-				return Response.status(Status.UNSUPPORTED_MEDIA_TYPE).build();
-			}
-		}
-		return Response.status(Status.UNAUTHORIZED).build();
-	}
 	
 	
-	@GET
-	@Path("{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getGiftList(@PathParam("id") int id,
-			@HeaderParam("key") String key) {
-		if(key!=null) {
-			if(key.equals(apiKey)) {
-				GiftList giftList=GiftList.getGiftList(id);
-				if(giftList == null)
-					return Response.status(Status.NOT_FOUND).build();
-				
-				return Response.status(Status.OK).entity(giftList).build();
-			}
-		}
-		return Response.status(Status.UNAUTHORIZED).build();
-	}
 	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllList(@HeaderParam("key") String key) {
-		if(key!=null) {
-			if(key.equals(apiKey)) {
-				ArrayList<GiftList> giftLists=GiftList.getAll();
-				if(giftLists == null || giftLists.isEmpty())
-					return Response.status(Status.NOT_FOUND).build();
-				
-				return Response.status(Status.OK).entity(giftLists).build();
-			}
-		}
-		return Response.status(Status.UNAUTHORIZED).build();
-	}
+	
 	
 	
 	

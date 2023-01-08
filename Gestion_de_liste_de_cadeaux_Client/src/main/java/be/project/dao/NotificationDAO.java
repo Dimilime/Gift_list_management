@@ -26,6 +26,8 @@ public class NotificationDAO extends DAO<Notification>{
 		parameters.add("message", obj.getMessage());
 		StringBuilder users = new StringBuilder();
 		for (User u : obj.getUsers()) {
+			System.out.println("insert notif client valeurs du getUsers");
+			System.out.println(u.getEmail());
 			users.append(u.getEmail()+",");
 		}
 		parameters.add("users", users.toString());

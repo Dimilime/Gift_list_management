@@ -10,6 +10,7 @@
 </jsp:include>
 <body>
 	<%@ include file="base.jsp"%>
+	<% GiftList list = (GiftList) session.getAttribute("list"); %>
 	<div
 		class="d-flex flex-column justify-content-center align-items-center">
 		<h1>Partager ma liste</h1>
@@ -32,7 +33,7 @@
 		<div class="d-flex align-items-center">
 
 			<input id="copyLinkInput" class="flex-grow-1" type="text" readonly
-				value="http://localhost:8080/Gestion_de_liste_de_cadeaux_Client/sharedList?id=<%=request.getParameter("id")%>">
+				value="http://localhost:8080/Gestion_de_liste_de_cadeaux_Client/signup?key=<%=list.getKey()%>">
 			<button id="copyLinkBtn"
 				class=" d-flex flex-shrink-0  align-items-center" type="button">
 				<span class="material-icons ">content_copy</span>

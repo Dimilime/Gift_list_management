@@ -40,10 +40,7 @@ public class EditList extends HttpServlet {
 					}	
 				}
 				if(rightAccess) {
-					//recup la liste des users pour le partage
-					ArrayList<User> allUsers = User.getAll();
 					request.setAttribute("giftList", currentGiftList);
-					request.setAttribute("allUsers", allUsers);
 					request.getRequestDispatcher("/WEB-INF/JSP/editList.jsp").forward(request, response);
 					return;
 				}
@@ -59,41 +56,27 @@ public class EditList extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//gère les modifs
+		//modification d'une liste form envoyé
 		int listId=0;
 		boolean enabled = false;
 		User connectedUser = null;
 		HttpSession session = request.getSession(false);
 		try {
-			if(session != null ) {
+			if(session != null) {
 				listId= (int)session.getAttribute("listId");
 				connectedUser = (User)session.getAttribute("connectedUser");
 			}
 				
-			String servletPath = request.getServletPath().substring(1);
 			if(listId!=0) {
-				//recup params obligatoire
-				if(request.getParameter("occasion")!=null && request.getParameter("expirationDate") !=null) {
+				if(request.getParameter("occasion")!=null) {
 					String occasion = request.getParameter("occasion");
 					String expirationDate = request.getParameter("expirationDate");
 				
-					//recup les id des participants
-					ArrayList<User> sharedUsers = new ArrayList<User>();
-					if(request.getParameterValues("participants") != null) {
-						String[] values = request.getParameterValues("participants");
-						int[] usersId = new int[values.length];
-						for(int i=0;i<values.length;i++) {
-							usersId[i] = Integer.valueOf(values[i]) ;
-							User user = new User();
-							user.setUserId(usersId[i]);
-							sharedUsers.add(user);
-						}
-					}
 					//recup checkbox liste active ou non
 					if(request.getParameter("enabled")!=null && request.getParameter("enabled").equals("on")) {
 						enabled = true;
 					}
-					GiftList giftList = new GiftList(listId,occasion,expirationDate,null, sharedUsers, connectedUser, null, Utils.convertBoolToString(enabled));
+					GiftList giftList = new GiftList(listId,occasion,expirationDate,null, null, connectedUser, null, Utils.convertBoolToString(enabled));
 	
 					if(giftList.update()) {
 						request.setAttribute("message", "La liste a bien été modifiée");

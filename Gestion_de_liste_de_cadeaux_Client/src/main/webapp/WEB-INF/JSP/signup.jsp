@@ -43,8 +43,8 @@
 				    <label for="inputPassword" class="form-label">Mot de passe</label>
 				    <input type="password" class="form-control" id="inputPassword" name="password" placeholder="**********" required>
 				  </div>
-				<% if(request.getAttribute("key")!=null){%>
-					<input type="hidden" class="form-control" id="key" name="key" value="<%=request.getAttribute("key") %>">
+				<% if(request.getParameter("key")!=null){%>
+					<input type="hidden" class="form-control" id="key" name="key" value="<%=request.getParameter("key") %>">
 				<% } %>
 				  <div class="center">
 		          	<button type="submit" class="button" >S'inscrire</button>

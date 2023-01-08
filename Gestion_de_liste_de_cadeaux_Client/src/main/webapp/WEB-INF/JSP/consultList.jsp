@@ -131,8 +131,7 @@
 				<%} %>
 				<%if(u.getUserId() == giftList.getGiftListUser().getUserId() && !gift.isReserved()){%>
 				<td>
-					<a href="./editGift?id=<%=gift.getGiftId()%>">Modifier le cadeau</a><br>
-					<a href="./offerGift?id=<%=gift.getGiftId()%>">Offrir en partie ou totalement ce cadeau</a>
+					<a href="./editGift?giftId=<%=gift.getGiftId()%>&listId=<%=giftList.getListId()%>">Modifier le cadeau</a><br>
 				</td>
 				<%} %>
 				<%if(!gift.isFullyPaid() && u.getUserId() != giftList.getGiftListUser().getUserId()){%>
@@ -143,8 +142,13 @@
 			</tr>
 			<%}} %>
 		</table>
-		 
+		<%if(u.getUserId() == giftList.getGiftListUser().getUserId()){%>
+		 <div class="ms-5">
+			<a class="btn btn-secondary " href="./addGift">Ajouter un nouveau cadeau</a>
+		</div>
+		<%} %>
 	</div>
+	
 	<div class="center">
 		<a class="btn-red" href="./home">Retour</a>
 	</div>

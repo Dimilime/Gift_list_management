@@ -1,6 +1,7 @@
 <%@page import="be.project.javabeans.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" errorPage="handleException.jsp"%>
+	pageEncoding="UTF-8" errorPage="handleException.jsp" session="true"%>
+<jsp:useBean id="admin" class="be.project.javabeans.User" scope="session"></jsp:useBean>
 <nav class="navbar navbar-expand-md bg-opacity-10">
         <a class="navbar-brand" href="./home">
             <img src="./resources/imgs/gift32.png"width="32" height="32" alt="Logo of the website"/>
@@ -14,10 +15,15 @@
 					listes</a></li>
 			<li class="nav-item "><a class="nav-link" href="./invitations">Mes
 					invitations</a></li>
-			<li class="nav-item"><a class="nav-link" href="./notifications">Mes
-					notifications</a></li>
+			<li class="nav-item">
+			
+			<a class="nav-link notif_href" href="./notifications">Mes notifications
+			<%if(session.getAttribute("notif")!=null){ %> <span><%=session.getAttribute("notif") %></span><%} %>
+			</a>
+			
+			</li>
+			
 		</ul>
-		
 		<a class="btn-red btn-logout" href="./logout">Deconnexion</a>
 	</div>
 	<div class="nav-item me-3">Connecté en tant que <B><%=((User) session.getAttribute("connectedUser")).getFirstname() %></B></div>

@@ -131,6 +131,10 @@ public class Gift implements Serializable{
 		return giftDAO.insert(this);
 	}
 	
+	public int update() {
+		return giftDAO.update(this);
+	}
+	
 	public String getReservedAsString() {
 		return reserved ? "Y" : "N";
 	}

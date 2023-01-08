@@ -71,7 +71,7 @@ public class GiftList implements Serializable{
 		LocalDate parsedExpirationDate = null;
 		
 		try {
-		if(expirationDate != null) {
+		if(expirationDate != null && !expirationDate.isEmpty()) {
 			expirationDate = expirationDate.contains(" ")? expirationDate.split(" ")[0] : expirationDate;
 			expirationDate = expirationDate.contains("-")? expirationDate.replace("-", "/"): expirationDate;
 			parsedExpirationDate = LocalDate.parse(expirationDate, formatter);
@@ -146,6 +146,10 @@ public class GiftList implements Serializable{
 		return giftListDAO.find(id);
 	}
 	
+	public static GiftList getGiftListByKey(String key) {
+		return ((GiftListDAO)giftListDAO).findByKey(key);
+	}
+	
 	public Date parseExpirationDateToDate() {
 		try {
 		if(expirationDate != null) 
@@ -191,4 +195,7 @@ public class GiftList implements Serializable{
 		}
 		
 	}
+
+
+	
 }

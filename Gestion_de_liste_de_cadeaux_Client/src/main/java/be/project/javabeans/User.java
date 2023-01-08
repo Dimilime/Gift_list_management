@@ -174,11 +174,9 @@ public class User implements Serializable{
 	public static ArrayList<User> getAll(){
 		return userDAO.findAll();
 	}
+	
 	public boolean createUser() {
 		return userDAO.insert(this) == 1;
-	}
-	public boolean createUser(boolean withSharedList) {
-		return false;
 	}
 	
 	public int addGiftList(GiftList gl) {
@@ -211,6 +209,12 @@ public class User implements Serializable{
 					.collect(Collectors.toCollection(ArrayList::new));
 		}
 		return null;
+	}
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email
+				+ ", password=" + password + ", giftLists=" + giftLists + ", invitations=" + invitations
+				+ ", notifications=" + notifications + ", participations=" + participations + "]";
 	}
 	
 	
