@@ -24,35 +24,24 @@ public class Home extends HttpServlet {
 		User user = null;
 		if(session != null )
 			user = (User)session.getAttribute("connectedUser");
-			System.out.println("home doget -> état sur user en session " + user);
 			//supprime l'attribut signifiant la création d'une nouvelle liste de cadeau
 			if(session.getAttribute("newList")!= null)
 				session.removeAttribute("newList");
 		if(user != null) {
 			//récupère toutes les listes des cadeaux du user(contient infos de la liste + les sharedUsers)
 			user.findAllGiftList();
-			System.out.println("home doget -> état des listes récup " + user.getGiftLists());
 			//récupère toutes les notifs de l'utilisateur si première connexion
 			if(session.getAttribute("refreshNotif") != null && session.getAttribute("refreshNotif").equals("yes")) {
 				ArrayList<Notification> notifs = user.findAllNotifications();
 				session.removeAttribute("refreshNotif");
-				if(notifs.size()>0) {
+				if(notifs!=null && notifs.size()>0) {
 					//si a des notifs affiche le nombre
 					session.setAttribute("notif", notifs.size());
 				}
-			}
-			
+			}			
 			
 			session.setAttribute("connectedUser", user);
 			
-			//TODO
-			//supprimer
-			System.out.println("Paramètres existant en session :");
-			Enumeration<String> attributes = request.getSession().getAttributeNames();
-			while (attributes.hasMoreElements()) {
-			    String attribute = (String) attributes.nextElement();
-			    System.out.println(attribute+" : "+request.getSession().getAttribute(attribute));
-			}
 			
 			request.getRequestDispatcher("/WEB-INF/JSP/home.jsp").forward(request, response);
 		}else {

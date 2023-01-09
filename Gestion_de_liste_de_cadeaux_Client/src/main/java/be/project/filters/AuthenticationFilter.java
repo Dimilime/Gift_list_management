@@ -29,9 +29,7 @@ public class AuthenticationFilter extends HttpFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
 		HttpSession session = ((HttpServletRequest)request).getSession(false);
-		String requestUrl = ((HttpServletRequest)request).getRequestURI();
-		
-		System.out.println(requestUrl);
+
 		if(session!=null) {
 			User u = (User)session.getAttribute("connectedUser");
 			if(u !=null) {

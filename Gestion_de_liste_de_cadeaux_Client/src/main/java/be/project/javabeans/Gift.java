@@ -213,9 +213,8 @@ public class Gift implements Serializable{
 		}
 		JSONObject listObject = jsonObject.getJSONObject("giftList");
 		giftList = GiftList.mapListFromJson(listObject);
-		gift = new Gift(giftId, priorityLevel, name, description, averagePrice, link, giftList, image, null);
+		gift = new Gift(giftId, priorityLevel, name, description, averagePrice, link, giftList, image, participations);
 		gift.setReserved(reserved);
-		gift.setParticipations(participations);
 		return gift;
 		
 	}

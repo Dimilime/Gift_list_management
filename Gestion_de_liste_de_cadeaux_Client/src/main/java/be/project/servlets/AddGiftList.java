@@ -48,7 +48,7 @@ public class AddGiftList extends HttpServlet {
 			try {
 				giftList = new GiftList(0,occasion,user,expirationDate, null, "Y");
 				
-				if(user.getGiftLists().isEmpty())
+				if(user.getGiftLists()!= null && user.getGiftLists().isEmpty())
 					user.setGiftLists(giftLists);
 				int idCreated = user.addGiftList(giftList);
 				if(idCreated !=0) {

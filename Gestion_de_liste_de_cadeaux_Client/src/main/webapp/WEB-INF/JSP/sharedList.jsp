@@ -38,10 +38,13 @@
 					<div class="card-body">
 						<h5 class="card-title"><%=gift.getName()%></h5>
 						<p class="card-text">
-						<%=gift.getDescription()== null? "Pas de description" : gift.getDescription() %>
+							Echelle d'envie : <%=gift.getPriorityLevel()%>/10
 						</p>
 						<p class="card-text">
-						<%=String.format("%.2f",  gift.getAveragePrice())%> euros
+							<%=gift.getDescription()== null? "Pas de description" : gift.getDescription() %>
+						</p>
+						<p class="card-text">
+							<%=String.format("%.2f",  gift.getAveragePrice())%> euros
 						</p>
 						<%if(gift.isFullyPaid()){ %>
 							<p class="card-text">

@@ -141,6 +141,7 @@ public class GiftListDAO extends DAO<GiftList>{
 			}
 			return giftLists;
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("error findAll de GiftListDAO client = "+e.getMessage());
 			return null;
 		}
