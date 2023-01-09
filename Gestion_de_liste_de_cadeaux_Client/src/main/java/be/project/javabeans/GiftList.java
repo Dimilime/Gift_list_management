@@ -49,13 +49,6 @@ public class GiftList implements Serializable{
 		this.sharedUsers = new ArrayList<>();
 	}
 	
-	
-	public GiftList(int listId, String occasion, String expirationDate, ArrayList<Gift> gifts, ArrayList<User> sharedUsers,
-			User giftListUser, String key, String enabled) throws ExpirationDateException {
-		this(listId,occasion,giftListUser, expirationDate, key,enabled);
-		this.gifts = gifts;
-		this.sharedUsers = sharedUsers;
-	}
 
 	public int getListId() {
 		return listId;
@@ -116,14 +109,6 @@ public class GiftList implements Serializable{
 	public ArrayList<Gift> getGifts() {
 		return gifts;
 	}
-	public ArrayList<Gift> findAllGifts() {
-		if(Gift.getAll() != null) {
-			return gifts = Gift.getAll().stream()
-					.filter( gift -> gift.getGiftList().listId == this.listId)
-					.collect(Collectors.toCollection(ArrayList::new));
-		}
-		return null;
-	}
 
 	public void setGifts(ArrayList<Gift> gifts) {
 		this.gifts = gifts;
@@ -147,16 +132,21 @@ public class GiftList implements Serializable{
 		this.key = key;
 	}
 	
+	public ArrayList<Gift> findAllGifts() {
+		if(Gift.getAll() != null) {
+			return gifts = Gift.getAll().stream()
+					.filter( gift -> gift.getGiftList().listId == this.listId)
+					.collect(Collectors.toCollection(ArrayList::new));
+		}
+		return null;
+	}
+	
 	public boolean addGift(Gift g) {
 		if(g != null) {
 			gifts.add(g);
 			return g.create() != 0;
 		}
 		return false;	
-	}
-	
-	public void removeGift(Gift g) {
-		gifts.remove(g);
 	}
 	
 	public boolean addUserToSharedList(User u) {

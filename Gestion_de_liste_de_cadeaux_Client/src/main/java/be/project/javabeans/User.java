@@ -46,13 +46,7 @@ public class User implements Serializable{
 		this.notifications = new ArrayList<>();
 		this.participations = new ArrayList<>();
 	}
-	public User(int userId, String firstname, String lastname, String email, String password,ArrayList<GiftList> giftLists ,ArrayList<Notification> notifications, ArrayList<Participation> participations ) {
-		this(firstname,lastname,email,password);
-		this.userId = userId;
-		this.giftLists= giftLists;
-		this.notifications=notifications;
-		this.participations= participations;
-	}
+
 
 	public int getUserId() {
 		return userId;
@@ -133,6 +127,9 @@ public class User implements Serializable{
 		return ((UserDAO)userDAO).findByEmail(email);
 	}
 	
+	public boolean deleteNotification(int index) {
+		return notifications.get(index).delete(this);
+	}
 
 	public static User getUserByJSONObject(JSONObject json)throws JsonParseException, JsonMappingException, JSONException, IOException, ExpirationDateException {
 		User user=new User();

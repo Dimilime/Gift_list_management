@@ -135,9 +135,6 @@ public class GiftList implements Serializable{
 		return giftListDAO.update(this);
 	}
 	
-	/*public boolean addUserToSharedList(User u) {
-		return ((GiftListDAO)giftListDAO).addUserTosharedList(this, u);
-	}*/
 	public static ArrayList<GiftList> getAll() {
 		return giftListDAO.findAll();
 	}

@@ -134,6 +134,7 @@ public class User implements Serializable{
 	public static User getUserByEmail(String email) {
 		return ((UserDAO)userDAO).findByEmail(email);
 	}
+
 	
 	public static User get(int id) {
 		return userDAO.find(id);

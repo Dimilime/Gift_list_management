@@ -26,8 +26,6 @@ public class NotificationDAO extends DAO<Notification>{
 		parameters.add("message", obj.getMessage());
 		StringBuilder users = new StringBuilder();
 		for (User u : obj.getUsers()) {
-			System.out.println("insert notif client valeurs du getUsers");
-			System.out.println(u.getEmail());
 			users.append(u.getEmail()+",");
 		}
 		parameters.add("users", users.toString());
@@ -80,6 +78,16 @@ public class NotificationDAO extends DAO<Notification>{
 			System.out.println("error findAll de NotificationDAO client = "+e.getMessage());
 			return null;
 		}
+	}
+	
+	public boolean deleteUserNotification(User user, Notification obj) {
+		
+		parameters.clear();
+		parameters.add("userId", String.valueOf(user.getUserId()));
+		clientResponse = resource.path("notification").path(String.valueOf(obj.getNotificationId()))
+				.header("key",apiKey)
+				.delete(ClientResponse.class, parameters);
+		return clientResponse.getStatus() == 204;
 	}
 	
 

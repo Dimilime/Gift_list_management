@@ -76,7 +76,7 @@ public class EditList extends HttpServlet {
 					if(request.getParameter("enabled")!=null && request.getParameter("enabled").equals("on")) {
 						enabled = true;
 					}
-					GiftList giftList = new GiftList(listId,occasion,expirationDate,null, null, connectedUser, null, Utils.convertBoolToString(enabled));
+					GiftList giftList = new GiftList(listId,occasion,connectedUser,expirationDate, null, Utils.convertBoolToString(enabled));
 	
 					if(giftList.update()) {
 						request.setAttribute("message", "La liste a bien été modifiée");

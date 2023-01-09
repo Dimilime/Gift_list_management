@@ -31,6 +31,7 @@
 		<servlet-name>SharedList</servlet-name>
 		<servlet-name>EditGift</servlet-name>
 		<servlet-name>Invitations</servlet-name>
+		<servlet-name>DeleteNotification</servlet-name>
 	</filter-mapping>
 	
 	<!-- CONTEXT PARAMS -->
@@ -118,6 +119,10 @@
 		<servlet-name>ExceptionHandler</servlet-name>
 		<servlet-class>be.project.servlets.ExceptionHandler</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>DeleteNotification</servlet-name>
+		<servlet-class>be.project.servlets.DeleteNotification</servlet-class>
+	</servlet>
 
 	<!-- MAPPING SERVLET -->
 	<servlet-mapping>
@@ -204,6 +209,11 @@
 	<servlet-mapping>
 		<servlet-name>SharedList</servlet-name>
 		<url-pattern>/sharedList</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>DeleteNotification</servlet-name>
+		<url-pattern>/deleteNotification</url-pattern>
 	</servlet-mapping>
 
 	<error-page>

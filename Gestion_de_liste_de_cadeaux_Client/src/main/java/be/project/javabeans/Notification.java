@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
+import be.project.dao.NotificationDAO;
 
 public class Notification implements Serializable{
 
@@ -71,6 +72,10 @@ public class Notification implements Serializable{
 	
 	public boolean create() {
 		return notificationDAO.insert(this) != 0 ? true : false;
+	}
+	
+	public boolean delete(User u) {
+		return ((NotificationDAO)notificationDAO).deleteUserNotification(u, this);
 	}
 	
 	public static Notification mapNotificationFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException, ExpirationDateException

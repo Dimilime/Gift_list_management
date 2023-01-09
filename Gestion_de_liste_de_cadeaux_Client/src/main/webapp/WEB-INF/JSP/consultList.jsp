@@ -112,7 +112,7 @@
 				<td><%= gift.getName()%></td>
 				<td><%= gift.getDescription() == null ? "Pas de description fourni": gift.getDescription()%></td>
 				<td><%= String.format("%.2f",  gift.getAveragePrice())%> euros</td>
-				<td><%= gift.getLink() == null ? "Pas de lien fourni": gift.getLink()  %></td>
+				<td><%= gift.getLink() == null ? "Pas de lien fourni": "<a href='"+gift.getLink()+"' class='card-link'>Lien marchand</a>"  %></td>
 				<td><%= gift.getImage() == null ? "Pas d'image fournie":
 					"<img alt='image du cadeau' src='data:image/png;base64,"+gift.getImage()+"' width='150' height='150'>"%> </td>
 				<td><%= gift.isReserved() ? "Oui":" Non"%></td>

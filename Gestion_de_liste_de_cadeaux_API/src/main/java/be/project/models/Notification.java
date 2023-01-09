@@ -84,6 +84,10 @@ public class Notification implements Serializable{
 	public static ArrayList<Notification> getAll(){
 		return notificationDAO.findAll();
 	}
+	
+	public boolean delete(int userId) {
+		return ((NotificationDAO)notificationDAO).deleteUserNotification(this, userId);
+	}
 
 	
 	

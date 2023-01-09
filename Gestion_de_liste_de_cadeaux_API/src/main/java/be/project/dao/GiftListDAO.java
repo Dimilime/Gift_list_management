@@ -185,22 +185,7 @@ public class GiftListDAO extends DAO<GiftList>{
 		return giftLists;
 	}
 	
-	
-	/*public boolean addUserTosharedList(GiftList obj, User user) {
-		int id=0;
-		String sql="{call INSERT_USER_SHARED_LIST(?,?,?)}";
-		try(CallableStatement callableStatement = conn.prepareCall(sql)) {
-			callableStatement.setInt(1, user.getUserId());
-			callableStatement.setInt(2, obj.getListId());
-			callableStatement.registerOutParameter(3, java.sql.Types.INTEGER);
-			callableStatement.executeUpdate();
-			id = callableStatement.getInt(3);
-			
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return id !=0 ;
-	}*/
+
 
 	public boolean addSharedList(int listId, int[] sharedUsersId) {
 		int codeError = -1;

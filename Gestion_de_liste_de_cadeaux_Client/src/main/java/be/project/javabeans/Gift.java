@@ -3,8 +3,6 @@ package be.project.javabeans;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Base64;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

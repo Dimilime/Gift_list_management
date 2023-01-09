@@ -1,17 +1,20 @@
 package be.project.api;
 
 import java.util.ArrayList;
+
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import be.project.models.GiftList;
 import be.project.models.Notification;
 import be.project.models.User;
 
@@ -72,5 +75,20 @@ public class NotificationAPI extends API{
 			return Response.status(Status.UNAUTHORIZED).build();
 		}
 		
+		@DELETE
+		@Path("{id}")
+		public Response deleteNotificationMessage(@PathParam("id") int id,@FormParam("userId") int userId) {
+			if(id != 0 && userId !=0) {
+				Notification notification = new Notification();
+				notification.setNotificationId(id);
+				System.out.println("idnotif: "+id +"et user "+ userId);
+				if(notification.delete(userId)) {
+					return Response.status(Status.NO_CONTENT).build();
+				}
+				return Response.status(Status.SERVICE_UNAVAILABLE).build();
+			}
+			
+			return Response.status(Status.BAD_REQUEST).build();
+		}
 
 }

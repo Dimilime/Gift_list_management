@@ -141,5 +141,25 @@ public class NotificationDAO extends DAO<Notification> {
 		
 		return idU;
 	}
+	
+	public boolean deleteUserNotification(Notification obj, int userId) {
+		int id=0;
+		String sql ="{call DELETE_USER_Notification(?,?,?)}";
+		try (CallableStatement callstmt =conn.prepareCall(sql);)
+		{
+			callstmt.setInt(1, userId);
+			callstmt.setInt(2, obj.getNotificationId());
+			callstmt.registerOutParameter(3, java.sql.Types.INTEGER);
+			callstmt.executeUpdate();
+			
+			id =callstmt.getInt(3);
+
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return id != 0 ;
+
+	}
 
 }

@@ -45,13 +45,14 @@
 			<% 
 			if (request.getAttribute("notifications") != null) {
 				ArrayList<Notification> notifications = (ArrayList<Notification>)request.getAttribute("notifications");
+				int index =0;
 				if(notifications != null)
 					for ( Notification notif : notifications) {
 			%>
 			<tr>
 				<td><%= notif.getTitle()%></td>
 				<td><%= notif.getMessage()%></td>
-				
+				<td><a href="./deleteNotification?index=<%=index++%>" class="btn btn-danger">Supprimer</a></td>
 			</tr>
 			<%
 			}}

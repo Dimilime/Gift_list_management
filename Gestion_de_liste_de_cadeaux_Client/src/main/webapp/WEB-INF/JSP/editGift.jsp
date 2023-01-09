@@ -30,7 +30,8 @@
 				
 				<div class="mb-3">
 					<label for="descriptionInput" class="form-label">Description</label> 
-					<input id="descriptionInput" type="text" class="form-control" name="description" value="<%=gift.getDescription()%>">
+					<input id="descriptionInput" type="text" class="form-control" name="description" placeholder="Description du cadeau"
+					value="<%=gift.getDescription() == null ? "": gift.getDescription()%>">
 				</div>
 				
 				<div class="mb-3">
