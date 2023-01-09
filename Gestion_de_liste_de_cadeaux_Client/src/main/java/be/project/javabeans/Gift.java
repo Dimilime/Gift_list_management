@@ -3,6 +3,9 @@ package be.project.javabeans;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import be.project.dao.AbstractDAOFactory;
 import be.project.dao.DAO;
+import be.project.dao.GiftDAO;
 import be.project.javabeans.Gift;
 
 public class Gift implements Serializable{
@@ -150,16 +154,42 @@ public class Gift implements Serializable{
 	public boolean isFullyPaid() {
 		if(this.getParticipations() == null) 
 			return false;
-		
 		double somme =0;
 		for(Participation participation : this.getParticipations()) {
 			somme+= participation.getParticipationpart();
 		}
 		return this.averagePrice == somme;
 	}
+
+	
+	public boolean hasAlreadyOffer(int userId) {
+		boolean success = false;
+		if(this.getParticipations() == null) 
+			return false;
+		for(Participation participation : this.getParticipations()) {
+			if(userId == participation.getParticipant().getUserId()) {
+				success=true;
+				break;
+			}
+		}
+		return success;
+	}
+	
+	public double priceRemain() {
+		if(this.getParticipations() == null) 
+			return this.averagePrice;
+		
+		double price = averagePrice;
+		for(Participation participation : this.getParticipations()) {
+			price-= participation.getParticipationpart();
+		}
+		return price;
+	}
 	public static Gift mapGiftFromJson(JSONObject jsonObject) throws JsonParseException, JsonMappingException, JSONException, IOException, ExpirationDateException  {
+
 		Gift gift = null;
 		GiftList giftList = null;
+		ArrayList<Participation> participations=null;
 		int giftId = jsonObject.getInt("giftId");
 		int priorityLevel = jsonObject.getInt("priorityLevel");
 		String name = jsonObject.getString("name");
@@ -168,12 +198,41 @@ public class Gift implements Serializable{
 		boolean reserved = jsonObject.getBoolean("reserved");
 		String link = jsonObject.isNull("link") ? null : jsonObject.getString("link");
 		String image = jsonObject.isNull("image") ? null : jsonObject.getString("image");
-		//JSONArray participations = jsonObject.getJSONArray("participations"); 
+		JSONArray participationsArray = jsonObject.getJSONArray("participations");
+		if(participationsArray.length()>0)
+			participations = new ArrayList<Participation>();
+		for(int i=0;i<participationsArray.length();i++) {
+			JSONObject obj=(JSONObject)participationsArray.getJSONObject(i);
+			double price = obj.getDouble("participationpart");
+			JSONObject participantObject= obj.getJSONObject("participant");
+			int userId= participantObject.getInt("userId");
+			User u = new User();
+			u.setUserId(userId);
+			Participation participation = new Participation(0,u,price,null);
+			participations.add(participation);
+		}
 		JSONObject listObject = jsonObject.getJSONObject("giftList");
 		giftList = GiftList.mapListFromJson(listObject);
 		gift = new Gift(giftId, priorityLevel, name, description, averagePrice, link, giftList, image, null);
 		gift.setReserved(reserved);
+		gift.setParticipations(participations);
 		return gift;
+		
+	}
+
+	public static Gift get(int giftId) {
+		return giftDAO.find(giftId);
+	}
+
+	public boolean offer() {
+		 return((GiftDAO)giftDAO).addOffer(this);
+	}
+
+	public void addParticipation(Participation participation) {
+		if(participations==null) {
+			participations = new ArrayList<Participation>();
+		}
+		participations.add(participation);
 		
 	}
 }

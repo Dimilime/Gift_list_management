@@ -84,7 +84,7 @@ public class UserDAO extends DAO<User>{
 			callableStatement.execute();
 			
 			struc = (Struct) callableStatement.getObject(2);
-			Object[] objects = struc.getAttributes();
+			Object[] objects = struc ==null ? null : struc.getAttributes();
 			if(objects != null) {
 				int userId= Integer.valueOf(objects[0].toString());
 				String firstname=(String)objects[1];

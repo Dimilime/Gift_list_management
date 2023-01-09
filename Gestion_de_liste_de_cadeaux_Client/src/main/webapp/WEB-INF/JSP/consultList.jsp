@@ -134,11 +134,6 @@
 					<a href="./editGift?giftId=<%=gift.getGiftId()%>&listId=<%=giftList.getListId()%>">Modifier le cadeau</a><br>
 				</td>
 				<%} %>
-				<%if(!gift.isFullyPaid() && u.getUserId() != giftList.getGiftListUser().getUserId()){%>
-				<td>
-					<a href="./offerGift?id=<%=gift.getGiftId()%>">Offrir en partie ou totalement ce cadeau</a>
-				</td>
-				<%} %>
 			</tr>
 			<%}} %>
 		</table>

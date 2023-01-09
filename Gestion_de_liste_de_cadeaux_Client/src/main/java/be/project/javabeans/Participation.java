@@ -55,7 +55,4 @@ public class Participation implements Serializable{
 	public void setGift(Gift gift) {
 		this.gift = gift;
 	}
-	
-
-
 }

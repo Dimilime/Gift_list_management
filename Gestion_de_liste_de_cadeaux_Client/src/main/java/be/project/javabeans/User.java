@@ -213,6 +213,19 @@ public class User implements Serializable{
 				+ ", password=" + password + ", giftLists=" + giftLists + ", invitations=" + invitations
 				+ ", notifications=" + notifications + ", participations=" + participations + "]";
 	}
+
+	public void addParticipation(Participation participation) {
+		if(participations==null) {
+			participations = new ArrayList<Participation>();
+		}
+		participations.add(participation);
+		
+	}
+	public boolean addNewParticipation(Participation participation) {
+		addParticipation(participation);
+		return participation.getGift().offer();
+		
+	}
 	
 	
 	

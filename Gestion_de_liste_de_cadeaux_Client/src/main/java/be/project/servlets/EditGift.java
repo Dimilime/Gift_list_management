@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import be.project.javabeans.Gift;
 import be.project.javabeans.GiftList;
 import be.project.javabeans.User;
-import be.project.utils.Utils;
 
 
 public class EditGift extends HttpServlet {

@@ -8,9 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sun.jersey.api.client.ClientResponse;
+
 import be.project.javabeans.Gift;
-import be.project.javabeans.User;
-import be.project.utils.Utils;
+import be.project.javabeans.Participation;
 
 public class GiftDAO extends DAO<Gift> {
 	
@@ -64,8 +64,29 @@ public class GiftDAO extends DAO<Gift> {
 
 	@Override
 	public Gift find(int id) {
-		return null;
+		clientResponse=resource
+				.path("gift")
+				.path(String.valueOf(id))
+				.header("key",apiKey)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(ClientResponse.class);
+		Gift gift=null;
+		String responseJSON=clientResponse.getEntity(String.class);
+		int status=clientResponse.getStatus();
+		//gérer cas aucun gift trouvé
+		if(status == 404) 
+			return null;
+
+		try {
+			JSONObject json = new JSONObject(responseJSON);
+			gift=Gift.mapGiftFromJson(json);
+			return gift;
+		} catch (Exception e) {
+			System.out.println("error find de GiftDAO client find = "+e.getMessage());
+			return null;
+		}
 	}
+	
 
 	@Override
 	public ArrayList<Gift> findAll() {
@@ -92,6 +113,26 @@ public class GiftDAO extends DAO<Gift> {
 			System.out.println("error findAll de GiftDAO client = "+e.getMessage());
 			return null;
 		}
+	}
+
+	public boolean addOffer(Gift gift) {
+		ArrayList<Participation> participations = gift.getParticipations();
+		System.out.println("addOffer gift dao client : ");
+		System.out.println(participations.get(0).getParticipant().getUserId());
+		System.out.println(gift.getGiftId());
+		System.out.println(participations.get(0).getParticipationpart());
+		parameters.clear();
+		parameters.add("userId", String.valueOf(participations.get(0).getParticipant().getUserId()));
+		parameters.add("giftId", String.valueOf(gift.getGiftId()));
+		parameters.add("price",  String.valueOf(participations.get(0).getParticipationpart()));
+
+		clientResponse=resource
+				.path("gift")
+				.path(String.valueOf(gift.getGiftId()))
+				.path("offer")
+				.header("key",apiKey)
+				.post(ClientResponse.class,parameters);
+		return clientResponse.getStatus() == 201 ? true : false;
 	}
 
 }

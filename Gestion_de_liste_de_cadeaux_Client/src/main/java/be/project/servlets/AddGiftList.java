@@ -1,7 +1,6 @@
 package be.project.servlets;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
