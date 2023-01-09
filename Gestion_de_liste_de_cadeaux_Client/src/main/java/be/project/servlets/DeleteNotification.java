@@ -20,7 +20,6 @@ public class DeleteNotification extends HttpServlet {
 		User user = null;
 		if(session != null )
 			user = (User)session.getAttribute("connectedUser");
-		System.out.println("on passe dans la servlet delete");
 		if(request.getParameter("index") !=null) {
 			try {
 				int index = Integer.valueOf(request.getParameter("index"));

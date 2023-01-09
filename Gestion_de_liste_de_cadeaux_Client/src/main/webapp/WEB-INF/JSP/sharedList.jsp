@@ -63,9 +63,9 @@
 							<a href="./shareoffer?id=<%=gift.getGiftId() %>"  class="btn btn-sm btn-outline-secondary ml-2">
 								Offrir à plusieurs ?
 							</a>
-							<%} %>
+							
 						</div>
-
+						<%} %>
 					</div>
 
 				</div>

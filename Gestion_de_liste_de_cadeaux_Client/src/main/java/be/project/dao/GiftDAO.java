@@ -117,10 +117,6 @@ public class GiftDAO extends DAO<Gift> {
 
 	public boolean addOffer(Gift gift) {
 		ArrayList<Participation> participations = gift.getParticipations();
-		System.out.println("addOffer gift dao client : ");
-		System.out.println(participations.get(0).getParticipant().getUserId());
-		System.out.println(gift.getGiftId());
-		System.out.println(participations.get(0).getParticipationpart());
 		parameters.clear();
 		parameters.add("userId", String.valueOf(participations.get(0).getParticipant().getUserId()));
 		parameters.add("giftId", String.valueOf(gift.getGiftId()));

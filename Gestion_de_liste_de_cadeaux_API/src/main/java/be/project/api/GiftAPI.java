@@ -67,7 +67,6 @@ public class GiftAPI extends API {
 				@FormParam("priorityLevel") int priorityLevel,
 				@FormParam("link") String link,
 				@HeaderParam("key") String key) {
-			System.out.println("arrive dans api");
 			if(key.equals(apiKey)) {
 				try {
 					if(giftId!=giftIdInForm)  
@@ -145,10 +144,7 @@ public class GiftAPI extends API {
 				@HeaderParam("key") String key
 				)
 		{
-			System.out.println("addOffer gift dao api : ");
-			System.out.println(userId);
-			System.out.println(giftIdForm);
-			System.out.println(price);
+
 			if(key.equals(apiKey) && giftId == giftIdForm) {
 				Gift gift = new Gift();
 				gift.setGiftId(giftId);
